@@ -14,7 +14,7 @@
       "settings": {
         "heading": "",
         "before_image": "{{ collection.image }}",
-        "after_image": "{{ collection.metafields.custom.before_image.value }}",
+        "after_image": "",
         "description": "{{ collection.description }}"
       }
     },

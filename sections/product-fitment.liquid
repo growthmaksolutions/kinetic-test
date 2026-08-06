@@ -1,0 +1,532 @@
+{%- comment -%}
+  ------------------------------------------------------------
+  Product Fitment Checker — "Will this fit your bike?"
+
+  Cascading Make -> Model -> Year selector that matches the rider's
+  bike against this product's compatibility records and returns a
+  definite FITS / DOES NOT FIT verdict.
+
+  Compatibility records are read in priority order so the module works
+  with data the store already has:
+
+    1. custom.fitment_data   list.single_line_text_field
+                             "Harley-Davidson|Dyna|2006-2017"
+    2. product tags          "fits:Harley-Davidson:Dyna:2006-2017"
+    3. custom.model          single value, paired with product.vendor
+
+  A year of "All years" (or an omitted year) matches any year.
+  The rider's bike is remembered in localStorage, so it stays selected
+  as they move between products.
+  ------------------------------------------------------------
+{%- endcomment -%}
+
+{%- liquid
+  assign recs = ''
+
+  comment
+    1. Structured list metafield — the preferred source.
+  endcomment
+  assign fd = product.metafields.custom.fitment_data.value | default: product.metafields.custom.fitment_data
+  if fd != blank
+    for row in fd
+      assign clean = row | strip
+      if clean != blank
+        assign recs = recs | append: clean | append: ';;'
+      endif
+    endfor
+  endif
+
+  comment
+    2. Tag convention — "fits:Make:Model:Years".
+  endcomment
+  if recs == blank
+    for tag in product.tags
+      assign lower = tag | downcase
+      if lower contains 'fits:'
+        assign t = tag | remove_first: 'fits:' | remove_first: 'Fits:' | replace: ':', '|' | strip
+        if t != blank
+          assign recs = recs | append: t | append: ';;'
+        endif
+      endif
+    endfor
+  endif
+
+  comment
+    3. Fall back to the model metafield this theme already uses.
+  endcomment
+  if recs == blank
+    assign md = product.metafields.custom.model.value | default: product.metafields.custom.model
+    if md != blank
+      assign mk = product.vendor | default: 'Universal'
+      assign recs = mk | append: '|' | append: md | append: '|All years;;'
+    endif
+  endif
+-%}
+
+{%- if recs != blank -%}
+<section class="km-section km-fit" id="Section-{{ section.id }}">
+  <div class="km-container">
+    <div class="km-fit__panel" data-km-fitment data-records="{{ recs | escape }}">
+
+      <div class="km-fit__head">
+        <span class="km-fit__eyebrow km-mono">{{ section.settings.eyebrow | default: 'Compatibility' }}</span>
+        <h2 class="km-fit__title">{{ section.settings.heading | default: 'Will this fit your bike?' }}</h2>
+        {%- if section.settings.subtext != blank -%}
+          <p class="km-fit__sub">{{ section.settings.subtext }}</p>
+        {%- endif -%}
+      </div>
+
+      <form class="km-fit__form" data-km-fit-form novalidate>
+        <div class="km-fit__field">
+          <label class="km-fit__label km-mono" for="km-fit-make-{{ section.id }}">Make</label>
+          <div class="km-fit__select-wrap">
+            <select class="km-fit__select" id="km-fit-make-{{ section.id }}" data-km-fit-make>
+              <option value="">Select make</option>
+            </select>
+            {%- render 'icon', icon: 'chevron-down' -%}
+          </div>
+        </div>
+
+        <div class="km-fit__field">
+          <label class="km-fit__label km-mono" for="km-fit-model-{{ section.id }}">Model</label>
+          <div class="km-fit__select-wrap">
+            <select class="km-fit__select" id="km-fit-model-{{ section.id }}" data-km-fit-model disabled>
+              <option value="">Select model</option>
+            </select>
+            {%- render 'icon', icon: 'chevron-down' -%}
+          </div>
+        </div>
+
+        <div class="km-fit__field">
+          <label class="km-fit__label km-mono" for="km-fit-year-{{ section.id }}">Year</label>
+          <div class="km-fit__select-wrap">
+            <select class="km-fit__select" id="km-fit-year-{{ section.id }}" data-km-fit-year disabled>
+              <option value="">Select year</option>
+            </select>
+            {%- render 'icon', icon: 'chevron-down' -%}
+          </div>
+        </div>
+
+        <button type="submit" class="km-fit__submit" data-km-fit-check>
+          {{ section.settings.button_label | default: 'Check fitment' }}
+          {%- render 'icon', icon: 'arrow-right' -%}
+        </button>
+      </form>
+
+      {%- comment -%} Verdict — announced to screen readers when it changes {%- endcomment -%}
+      <div class="km-fit__result" data-km-fit-result role="status" aria-live="polite" hidden>
+        <span class="km-fit__result-mark" aria-hidden="true"></span>
+        <div class="km-fit__result-body">
+          <strong class="km-fit__result-title" data-km-fit-title></strong>
+          <span class="km-fit__result-detail" data-km-fit-detail></span>
+        </div>
+        <button type="button" class="km-fit__reset" data-km-fit-reset>Change bike</button>
+      </div>
+
+      {%- if section.settings.show_list -%}
+        <details class="km-fit__all">
+          <summary class="km-fit__all-summary">
+            <span>{{ section.settings.list_label | default: 'View all compatible models' }}</span>
+            {%- render 'icon', icon: 'chevron-down' -%}
+          </summary>
+          <ul class="km-fit__all-list" data-km-fit-list></ul>
+        </details>
+      {%- endif -%}
+
+      {%- if section.settings.help_text != blank -%}
+        <p class="km-fit__help">{{ section.settings.help_text }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .km-fit__panel {
+    position: relative;
+    background: var(--km-surface);
+    border: 1px solid var(--km-border);
+    border-radius: var(--km-radius-lg);
+    padding: 32px;
+  }
+  /* Machined corner bracket — a small technical cue, not decoration */
+  .km-fit__panel::before {
+    content: '';
+    position: absolute; top: -1px; left: -1px;
+    width: 44px; height: 44px;
+    border-top: 2px solid var(--km-accent);
+    border-left: 2px solid var(--km-accent);
+    border-radius: var(--km-radius-lg) 0 0 0;
+    pointer-events: none;
+  }
+
+  .km-fit__head { margin-bottom: 24px; }
+  .km-fit__eyebrow {
+    display: block;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: .18em; text-transform: uppercase;
+    color: var(--km-accent);
+    margin-bottom: 10px;
+  }
+  .km-fit__title {
+    font-size: clamp(26px, 3vw, 40px);
+    margin: 0;
+    color: var(--km-heading);
+  }
+  .km-fit__sub {
+    margin: 10px 0 0;
+    font-size: 14px;
+    color: var(--km-text);
+    max-width: 60ch;
+  }
+
+  .km-fit__form {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+    gap: 14px;
+    align-items: end;
+  }
+  .km-fit__field { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .km-fit__label {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: .16em; text-transform: uppercase;
+    color: var(--km-text-dim);
+  }
+  .km-fit__select-wrap { position: relative; display: block; }
+  .km-fit__select-wrap svg {
+    position: absolute; right: 12px; top: 50%;
+    transform: translateY(-50%);
+    width: 14px; height: 14px;
+    color: var(--km-text-dim);
+    pointer-events: none;
+  }
+  .km-fit__select {
+    appearance: none; -webkit-appearance: none;
+    width: 100%;
+    padding: 13px 38px 13px 14px;
+    background: var(--km-surface-3);
+    border: 1px solid var(--km-border);
+    border-radius: var(--km-radius);
+    color: var(--km-heading);
+    font-size: 14px; font-weight: 600;
+    cursor: pointer;
+    transition: border-color var(--km-transition), background var(--km-transition);
+  }
+  .km-fit__select:hover:not(:disabled) { border-color: var(--km-border-strong); }
+  .km-fit__select:focus { outline: none; border-color: var(--km-accent); background: var(--km-surface-2); }
+  .km-fit__select:disabled { opacity: .45; cursor: not-allowed; }
+
+  .km-fit__submit {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 14px 26px;
+    background: var(--km-accent);
+    color: var(--km-on-accent);
+    border: 0; border-radius: var(--km-radius);
+    font-size: 12px; font-weight: 800;
+    letter-spacing: .14em; text-transform: uppercase;
+    cursor: pointer; white-space: nowrap;
+    transition: background var(--km-transition), transform var(--km-transition);
+  }
+  .km-fit__submit:hover { background: var(--km-accent-hot); transform: translateY(-1px); }
+  .km-fit__submit svg { width: 15px; height: 15px; }
+
+  /* ---- Verdict ---- */
+  .km-fit__result {
+    display: flex; align-items: center; gap: 14px;
+    margin-top: 20px; padding: 16px 18px;
+    border: 1px solid var(--km-border);
+    border-left-width: 3px;
+    border-radius: var(--km-radius);
+    background: var(--km-surface-2);
+  }
+  .km-fit__result[hidden] { display: none; }
+  .km-fit__result-mark {
+    flex: 0 0 auto; width: 24px; height: 24px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 800;
+  }
+  .km-fit__result-body { display: flex; flex-direction: column; gap: 3px; min-width: 0; flex: 1 1 auto; }
+  .km-fit__result-title {
+    font-family: var(--km-font-display);
+    font-size: 20px; letter-spacing: .02em; text-transform: uppercase;
+    line-height: 1;
+  }
+  .km-fit__result-detail { font-size: 13px; color: var(--km-text); }
+
+  .km-fit__result.is-fit           { border-left-color: var(--km-success); background: var(--km-success-bg); }
+  .km-fit__result.is-fit .km-fit__result-mark  { background: var(--km-success); color: var(--km-on-accent); }
+  .km-fit__result.is-fit .km-fit__result-title { color: var(--km-success); }
+
+  .km-fit__result.is-nofit         { border-left-color: var(--km-danger); background: var(--km-danger-bg); }
+  .km-fit__result.is-nofit .km-fit__result-mark  { background: var(--km-danger); color: var(--km-on-accent); }
+  .km-fit__result.is-nofit .km-fit__result-title { color: var(--km-danger); }
+
+  .km-fit__result.is-check         { border-left-color: var(--km-warn); background: var(--km-accent-dim); }
+  .km-fit__result.is-check .km-fit__result-mark  { background: var(--km-warn); color: var(--km-on-accent); }
+  .km-fit__result.is-check .km-fit__result-title { color: var(--km-warn); }
+
+  .km-fit__reset {
+    flex: 0 0 auto;
+    background: none; border: 0;
+    color: var(--km-text-dim);
+    font-size: 11px; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase;
+    cursor: pointer; text-decoration: underline; text-underline-offset: 3px;
+  }
+  .km-fit__reset:hover { color: var(--km-heading); }
+
+  /* ---- Full compatibility list ---- */
+  .km-fit__all { margin-top: 18px; border-top: 1px solid var(--km-border); padding-top: 16px; }
+  .km-fit__all-summary {
+    display: flex; align-items: center; gap: 8px;
+    cursor: pointer; list-style: none;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--km-text-dim);
+  }
+  .km-fit__all-summary::-webkit-details-marker { display: none; }
+  .km-fit__all-summary:hover { color: var(--km-accent); }
+  .km-fit__all-summary svg { width: 13px; height: 13px; transition: transform var(--km-transition); }
+  .km-fit__all[open] .km-fit__all-summary svg { transform: rotate(180deg); }
+  .km-fit__all-list {
+    list-style: none; margin: 14px 0 0; padding: 0;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 8px;
+  }
+  .km-fit__all-list li {
+    font-family: var(--km-font-mono);
+    font-size: 12px;
+    color: var(--km-text);
+    padding: 9px 12px;
+    background: var(--km-surface-3);
+    border-radius: var(--km-radius-sm);
+    border-left: 2px solid var(--km-border-strong);
+  }
+  .km-fit__help { margin: 14px 0 0; font-size: 12px; color: var(--km-text-dim); }
+
+  @media (max-width: 860px) {
+    .km-fit__panel { padding: 24px 20px; }
+    .km-fit__form { grid-template-columns: 1fr; }
+    .km-fit__submit { width: 100%; }
+    .km-fit__result { flex-wrap: wrap; }
+  }
+</style>
+
+<script>
+  (function () {
+    var root = document.querySelector('#Section-{{ section.id }} [data-km-fitment]');
+    if (!root) return;
+
+    var STORAGE_KEY = 'km:bike';
+    var ANY_YEAR = 'All years';
+
+    // "Make|Model|2006-2017" -> {make, model, from, to, raw}
+    var records = (root.dataset.records || '').split(';;').reduce(function (acc, row) {
+      if (!row.trim()) return acc;
+      var p = row.split('|').map(function (s) { return s.trim(); });
+      if (!p[0] || !p[1]) return acc;
+      var years = p[2] || ANY_YEAR;
+      var from = null, to = null;
+      var range = years.match(/(\d{4})\s*[-–—]\s*(\d{4})/);
+      var single = years.match(/^(\d{4})$/);
+      var openEnded = years.match(/^(\d{4})\s*[-–—+]\s*$|^(\d{4})\+$/);
+      if (range)           { from = +range[1]; to = +range[2]; }
+      else if (single)     { from = to = +single[1]; }
+      else if (openEnded)  { from = +(openEnded[1] || openEnded[2]); to = new Date().getFullYear() + 1; }
+      acc.push({ make: p[0], model: p[1], years: years, from: from, to: to });
+      return acc;
+    }, []);
+
+    if (!records.length) return;
+
+    var makeSel  = root.querySelector('[data-km-fit-make]');
+    var modelSel = root.querySelector('[data-km-fit-model]');
+    var yearSel  = root.querySelector('[data-km-fit-year]');
+    var form     = root.querySelector('[data-km-fit-form]');
+    var result   = root.querySelector('[data-km-fit-result]');
+    var rTitle   = root.querySelector('[data-km-fit-title]');
+    var rDetail  = root.querySelector('[data-km-fit-detail]');
+    var rMark    = root.querySelector('.km-fit__result-mark');
+    var resetBtn = root.querySelector('[data-km-fit-reset]');
+    var listEl   = root.querySelector('[data-km-fit-list]');
+
+    var uniq = function (a) { return a.filter(function (v, i) { return a.indexOf(v) === i; }); };
+    var fill = function (sel, values, placeholder) {
+      sel.innerHTML = '<option value="">' + placeholder + '</option>' +
+        values.map(function (v) { return '<option value="' + v + '">' + v + '</option>'; }).join('');
+    };
+
+    // The rider picks from every make/model the CATALOGUE knows about, not just
+    // this product's — otherwise an incompatible bike is unselectable and the
+    // checker can never answer "no".
+    var catalogue = {{ section.settings.catalogue | default: '' | json }};
+    var allMakes  = uniq(records.map(function (r) { return r.make; }));
+    var allPairs  = records.map(function (r) { return { make: r.make, model: r.model }; });
+
+    (catalogue || '').split(';;').forEach(function (row) {
+      var p = row.split('|').map(function (s) { return s.trim(); });
+      if (p[0] && p[1]) { allMakes.push(p[0]); allPairs.push({ make: p[0], model: p[1] }); }
+    });
+    allMakes = uniq(allMakes).sort();
+
+    fill(makeSel, allMakes, 'Select make');
+
+    if (listEl) {
+      listEl.innerHTML = records.map(function (r) {
+        return '<li>' + r.make + ' ' + r.model + ' &middot; ' + r.years + '</li>';
+      }).join('');
+    }
+
+    function modelsFor(make) {
+      return uniq(allPairs.filter(function (p) { return p.make === make; })
+                          .map(function (p) { return p.model; })).sort();
+    }
+
+    function yearsFor(make, model) {
+      var matched = records.filter(function (r) { return r.make === make && r.model === model; });
+      var span = matched.filter(function (r) { return r.from !== null; });
+      var years = [];
+      // Offer a generous window so a rider can select a year this part does NOT cover.
+      var lo = span.length ? Math.min.apply(null, span.map(function (r) { return r.from; })) - 6 : 1990;
+      var hi = span.length ? Math.max.apply(null, span.map(function (r) { return r.to; })) + 6
+                           : new Date().getFullYear() + 1;
+      hi = Math.min(hi, new Date().getFullYear() + 1);
+      for (var y = hi; y >= Math.max(lo, 1970); y--) years.push(String(y));
+      if (!span.length) years.unshift(ANY_YEAR);
+      return years;
+    }
+
+    function setResult(state, title, detail, mark) {
+      result.hidden = false;
+      result.className = 'km-fit__result ' + state;
+      rMark.textContent = mark;
+      rTitle.textContent = title;
+      rDetail.textContent = detail;
+    }
+
+    makeSel.addEventListener('change', function () {
+      var make = makeSel.value;
+      modelSel.disabled = !make;
+      yearSel.disabled = true;
+      fill(yearSel, [], 'Select year');
+      fill(modelSel, make ? modelsFor(make) : [], 'Select model');
+      result.hidden = true;
+    });
+
+    modelSel.addEventListener('change', function () {
+      var ok = makeSel.value && modelSel.value;
+      yearSel.disabled = !ok;
+      fill(yearSel, ok ? yearsFor(makeSel.value, modelSel.value) : [], 'Select year');
+      result.hidden = true;
+    });
+
+    yearSel.addEventListener('change', function () { result.hidden = true; });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var make = makeSel.value, model = modelSel.value, year = yearSel.value;
+
+      if (!make || !model || !year) {
+        setResult('is-check', 'Select your bike', 'Choose a make, model and year to check compatibility.', '!');
+        return;
+      }
+
+      var hit = records.filter(function (r) {
+        if (r.make !== make || r.model !== model) return false;
+        if (year === ANY_YEAR || r.from === null) return true;
+        var y = parseInt(year, 10);
+        return y >= r.from && y <= r.to;
+      })[0];
+
+      if (hit) {
+        setResult('is-fit', 'Fits your bike',
+          'Confirmed for ' + make + ' ' + model + ' (' + hit.years + ').', '✓');
+      } else {
+        var modelAnyYear = records.some(function (r) { return r.make === make && r.model === model; });
+        if (modelAnyYear) {
+          var spans = records.filter(function (r) { return r.make === make && r.model === model; })
+                             .map(function (r) { return r.years; }).join(', ');
+          setResult('is-nofit', 'Not compatible',
+            'This part fits the ' + make + ' ' + model + ' for ' + spans + ' — not ' + year + '.', '✕');
+        } else {
+          setResult('is-nofit', 'Not compatible',
+            'This part is not listed for the ' + make + ' ' + model + '.', '✕');
+        }
+      }
+
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ make: make, model: model, year: year }));
+      } catch (err) { /* private mode — the checker still works, it just won't remember */ }
+    });
+
+    if (resetBtn) {
+      resetBtn.addEventListener('click', function () {
+        makeSel.value = '';
+        fill(modelSel, [], 'Select model'); modelSel.disabled = true;
+        fill(yearSel, [], 'Select year');   yearSel.disabled = true;
+        result.hidden = true;
+        try { localStorage.removeItem(STORAGE_KEY); } catch (err) {}
+        makeSel.focus();
+      });
+    }
+
+    // Restore the rider's bike and re-check it against THIS product.
+    try {
+      var saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+      if (saved && saved.make && allMakes.indexOf(saved.make) !== -1) {
+        makeSel.value = saved.make;
+        makeSel.dispatchEvent(new Event('change'));
+        if (saved.model && modelsFor(saved.make).indexOf(saved.model) !== -1) {
+          modelSel.value = saved.model;
+          modelSel.dispatchEvent(new Event('change'));
+          if (saved.year) {
+            var opts = Array.prototype.map.call(yearSel.options, function (o) { return o.value; });
+            if (opts.indexOf(saved.year) !== -1) {
+              yearSel.value = saved.year;
+              form.dispatchEvent(new Event('submit'));
+            }
+          }
+        }
+      }
+    } catch (err) { /* nothing saved, or storage unavailable */ }
+  })();
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Product Fitment",
+  "tag": "section",
+  "class": "km-fitment-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Compatibility" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Will this fit your bike?" },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Select your motorcycle to confirm this part is a direct fit before you order."
+    },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Check fitment" },
+    { "type": "checkbox", "id": "show_list", "label": "Show full compatibility list", "default": true },
+    { "type": "text", "id": "list_label", "label": "Compatibility list label", "default": "View all compatible models" },
+    {
+      "type": "textarea",
+      "id": "help_text",
+      "label": "Help text",
+      "default": "Not sure which model you ride? Check the VIN plate on your steering head."
+    },
+    { "type": "header", "content": "Catalogue" },
+    {
+      "type": "textarea",
+      "id": "catalogue",
+      "label": "All makes & models you sell for",
+      "info": "One per line as Make|Model, separated by ;; — e.g. Harley-Davidson|Dyna;;Honda|Rebel. Riders can then select a bike this part does NOT fit and get a clear 'not compatible' answer instead of an unselectable dropdown."
+    },
+    { "type": "header", "content": "Where fitment data comes from" },
+    {
+      "type": "paragraph",
+      "content": "Read in priority order: 1) the custom.fitment_data list metafield (Make|Model|2006-2017), 2) product tags shaped fits:Make:Model:2006-2017, 3) the custom.model metafield paired with the product vendor. The section hides itself when a product has none of these."
+    }
+  ],
+  "presets": [{ "name": "Product Fitment" }]
+}
+{% endschema %}

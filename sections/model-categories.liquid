@@ -87,7 +87,7 @@
 
 <style>
   .km-model-cats {
-    background: #fff;
+    background: var(--km-surface);
     padding: 0 0 80px;
   }
   .km-model-cats__header {
@@ -96,7 +96,7 @@
   .km-model-cats__title {
     font-size: clamp(24px, 3.5vw, 36px);
     font-weight: 700;
-    color: #000;
+    color: var(--km-heading);
     margin: 0;
   }
 
@@ -107,7 +107,7 @@
   }
 
   .km-model-cats__card {
-    background: #fff;
+    background: var(--km-surface);
     display: flex;
     flex-direction: column;
     gap: 24px;
@@ -115,11 +115,11 @@
 
   .km-model-cats__card-image {
     position: relative;
-    border-radius: 16px;
+    border-radius: var(--km-radius);
     overflow: hidden;
     aspect-ratio: 1.5/1;
-    background: #f9fafb;
-    border: 1px solid #E5E7EB;
+    background: var(--km-surface-3);
+    border: 1px solid var(--km-border);
   }
   .km-model-cats__img {
     width: 100%;
@@ -136,13 +136,13 @@
   .km-model-cats__card-title {
     font-size: 24px;
     font-weight: 700;
-    color: #000;
+    color: var(--km-heading);
     margin: 0;
   }
   .km-model-cats__card-desc {
     font-size: 14px;
     line-height: 1.65;
-    color: var(--km-text, #4B5563);
+    color: var(--km-text);
     margin: 0 0 8px;
   }
   .km-model-cats__card-btn {
@@ -152,10 +152,10 @@
     font-size: 13px;
     font-weight: 700;
     line-height: 1.2;
-    border-radius: 9999px;
-    border-color: #D1D5DB;
-    background: var(--km-accent, #FBB03D);
-    color: #000;
+    border-radius: var(--km-radius-pill);
+    border-color: var(--km-border);
+    background: var(--km-accent);
+    color: var(--km-on-accent);
     border: 0;
     display: inline-flex;
     align-items: center;
@@ -168,7 +168,7 @@
     transition: background .2s ease;
   }
   .km-model-cats__card-btn:hover {
-    background: #e69a2b;
+    background: var(--km-accent-hot);
   }
   .km-model-cats__card-btn svg { width: 14px; height: 14px; }
 

@@ -50,6 +50,57 @@
         "breadcrumb_category_label": "{{ product.metafields.custom.product_category.value }}"
       }
     },
+    "fitment": {
+      "type": "product-fitment",
+      "settings": {
+        "eyebrow": "Compatibility",
+        "heading": "Will this fit your bike?",
+        "subtext": "Select your motorcycle to confirm this part is a direct fit before you order.",
+        "button_label": "Check fitment",
+        "show_list": true,
+        "list_label": "View all compatible models",
+        "help_text": "Not sure which model you ride? Check the VIN plate on your steering head.",
+        "catalogue": "Harley-Davidson|Sportster;;Harley-Davidson|Softail;;Harley-Davidson|Dyna;;Harley-Davidson|Touring;;Harley-Davidson|Milwaukee-8;;Indian|Scout;;Indian|Chief;;Triumph|Bonneville;;Triumph|Street Twin;;Honda|Rebel;;Honda|Shadow"
+      }
+    },
+    "specs": {
+      "type": "product-specs",
+      "blocks": {
+        "spec_material": {
+          "type": "spec",
+          "settings": { "label": "Material", "value": "6061-T6 billet aluminium", "unit": "", "note": "" }
+        },
+        "spec_finish": {
+          "type": "spec",
+          "settings": { "label": "Finish", "value": "Hard anodised", "unit": "", "note": "" }
+        },
+        "spec_hardware": {
+          "type": "spec",
+          "settings": { "label": "Hardware", "value": "Stainless, included", "unit": "", "note": "" }
+        },
+        "spec_origin": {
+          "type": "spec",
+          "settings": { "label": "Origin", "value": "Designed & machined in the USA", "unit": "", "note": "" }
+        }
+      },
+      "block_order": [
+        "spec_material",
+        "spec_finish",
+        "spec_hardware",
+        "spec_origin"
+      ],
+      "settings": {
+        "eyebrow": "Technical data",
+        "heading": "Specifications",
+        "show_sku": true,
+        "sku_label": "Part number",
+        "show_barcode": false,
+        "show_vendor": true,
+        "show_type": true,
+        "show_weight": true,
+        "footnote": "Specifications are for reference. Confirm fitment against your motorcycle before ordering."
+      }
+    },
     "accordion": {
       "type": "product-accordion",
       "blocks": {
@@ -61,27 +112,11 @@
             "custom_content": ""
           }
         },
-        "specs": {
-          "type": "accordion_item",
-          "settings": {
-            "title": "Specifications",
-            "metafield_key": "specifications",
-            "custom_content": ""
-          }
-        },
         "features": {
           "type": "accordion_item",
           "settings": {
             "title": "Features",
             "metafield_key": "features",
-            "custom_content": ""
-          }
-        },
-        "fitment": {
-          "type": "accordion_item",
-          "settings": {
-            "title": "Fitment",
-            "metafield_key": "fitment",
             "custom_content": ""
           }
         },
@@ -104,9 +139,7 @@
       },
       "block_order": [
         "info",
-        "specs",
         "features",
-        "fitment",
         "why_choose",
         "faqs"
       ],
@@ -233,6 +266,8 @@
   },
   "order": [
     "main",
+    "fitment",
+    "specs",
     "accordion",
     "trust",
     "innovation",

@@ -81,13 +81,13 @@
 </section>
 
 <style>
-  .km-faq-page { padding: 56px 0 0; background: var(--km-body-bg, #EDEDED); }
+  .km-faq-page { padding: 56px 0 0; background: var(--km-body-bg); }
   .km-faq-page__header { margin-bottom: 40px; }
   .km-faq-page__h1 {
     font-size: clamp(32px, 4.4vw, 52px);
     font-weight: 700;
     letter-spacing: -.02em;
-    color: #000;
+    color: var(--km-heading);
     margin: 0;
     line-height: 1.1;
   }
@@ -100,12 +100,12 @@
     margin-bottom: 64px;
   }
 
-  .km-faq-page__media { aspect-ratio: 4/5; border-radius: 18px; overflow: hidden; background: #fff; }
+  .km-faq-page__media { aspect-ratio: 4/5; border-radius: var(--km-radius-lg); overflow: hidden; background: var(--km-surface); }
   .km-faq-page__img { width: 100%; height: 100%; object-fit: cover; }
 
   .km-faq-page__list { display: flex; flex-direction: column; }
   .km-faq-page__item {
-    border-bottom: 1px solid #000;
+    border-bottom: 1px solid var(--km-border-strong);
   }
   .km-faq-page__q {
     list-style: none;
@@ -121,7 +121,7 @@
     justify-content: space-between;
     gap: 20px;
     font-weight: 400;
-    color: #222;
+    color: var(--km-heading);
     font-size: 16px;
     line-height: 1.4;
   }
@@ -133,7 +133,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: #222;
+    color: var(--km-heading);
     transition: transform .35s ease;
   }
   .km-faq-page__chev svg { width: 18px; height: 18px; display: block; }
@@ -147,29 +147,29 @@
   }
   .km-faq-page__a {
     padding: 0 0 25px;
-    color: var(--km-text, #4B5563);
+    color: var(--km-text);
     font-size: 14px;
     line-height: 1.7;
   }
   .km-faq-page__a p { margin: 0; }
 
   .km-faq-page__support {
-    background: #fff;
+    background: var(--km-surface);
     border-radius: 0;
     padding: 40px 0;
-    border-top: 1px solid var(--km-border, #DDDDDD);
+    border-top: 1px solid var(--km-border);
     margin-bottom: 40px;
   }
   .km-faq-page__support h3 {
     font-size: 20px;
     font-weight: 700;
-    color: #000;
+    color: var(--km-heading);
     margin: 0 0 8px;
     letter-spacing: -.01em;
   }
   .km-faq-page__support p {
     font-size: 14px;
-    color: var(--km-text, #4B5563);
+    color: var(--km-text);
     margin: 0 0 16px;
     max-width: 560px;
   }
@@ -179,25 +179,25 @@
     gap: 8px;
     font-size: 13px;
     font-weight: 700;
-    color: #000;
+    color: var(--km-heading);
     text-decoration: none;
     padding-bottom: 2px;
     border-bottom: 2px solid transparent;
     transition: border-color .2s ease;
   }
-  .km-faq-page__support-link:hover { border-color: var(--km-accent, #FBB03D); }
+  .km-faq-page__support-link:hover { border-color: var(--km-accent); }
 
   /* CTA STRIP */
-  .km-faq-page__cta-wrap { padding: 40px 0 96px; background: var(--km-body-bg, #EDEDED); }
+  .km-faq-page__cta-wrap { padding: 40px 0 96px; background: var(--km-body-bg); }
   .km-faq-page__cta-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0;
-    border-radius: 20px;
+    border-radius: var(--km-radius-lg);
     overflow: hidden;
   }
   .km-faq-page__cta-left {
-    background: #fff;
+    background: var(--km-surface);
     padding: 48px 40px;
     display: flex;
     flex-direction: column;
@@ -207,27 +207,27 @@
   .km-faq-page__cta-left h3 {
     font-size: clamp(22px, 2.4vw, 28px);
     font-weight: 700;
-    color: #000;
+    color: var(--km-heading);
     margin: 0;
     letter-spacing: -.015em;
     line-height: 1.2;
   }
-  .km-faq-page__cta-left p { font-size: 14px; line-height: 1.65; color: var(--km-text, #4B5563); margin: 0 0 10px; max-width: 440px; }
+  .km-faq-page__cta-left p { font-size: 14px; line-height: 1.65; color: var(--km-text); margin: 0 0 10px; max-width: 440px; }
   .km-faq-page__cta-link {
     display: inline-flex;
     align-items: center;
     gap: 8px;
     font-size: 13px;
     font-weight: 700;
-    color: #000;
+    color: var(--km-heading);
     text-decoration: none;
   }
-  .km-faq-page__cta-link:hover { color: var(--km-accent, #FBB03D); }
+  .km-faq-page__cta-link:hover { color: var(--km-accent); }
 
   .km-faq-page__cta-right {
     position: relative;
-    background: #111;
-    color: #fff;
+    background: var(--km-surface-2);
+    color: var(--km-on-dark);
     overflow: hidden;
     isolation: isolate;
     min-height: 240px;
@@ -246,18 +246,18 @@
   .km-faq-page__cta-right-inner h4 {
     font-size: clamp(18px, 2vw, 22px);
     font-weight: 700;
-    color: #fff;
+    color: var(--km-on-dark);
     margin: 0 0 8px;
     line-height: 1.25;
     max-width: 400px;
   }
-  .km-faq-page__form { display: flex; background: #fff; border-radius: 6px; overflow: hidden; max-width: 400px; }
-  .km-faq-page__form-input { flex: 1; padding: 14px 16px; border: 0; font-size: 14px; color: #111; outline: none; font-family: inherit; }
+  .km-faq-page__form { display: flex; background: var(--km-surface); border-radius: var(--km-radius-sm); overflow: hidden; max-width: 400px; }
+  .km-faq-page__form-input { flex: 1; padding: 14px 16px; border: 0; font-size: 14px; color: var(--km-heading); outline: none; font-family: inherit; }
   .km-faq-page__form-btn {
     flex: 0 0 auto;
     padding: 14px 24px;
-    background: var(--km-accent, #FBB03D);
-    color: #000;
+    background: var(--km-accent);
+    color: var(--km-on-accent);
     border: 0;
     font-weight: 800;
     font-size: 13px;
@@ -266,7 +266,7 @@
     font-family: inherit;
     transition: background .2s ease;
   }
-  .km-faq-page__form-btn:hover { background: #e69a2b; }
+  .km-faq-page__form-btn:hover { background: var(--km-accent-hot); }
 
   @media (max-width: 900px) {
     .km-faq-page__layout { grid-template-columns: 1fr; gap: 24px; }

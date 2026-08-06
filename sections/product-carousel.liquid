@@ -39,7 +39,7 @@
               {%- render 'product-card', product: product_item, class: 'km-pcarousel__card' -%}
             {%- endif -%}
           {%- else -%}
-            <div class="km-pcarousel__empty" style="padding: 20px; font-size: 14px; color: #6b7280;">
+            <div class="km-pcarousel__empty" style="padding: 20px; font-size: 14px; color: var(--km-text);">
               No products found in the collection.
             </div>
           {%- endfor -%}
@@ -151,7 +151,7 @@
     position: relative;
     aspect-ratio: 3 / 2;
     overflow: hidden;
-    background: #f9fafb;
+    background: var(--km-plate);
     display: block;
   }
   .km-pcarousel__img {
@@ -167,7 +167,7 @@
     padding: 6px 12px;
     border-radius: var(--km-radius-pill);
     background: var(--km-accent);
-    color: #000;
+    color: var(--km-on-accent);
     font-size: 11px;
     font-weight: 700;
     letter-spacing: .1em;
@@ -217,7 +217,7 @@
   }
   .km-pcarousel__compare {
     font-size: 13px;
-    color: #9ca3af;
+    color: var(--km-text-dim);
     text-decoration: line-through;
   }
 
@@ -241,7 +241,7 @@
     color: var(--km-accent);
   }
   .km-pcarousel__rating svg { width: 14px; height: 14px; }
-  .km-pcarousel__star--off { color: #d1d5db; }
+  .km-pcarousel__star--off { color: var(--km-text-dim); }
 
   @media (max-width: 1000px) {
     .km-pcarousel__track { display: flex; }

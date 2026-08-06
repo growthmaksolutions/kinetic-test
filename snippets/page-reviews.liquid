@@ -89,12 +89,12 @@
 </section>
 
 <style>
-  .km-reviews-page { padding-bottom: 96px; background: var(--km-body-bg, #EDEDED); }
-  .km-reviews-page__hero { background: #000; color: #fff; padding: 80px 0 64px; position: relative; overflow: hidden; isolation: isolate; }
+  .km-reviews-page { padding-bottom: 96px; background: var(--km-body-bg); }
+  .km-reviews-page__hero { background: var(--km-surface); color: var(--km-on-dark); padding: 80px 0 64px; position: relative; overflow: hidden; isolation: isolate; }
   .km-reviews-page__hero::before { content: ''; position: absolute; inset: 0; z-index: -1; background: radial-gradient(60% 80% at 80% 30%, rgba(251,176,61,.15), transparent 60%); }
   .km-reviews-page__hero-inner { text-align: center; max-width: 760px; margin: 0 auto; }
-  .km-reviews-page__eyebrow { display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--km-accent, #FBB03D); margin-bottom: 14px; }
-  .km-reviews-page__h1 { font-size: clamp(40px, 5.4vw, 64px); font-weight: 700; letter-spacing: -.02em; color: #fff; margin: 0 0 16px; line-height: 1.05; }
+  .km-reviews-page__eyebrow { display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--km-accent); margin-bottom: 14px; }
+  .km-reviews-page__h1 { font-size: clamp(40px, 5.4vw, 64px); font-weight: 700; letter-spacing: -.02em; color: var(--km-on-dark); margin: 0 0 16px; line-height: 1.05; }
   .km-reviews-page__sub { font-size: 16px; line-height: 1.65; color: rgba(255,255,255,.8); margin: 0 auto 40px; max-width: 560px; }
   .km-reviews-page__stats {
     display: grid;
@@ -123,14 +123,14 @@
   .km-reviews-page__num {
     font-size: 36px;
     font-weight: 800;
-    color: #fff;
+    color: var(--km-on-dark);
     line-height: 1;
     letter-spacing: -.01em;
   }
   .km-reviews-page__num-stars {
     display: inline-flex;
     gap: 2px;
-    color: var(--km-accent, #FBB03D);
+    color: var(--km-accent);
   }
   .km-reviews-page__num-stars svg { width: 12px; height: 12px; }
   .km-reviews-page__label {
@@ -147,9 +147,9 @@
     display: flex;
     gap: 4px;
     padding: 8px;
-    background: #fff;
-    border: 1px solid var(--km-border, #DDDDDD);
-    border-radius: 9999px;
+    background: var(--km-surface);
+    border: 1px solid var(--km-border);
+    border-radius: var(--km-radius-pill);
   }
   .km-reviews-page__tab {
     padding: 12px 24px;
@@ -157,25 +157,25 @@
     font-weight: 800;
     letter-spacing: .1em;
     text-transform: uppercase;
-    color: var(--km-text, #4B5563);
+    color: var(--km-text);
     background: transparent;
     border: 0;
-    border-radius: 9999px;
+    border-radius: var(--km-radius-pill);
     cursor: pointer;
     font-family: inherit;
     transition: background .25s ease, color .25s ease;
     white-space: nowrap;
   }
-  .km-reviews-page__tab:hover { color: #000; background: var(--km-body-bg, #EDEDED); }
-  .km-reviews-page__tab.is-active { background: #000; color: #fff; }
-  .km-reviews-page__result-count { font-size: 12px; color: var(--km-text, #4B5563); font-weight: 600; letter-spacing: .02em; }
+  .km-reviews-page__tab:hover { color: var(--km-heading); background: var(--km-body-bg); }
+  .km-reviews-page__tab.is-active { background: var(--km-primary); color: var(--km-primary-contrast); }
+  .km-reviews-page__result-count { font-size: 12px; color: var(--km-text); font-weight: 600; letter-spacing: .02em; }
 
   .km-reviews-page__grid-wrap { margin-bottom: 64px; }
   .km-reviews-page__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
   .km-reviews-page__card {
-    background: #fff;
-    border: 1px solid var(--km-border, #DDDDDD);
-    border-radius: 20px;
+    background: var(--km-surface);
+    border: 1px solid var(--km-border);
+    border-radius: var(--km-radius-lg);
     padding: 28px;
     display: flex;
     flex-direction: column;
@@ -191,34 +191,34 @@
     to   { opacity: 1; transform: translateY(0) scale(1); }
   }
 
-  .km-reviews-page__verified { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #0a8453; background: rgba(10,132,83,.08); padding: 6px 12px; border-radius: 9999px; align-self: flex-start; }
+  .km-reviews-page__verified { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--km-success); background: rgba(10,132,83,.08); padding: 6px 12px; border-radius: var(--km-radius-pill); align-self: flex-start; }
   .km-reviews-page__verified-dot { width: 6px; height: 6px; border-radius: 50%; background: #0a8453; }
-  .km-reviews-page__stars { display: inline-flex; gap: 2px; color: var(--km-accent, #FBB03D); }
-  .km-reviews-page__quote { font-size: 15px; line-height: 1.65; color: var(--km-text, #4B5563); margin: 0; font-weight: 500; flex: 1; }
-  .km-reviews-page__meta { padding-top: 14px; border-top: 1px solid var(--km-border, #DDDDDD); }
-  .km-reviews-page__author { font-weight: 700; font-size: 14px; color: #000; }
-  .km-reviews-page__product { font-size: 12px; color: var(--km-text, #4B5563); margin-top: 4px; line-height: 1.4; }
+  .km-reviews-page__stars { display: inline-flex; gap: 2px; color: var(--km-accent); }
+  .km-reviews-page__quote { font-size: 15px; line-height: 1.65; color: var(--km-text); margin: 0; font-weight: 500; flex: 1; }
+  .km-reviews-page__meta { padding-top: 14px; border-top: 1px solid var(--km-border); }
+  .km-reviews-page__author { font-weight: 700; font-size: 14px; color: var(--km-heading); }
+  .km-reviews-page__product { font-size: 12px; color: var(--km-text); margin-top: 4px; line-height: 1.4; }
 
   .km-reviews-page__empty {
     text-align: center;
     padding: 60px 20px;
-    background: #fff;
-    border: 1px dashed var(--km-border, #DDDDDD);
-    border-radius: 20px;
-    color: var(--km-text, #4B5563);
+    background: var(--km-surface);
+    border: 1px dashed var(--km-border);
+    border-radius: var(--km-radius-lg);
+    color: var(--km-text);
     font-size: 15px;
   }
 
-  .km-reviews-page__cta { background: #fff; border: 1px solid var(--km-border, #DDDDDD); border-radius: 24px; padding: 40px 48px; display: flex; justify-content: space-between; align-items: center; gap: 32px; }
-  .km-reviews-page__cta h2 { font-size: 24px; font-weight: 700; color: #000; margin: 0 0 6px; letter-spacing: -.01em; }
-  .km-reviews-page__cta p { font-size: 14px; color: var(--km-text, #4B5563); margin: 0; max-width: 520px; }
-  .km-btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 9999px; text-decoration: none; font-weight: 700; font-size: 14px; white-space: nowrap; }
-  .km-btn-primary { background: #000; color: #fff; }
-  .km-btn-primary:hover { background: var(--km-accent, #FBB03D); color: #000; }
+  .km-reviews-page__cta { background: var(--km-surface); border: 1px solid var(--km-border); border-radius: var(--km-radius-lg); padding: 40px 48px; display: flex; justify-content: space-between; align-items: center; gap: 32px; }
+  .km-reviews-page__cta h2 { font-size: 24px; font-weight: 700; color: var(--km-heading); margin: 0 0 6px; letter-spacing: -.01em; }
+  .km-reviews-page__cta p { font-size: 14px; color: var(--km-text); margin: 0; max-width: 520px; }
+  .km-btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: var(--km-radius-pill); text-decoration: none; font-weight: 700; font-size: 14px; white-space: nowrap; }
+  .km-btn-primary { background: var(--km-primary); color: var(--km-primary-contrast); }
+  .km-btn-primary:hover { background: var(--km-accent); color: var(--km-on-accent); }
 
   @media (max-width: 900px) { .km-reviews-page__grid { grid-template-columns: 1fr; } .km-reviews-page__cta { flex-direction: column; text-align: center; padding: 32px 24px; } }
   @media (max-width: 700px) {
-    .km-reviews-page__tabs { flex-wrap: wrap; justify-content: center; gap: 6px; border-radius: 20px; }
+    .km-reviews-page__tabs { flex-wrap: wrap; justify-content: center; gap: 6px; border-radius: var(--km-radius-lg); }
     .km-reviews-page__tab { padding: 10px 16px; font-size: 11px; }
   }
   @media (max-width: 600px) { .km-reviews-page__stats { gap: 24px; } .km-reviews-page__num { font-size: 24px; } }

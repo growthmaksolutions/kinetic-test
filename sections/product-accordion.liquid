@@ -44,7 +44,7 @@
             {%- if content != blank -%}
               {{ content }}
             {%- else -%}
-              <p style="color: #9ca3af; font-style: italic;">No content available. Add content via the product metafield "custom.{{ block.settings.metafield_key }}" or enter custom content in the theme editor.</p>
+              <p style="color: var(--km-text-dim); font-style: italic;">No content available. Add content via the product metafield "custom.{{ block.settings.metafield_key }}" or enter custom content in the theme editor.</p>
             {%- endif -%}
           </div>
         </details>
@@ -63,7 +63,7 @@
             {%- elsif product.description != blank -%}
               {{ product.description }}
             {%- else -%}
-              <p style="color: #9ca3af; font-style: italic;">No product information available.</p>
+              <p style="color: var(--km-text-dim); font-style: italic;">No product information available.</p>
             {%- endif -%}
           </div>
         </details>
@@ -93,19 +93,19 @@
 </div>
 
 <style>
-  .km-pp__accordion-wrap { padding: 0 0 40px; background: var(--km-body-bg, #EDEDED); }
+  .km-pp__accordion-wrap { padding: 0 0 40px; background: var(--km-body-bg); }
   .km-pp__accordion { display: flex; flex-direction: column; gap: 10px; }
-  .km-pp__acc-item { background: #fff; border: 1px solid var(--km-border, #DDDDDD); border-radius: 14px; padding: 0 24px; transition: border-color .2s ease; }
-  .km-pp__acc-item[open] { border-color: #000; }
-  .km-pp__acc-q { list-style: none; cursor: pointer; padding: 18px 0; display: flex; align-items: center; justify-content: space-between; gap: 20px; font-weight: 700; font-size: 14px; letter-spacing: .08em; text-transform: uppercase; color: #000; }
+  .km-pp__acc-item { background: var(--km-surface); border: 1px solid var(--km-border); border-radius: var(--km-radius); padding: 0 24px; transition: border-color .2s ease; }
+  .km-pp__acc-item[open] { border-color: var(--km-border-strong); }
+  .km-pp__acc-q { list-style: none; cursor: pointer; padding: 18px 0; display: flex; align-items: center; justify-content: space-between; gap: 20px; font-weight: 700; font-size: 14px; letter-spacing: .08em; text-transform: uppercase; color: var(--km-heading); }
   .km-pp__acc-q::-webkit-details-marker { display: none; }
-  .km-pp__acc-toggle { width: 28px; height: 28px; border-radius: 50%; background: var(--km-body-bg, #EDEDED); display: inline-flex; align-items: center; justify-content: center; color: #000; transition: background .2s ease, color .2s ease; }
+  .km-pp__acc-toggle { width: 28px; height: 28px; border-radius: 50%; background: var(--km-body-bg); display: inline-flex; align-items: center; justify-content: center; color: var(--km-heading); transition: background .2s ease, color .2s ease; }
   .km-pp__acc-toggle svg { width: 14px; height: 14px; }
   .km-pp__acc-toggle svg:last-child { display: none; }
-  .km-pp__acc-item[open] .km-pp__acc-toggle { background: #000; color: #fff; }
+  .km-pp__acc-item[open] .km-pp__acc-toggle { background: var(--km-primary); color: var(--km-primary-contrast); }
   .km-pp__acc-item[open] .km-pp__acc-toggle svg:first-child { display: none; }
   .km-pp__acc-item[open] .km-pp__acc-toggle svg:last-child { display: inline-flex; }
-  .km-pp__acc-a { padding: 10px 0 24px; border-top: 1px solid var(--km-border, #DDDDDD); font-size: 14px; line-height: 1.7; color: var(--km-text, #4B5563); }
+  .km-pp__acc-a { padding: 10px 0 24px; border-top: 1px solid var(--km-border); font-size: 14px; line-height: 1.7; color: var(--km-text); }
   .km-pp__acc-a p { margin: 0 0 12px; }
   .km-pp__acc-a p:last-child { margin-bottom: 0; }
   .km-pp__spec-list { padding-left: 18px; margin: 0; }

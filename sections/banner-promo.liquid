@@ -120,11 +120,11 @@
     grid-template-columns: 1fr 1fr;
     border-radius: var(--km-radius-lg);
     overflow: hidden;
-    color: #fff;
+    color: var(--km-on-dark);
     text-decoration: none;
     min-height: 380px;
     isolation: isolate;
-    transition: transform var(--km-transition, .25s ease);
+    transition: transform var(--km-transition);
   }
   .km-banner-promo__feature:hover { transform: translateY(-3px); }
 
@@ -144,7 +144,7 @@
     letter-spacing: .14em;
     text-transform: uppercase;
     background: var(--km-accent);
-    color: #000;
+    color: var(--km-on-accent);
     border-radius: var(--km-radius-pill);
   }
   .km-banner-promo__feature-heading {
@@ -152,7 +152,7 @@
     font-weight: 700;
     letter-spacing: -.02em;
     line-height: 1.05;
-    color: #fff;
+    color: var(--km-on-dark);
     margin: 0;
   }
   .km-banner-promo__feature-subtext {
@@ -201,9 +201,9 @@
     border-radius: var(--km-radius-lg);
     overflow: hidden;
     text-decoration: none;
-    color: #111;
+    color: var(--km-heading);
     min-height: 170px;
-    transition: transform var(--km-transition, .25s ease);
+    transition: transform var(--km-transition);
   }
   .km-banner-promo__offer:hover { transform: translateY(-2px); }
 
@@ -219,7 +219,7 @@
     font-weight: 700;
     letter-spacing: .12em;
     text-transform: uppercase;
-    color: #000;
+    color: var(--km-heading);
     opacity: .7;
   }
   .km-banner-promo__offer-heading {
@@ -227,7 +227,7 @@
     font-weight: 700;
     letter-spacing: -.01em;
     line-height: 1.15;
-    color: #000;
+    color: var(--km-heading);
     margin: 0;
   }
   .km-banner-promo__offer-subtext {
@@ -245,7 +245,7 @@
     font-weight: 700;
     letter-spacing: .1em;
     text-transform: uppercase;
-    color: #000;
+    color: var(--km-heading);
   }
   .km-banner-promo__offer-media {
     position: relative;

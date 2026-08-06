@@ -34,9 +34,9 @@
 
 <style>
   .km-ticker {
-    background: #fff;
-    border-top: 1px solid var(--km-border, #DDDDDD);
-    border-bottom: 1px solid var(--km-border, #DDDDDD);
+    background: var(--km-surface);
+    border-top: 1px solid var(--km-border);
+    border-bottom: 1px solid var(--km-border);
     padding: 22px 0;
     overflow: hidden;
     position: relative;
@@ -58,8 +58,8 @@
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background: var(--km-accent, #FBB03D);
-    color: #fff;
+    background: var(--km-accent);
+    color: var(--km-primary-contrast);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -70,13 +70,13 @@
     font-size: 16px;
     font-weight: 700;
     letter-spacing: .01em;
-    color: var(--km-heading, #000);
+    color: var(--km-heading);
     white-space: nowrap;
   }
   .km-ticker__divider {
     width: 1px;
     height: 26px;
-    background: var(--km-border, #DDDDDD);
+    background: var(--km-border);
     flex: 0 0 auto;
   }
   @keyframes km-ticker-scroll {

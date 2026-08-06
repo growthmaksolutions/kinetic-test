@@ -3,47 +3,15 @@
    Cloned from https://kinetic-motorcycles.webflow.io/
    ========================================================================== */
 
-:root {
-  --km-body-bg: #EDEDED;
-  --km-surface: #FFFFFF;
-  --km-text: #4B5563;
-  --km-heading: #000000;
-  --km-primary: #000000;
-  --km-primary-contrast: #FFFFFF;
-  --km-accent: #FBB03D;
-  --km-sale: #FFDEDE;
-  --km-border: #DDDDDD;
-  --km-header-bar: #000000;
+/* ---------------------------------------------------------------------------
+   DESIGN TOKENS LIVE IN layout/theme.liquid (inline <style> in <head>).
 
-  --km-radius-sm: 6px;
-  --km-radius: 12px;
-  --km-radius-lg: 20px;
-  --km-radius-pill: 9999px;
-
-  --km-page-max: 1440px;
-  --km-gutter: 32px;
-  --km-gutter-sm: 16px;
-
-  --km-font-body: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --km-font-heading: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-
-  --km-fs-xs: 12px;
-  --km-fs-sm: 14px;
-  --km-fs-base: 16px;
-  --km-fs-lg: 18px;
-  --km-fs-xl: 22px;
-  --km-fs-2xl: 28px;
-  --km-fs-3xl: 36px;
-  --km-fs-4xl: 48px;
-  --km-fs-5xl: 64px;
-  --km-fs-6xl: 80px;
-
-  --km-shadow-sm: 0 2px 6px rgba(0, 0, 0, .06);
-  --km-shadow: 0 8px 24px rgba(0, 0, 0, .08);
-  --km-shadow-lg: 0 20px 60px rgba(0, 0, 0, .12);
-
-  --km-transition: 200ms cubic-bezier(.4, 0, .2, 1);
-}
+   They are declared there so the dark canvas paints on the first frame with
+   no white flash before this stylesheet arrives. This file loads AFTER that
+   block, so re-declaring :root here would silently override the whole design
+   system — which is exactly what the old light palette used to do. Add or
+   change tokens in theme.liquid only.
+   --------------------------------------------------------------------------- */
 
 /* ---------- Resets ---------- */
 *,
@@ -258,13 +226,13 @@ p:last-child {
 }
 
 .km-badge-new {
-  background: #E8F4FE;
+  background: var(--km-surface-3);
   color: #1A72C6;
 }
 
 .km-badge-gold {
   background: var(--km-accent);
-  color: #000;
+  color: var(--km-on-accent);
 }
 
 .km-visually-hidden {
@@ -456,7 +424,7 @@ p:last-child {
   position: relative;
   aspect-ratio: 1/1;
   overflow: hidden;
-  background: #f9fafb;
+  background: var(--km-plate);
   display: block;
 }
 
@@ -542,7 +510,7 @@ p:last-child {
 }
 
 .km-pcarousel__star--off {
-  color: #d1d5db;
+  color: var(--km-text-dim);
 }
 
 @media (max-width: 1000px) {
@@ -800,7 +768,7 @@ video {
     inset: 0 !important;
     width: 100% !important;
     max-width: none !important;
-    background: #fff !important;
+    background: var(--km-surface) !important;
     z-index: 1001 !important;
     padding: 72px 24px 32px !important;
     overflow-y: auto !important;
@@ -813,7 +781,7 @@ video {
   }
 
   .km-header__menu-item {
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--km-border);
   }
 
   .km-header__nav.is-open .km-header__menu-link {
@@ -901,8 +869,8 @@ video {
 
   /* Each brand <details> — collapsed by default, tap summary to expand */
   .km-mega-mobile__item {
-    border-bottom: 1px solid #f0f0f0;
-    background: #fff !important;
+    border-bottom: 1px solid var(--km-border);
+    background: var(--km-surface) !important;
   }
 
   .km-mega-mobile__item:last-child {
@@ -920,8 +888,8 @@ video {
     font-size: 13px;
     font-weight: 600;
     letter-spacing: .04em;
-    color: #000;
-    background: #fff;
+    color: var(--km-heading);
+    background: var(--km-surface);
     text-transform: none;
   }
 
@@ -932,7 +900,7 @@ video {
   }
 
   .km-mega-mobile__brand-name {
-    color: #000;
+    color: var(--km-heading);
   }
 
   .km-mega-mobile__chev {
@@ -942,7 +910,7 @@ video {
     align-items: center;
     justify-content: center;
     transition: transform .25s ease;
-    color: #4B5563;
+    color: var(--km-text);
     flex-shrink: 0;
   }
 
@@ -965,7 +933,7 @@ video {
     list-style: none;
     margin: 0;
     padding: 0 0 8px;
-    background: #fafafa;
+    background: var(--km-surface-3);
   }
 
   .km-mega-mobile__list li {
@@ -978,7 +946,7 @@ video {
     padding: 10px 20px;
     font-size: 13px;
     font-weight: 400;
-    color: #4B5563;
+    color: var(--km-text);
     text-decoration: none;
     border-left: 2px solid transparent;
     text-transform: none;
@@ -987,15 +955,15 @@ video {
 
   .km-mega-mobile__list a:active,
   .km-mega-mobile__list a:hover {
-    color: #000;
+    color: var(--km-heading);
     border-left-color: var(--km-accent);
-    background: #fff;
+    background: var(--km-surface);
   }
 
   .km-mega-mobile__shop-all {
     font-weight: 700 !important;
-    color: #000 !important;
-    background: #fff !important;
+    color: var(--km-heading) !important;
+    background: var(--km-surface) !important;
   }
 
   /* ---------- HERO (Webflow mobile: 676px tall, 32px H1, 0 vertical pad, 20px side pad) ---------- */
@@ -2289,10 +2257,10 @@ video {
   min-width: 44px;
   height: 44px;
   padding: 0 16px;
-  border-radius: 8px;
-  background: #fff;
+  border-radius: var(--km-radius-sm);
+  background: var(--km-surface);
   border: 1px solid var(--km-border);
-  color: #000;
+  color: var(--km-heading);
   text-decoration: none;
   transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 2px 4px rgba(0,0,0,0.02);
@@ -2308,13 +2276,13 @@ video {
   /* Ensure the link inside the span gets the full styling */
 }
 .km-pagination .current {
-  background: #000 !important;
-  color: #fff !important;
-  border-color: #000 !important;
+  background: var(--km-primary) !important;
+  color: var(--km-primary-contrast) !important;
+  border-color: var(--km-border-strong) !important;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 .km-pagination a:hover {
-  background: #fff;
+  background: var(--km-surface);
   color: var(--km-accent);
   border-color: var(--km-accent);
   transform: translateY(-3px);
@@ -2325,7 +2293,7 @@ video {
   align-items: center;
   justify-content: center;
   min-width: 20px;
-  color: #9ca3af;
+  color: var(--km-text-dim);
 }
 .km-pagination .prev a,
 .km-pagination .next a {
@@ -2342,19 +2310,19 @@ video {
 
 /* ---- Container & Section Wrapper ---- */
 .judgeme-section .km-pp__review-wrapper {
-  background: #fff;
-  border: 1px solid var(--km-border, #DDDDDD);
-  border-radius: 20px;
+  background: var(--km-surface);
+  border: 1px solid var(--km-border);
+  border-radius: var(--km-radius-lg);
   padding: 60px 48px;
   box-shadow: 0 2px 12px rgba(0,0,0,.04);
 }
 
 /* ---- Section Heading ---- */
 .judgeme-section .km-section-title {
-  font-family: var(--km-font-heading, 'Georgia', serif);
+  font-family: var(--km-font-heading);
   font-size: clamp(28px, 3.2vw, 40px);
   font-weight: 700;
-  color: #000;
+  color: var(--km-heading);
   text-align: center;
   margin: 0 0 40px;
   letter-spacing: -.02em;
@@ -2370,7 +2338,7 @@ video {
   padding: 0 !important;
   margin: 0 !important;
   max-width: 100% !important;
-  font-family: var(--km-font-body, 'Inter', -apple-system, sans-serif) !important;
+  font-family: var(--km-font-body) !important;
 }
 
 /* ---- Summary Bar (rating number + count + CTA row) ---- */
@@ -2381,32 +2349,32 @@ video {
   border-radius: 0 !important;
   padding: 0 0 20px !important;
   margin: 0 0 24px !important;
-  border-bottom: 1px solid #EBEBEB !important;
+  border-bottom: 1px solid var(--km-border) !important;
 }
 
 .judgeme-section .jdgm-rev-widg__summary-text {
   font-size: 14px !important;
   font-weight: 700 !important;
-  color: #000 !important;
+  color: var(--km-heading) !important;
 }
 
 .judgeme-section .jdgm-rev-widg__summary-average,
 .judgeme-section .jdgm-rev-widg__average {
   font-size: 18px !important;
   font-weight: 700 !important;
-  color: #000 !important;
+  color: var(--km-heading) !important;
 }
 
 .judgeme-section .jdgm-rev-widg__summary-count {
   font-size: 13px !important;
-  color: #6B7280 !important;
+  color: var(--km-text) !important;
 }
 
 /* ---- "Customer Reviews" inner title (Judge.me adds its own — hide duplicate) ---- */
 .judgeme-section .jdgm-rev-widg__title {
   font-size: 15px !important;
   font-weight: 600 !important;
-  color: #000 !important;
+  color: var(--km-heading) !important;
   text-align: left !important;
   margin: 0 0 4px !important;
   letter-spacing: 0 !important;
@@ -2417,7 +2385,7 @@ video {
   margin: 0 0 4px !important;
   font-size: 15px !important;
   font-weight: 600 !important;
-  color: #000 !important;
+  color: var(--km-heading) !important;
 }
 
 /* ---- Stars (amber/orange) ---- */
@@ -2427,7 +2395,7 @@ video {
 .judgeme-section .jdgm-star.jdgm--on,
 .judgeme-section .jdgm-rev__rating,
 .judgeme-section .jdgm-prev-badge__stars .jdgm-star {
-  color: #F5A623 !important;
+  color: var(--km-accent) !important;
 }
 
 /* ---- "Write a review" Button ---- */
@@ -2435,9 +2403,9 @@ video {
 .judgeme-section .jdgm-btn--solid,
 .judgeme-section .jdgm-btn-primary,
 .judgeme-section button.jdgm-write-rev-link {
-  background: #F5A623 !important;
-  color: #fff !important;
-  border-radius: 6px !important;
+  background: var(--km-accent) !important;
+  color: var(--km-primary-contrast) !important;
+  border-radius: var(--km-radius-sm) !important;
   padding: 10px 24px !important;
   font-weight: 600 !important;
   border: none !important;
@@ -2453,8 +2421,8 @@ video {
 .judgeme-section .jdgm-btn--solid:hover,
 .judgeme-section .jdgm-btn-primary:hover,
 .judgeme-section button.jdgm-write-rev-link:hover {
-  background: #E6951A !important;
-  color: #fff !important;
+  background: var(--km-accent-hot) !important;
+  color: var(--km-primary-contrast) !important;
   transform: translateY(-1px);
 }
 
@@ -2463,10 +2431,10 @@ video {
 .judgeme-section .jdgm-filter-btn,
 .judgeme-section .jdgm-sort,
 .judgeme-section .jdgm-sort select {
-  border: 1px solid #DDD !important;
-  border-radius: 6px !important;
-  background: #fff !important;
-  color: #333 !important;
+  border: 1px solid var(--km-border) !important;
+  border-radius: var(--km-radius-sm) !important;
+  background: var(--km-surface) !important;
+  color: var(--km-heading) !important;
   font-size: 13px !important;
   padding: 6px 10px !important;
 }
@@ -2482,7 +2450,7 @@ video {
 .judgeme-section .jdgm-rev {
   background: transparent !important;
   border: none !important;
-  border-bottom: 1px solid #EBEBEB !important;
+  border-bottom: 1px solid var(--km-border) !important;
   border-radius: 0 !important;
   padding: 24px 0 !important;
   margin: 0 !important;
@@ -2511,8 +2479,8 @@ video {
   width: 36px !important;
   height: 36px !important;
   border-radius: 50% !important;
-  background: #E5E7EB !important;
-  color: #374151 !important;
+  background: var(--km-surface-3) !important;
+  color: var(--km-heading) !important;
   font-size: 14px !important;
   font-weight: 600 !important;
   display: inline-flex !important;
@@ -2525,7 +2493,7 @@ video {
 .judgeme-section .jdgm-rev__author {
   font-weight: 700 !important;
   font-size: 14px !important;
-  color: #000 !important;
+  color: var(--km-heading) !important;
   line-height: 1.3 !important;
 }
 
@@ -2533,7 +2501,7 @@ video {
 .judgeme-section .jdgm-rev__timestamp,
 .judgeme-section .jdgm-rev__location {
   font-size: 12px !important;
-  color: #9CA3AF !important;
+  color: var(--km-text-dim) !important;
 }
 
 /* ---- Review Stars ---- */
@@ -2545,7 +2513,7 @@ video {
 .judgeme-section .jdgm-rev__title {
   font-weight: 700 !important;
   font-size: 14px !important;
-  color: #000 !important;
+  color: var(--km-heading) !important;
   margin: 0 !important;
 }
 
@@ -2554,17 +2522,17 @@ video {
 .judgeme-section .jdgm-rev__body p {
   font-size: 14px !important;
   line-height: 1.7 !important;
-  color: #4B5563 !important;
+  color: var(--km-text) !important;
   margin: 0 !important;
 }
 
 /* ---- Product Info in Review ---- */
 .judgeme-section .jdgm-rev__product-info {
   padding-top: 12px !important;
-  border-top: 1px solid #F3F4F6 !important;
+  border-top: 1px solid var(--km-border) !important;
   margin-top: auto !important;
   font-size: 12px !important;
-  color: #9CA3AF !important;
+  color: var(--km-text-dim) !important;
 }
 
 /* ---- Verified Badge ---- */
@@ -2577,7 +2545,7 @@ video {
 .judgeme-section .jdgm-no-reviews-msg,
 .judgeme-section .jdgm-rev-widg__no-reviews {
   font-size: 14px !important;
-  color: #6B7280 !important;
+  color: var(--km-text) !important;
   text-align: center !important;
   padding: 32px 0 !important;
 }
@@ -2586,34 +2554,34 @@ video {
 .judgeme-section .jdgm-paginate-bottom {
   margin-top: 24px !important;
   padding-top: 20px !important;
-  border-top: 1px solid #EBEBEB !important;
+  border-top: 1px solid var(--km-border) !important;
   display: flex;
   justify-content: center;
   gap: 8px;
 }
 
 .judgeme-section .jdgm-paginate-bottom .jdgm-paginate__page {
-  background: #fff !important;
-  color: #000 !important;
-  border: 1px solid #DDD !important;
-  border-radius: 6px !important;
+  background: var(--km-surface) !important;
+  color: var(--km-heading) !important;
+  border: 1px solid var(--km-border) !important;
+  border-radius: var(--km-radius-sm) !important;
   padding: 6px 12px !important;
   font-size: 13px !important;
   font-weight: 600 !important;
 }
 
 .judgeme-section .jdgm-paginate-bottom .jdgm-paginate__page.jdgm-curt {
-  background: #000 !important;
-  color: #fff !important;
-  border-color: #000 !important;
+  background: var(--km-primary) !important;
+  color: var(--km-primary-contrast) !important;
+  border-color: var(--km-border-strong) !important;
 }
 
 /* ---- Review Form Overlay ---- */
 .judgeme-section .jdgm-form-wrapper,
 .judgeme-section .jdgm-rev-widg__form {
-  background: #fff !important;
-  border: 1px solid #EBEBEB !important;
-  border-radius: 16px !important;
+  background: var(--km-surface) !important;
+  border: 1px solid var(--km-border) !important;
+  border-radius: var(--km-radius) !important;
   padding: 32px !important;
   margin-top: 24px !important;
 }
@@ -2622,20 +2590,20 @@ video {
 .judgeme-section .jdgm-form-wrapper textarea,
 .judgeme-section .jdgm-rev-widg__form input,
 .judgeme-section .jdgm-rev-widg__form textarea {
-  border: 1px solid #DDD !important;
-  border-radius: 8px !important;
+  border: 1px solid var(--km-border) !important;
+  border-radius: var(--km-radius-sm) !important;
   padding: 10px 14px !important;
   font-size: 14px !important;
   font-family: inherit !important;
-  background: #fff !important;
-  color: #000 !important;
+  background: var(--km-surface) !important;
+  color: var(--km-heading) !important;
 }
 
 .judgeme-section .jdgm-form-wrapper input:focus,
 .judgeme-section .jdgm-form-wrapper textarea:focus,
 .judgeme-section .jdgm-rev-widg__form input:focus,
 .judgeme-section .jdgm-rev-widg__form textarea:focus {
-  border-color: #F5A623 !important;
+  border-color: var(--km-border-accent) !important;
   outline: none !important;
   box-shadow: 0 0 0 3px rgba(245,166,35,.15) !important;
 }
@@ -2669,7 +2637,7 @@ body .jdgm-preview-badge[data-template="product"] {
   visibility: visible !important;
   opacity: 1 !important;
   gap: 2px !important;
-  color: var(--km-accent, #FBB03D) !important;
+  color: var(--km-accent) !important;
   line-height: 1 !important;
 }
 
@@ -2678,7 +2646,7 @@ body .jdgm-preview-badge[data-template="product"] {
 .jdgm-prev-badge .jdgm-prev-badge__stars i,
 .km-pp__info .jdgm-prev-badge .jdgm-star,
 .jdgm-preview-badge .jdgm-star {
-  color: var(--km-accent, #FBB03D) !important;
+  color: var(--km-accent) !important;
   font-size: 14px !important;
   width: 14px !important;
   height: 14px !important;
@@ -2697,7 +2665,7 @@ body .jdgm-preview-badge[data-template="product"] {
   opacity: 1 !important;
   font-size: 12px !important;
   font-weight: 700 !important;
-  color: var(--km-text, #4B5563) !important;
+  color: var(--km-text) !important;
   letter-spacing: .04em !important;
   text-transform: uppercase !important;
   line-height: 1 !important;
@@ -2722,7 +2690,7 @@ body .jdgm-preview-badge[data-template="product"] {
 @media (max-width: 768px) {
   .judgeme-section .km-pp__review-wrapper {
     padding: 36px 20px;
-    border-radius: 16px;
+    border-radius: var(--km-radius);
   }
 
   .judgeme-section .km-section-title {
@@ -2744,7 +2712,7 @@ body .jdgm-preview-badge[data-template="product"] {
 @media (max-width: 480px) {
   .judgeme-section .km-pp__review-wrapper {
     padding: 28px 16px;
-    border-radius: 14px;
+    border-radius: var(--km-radius);
   }
 
   .judgeme-section .km-section-title {

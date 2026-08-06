@@ -82,21 +82,21 @@
 
 <style>
   .km-contact-info {
-    background: #fff;
+    background: var(--km-surface);
     padding-bottom: 80px;
   }
   .km-contact-info__grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0;
-    border-radius: 24px;
+    border-radius: var(--km-radius-lg);
     overflow: hidden;
-    border: 1px solid #E5E7EB;
+    border: 1px solid var(--km-border);
   }
 
   .km-contact-info__details {
     padding: 48px 40px;
-    background: #F3F4F6;
+    background: var(--km-surface-3);
     display: flex;
     flex-direction: column;
     gap: 32px;
@@ -104,13 +104,13 @@
   .km-contact-info__h {
     font-size: 14px;
     font-weight: 700;
-    color: #000;
+    color: var(--km-heading);
     margin: 0 0 12px;
   }
   .km-contact-info__text {
     font-size: 14px;
     line-height: 1.6;
-    color: #4B5563;
+    color: var(--km-text);
   }
   .km-contact-info__meta {
     margin-top: 16px;
@@ -121,14 +121,14 @@
   .km-contact-info__meta p {
     font-size: 14px;
     margin: 0;
-    color: #000;
+    color: var(--km-heading);
   }
   .km-contact-info__meta strong {
     font-weight: 700;
   }
   .km-contact-info__meta em {
     font-style: italic;
-    color: #6B7280;
+    color: var(--km-text);
     font-size: 13px;
   }
 
@@ -137,9 +137,9 @@
     margin-top: 8px;
     font-size: 16px;
     font-weight: 700;
-    color: #000;
+    color: var(--km-heading);
     text-decoration: none;
-    border-bottom: 2px solid var(--km-accent, #FBB03D);
+    border-bottom: 2px solid var(--km-accent);
   }
 
   .km-contact-info__socials {
@@ -148,7 +148,7 @@
   .km-contact-info__social-label {
     font-size: 12px;
     font-weight: 600;
-    color: #9CA3AF;
+    color: var(--km-text-dim);
     margin: 0 0 12px;
   }
   .km-contact-info__social-icons {
@@ -161,9 +161,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #fff;
+    background: var(--km-surface);
     border-radius: 50%;
-    color: #000;
+    color: var(--km-heading);
     transition: transform .2s ease;
     box-shadow: 0 2px 4px rgba(0,0,0,.05);
   }
@@ -190,9 +190,9 @@
     position: absolute;
     top: 20px;
     left: 20px;
-    background: #fff;
+    background: var(--km-surface);
     padding: 8px 16px;
-    border-radius: 6px;
+    border-radius: var(--km-radius-sm);
     font-size: 12px;
     font-weight: 700;
     color: #3B82F6;

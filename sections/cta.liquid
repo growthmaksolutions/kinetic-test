@@ -119,7 +119,7 @@
     text-decoration: none;
     align-self: flex-start;
   }
-  .km-cta__left-link svg { transition: transform var(--km-transition, .25s ease); }
+  .km-cta__left-link svg { transition: transform var(--km-transition); }
   .km-cta__left-link:hover svg { transform: translateX(4px); }
 
   /* RIGHT panel */
@@ -128,7 +128,7 @@
     overflow: hidden;
     isolation: isolate;
     min-height: 300px;
-    color: #fff;
+    color: var(--km-on-dark);
   }
   .km-cta__right-bg {
     position: absolute;
@@ -169,7 +169,7 @@
     font-weight: 700;
     line-height: 1.2;
     letter-spacing: -.01em;
-    color: #fff;
+    color: var(--km-on-dark);
     margin: 0 0 12px;
     max-width: 440px;
   }
@@ -179,8 +179,8 @@
     align-items: stretch;
     gap: 0;
     max-width: 460px;
-    background: #fff;
-    border-radius: 4px;
+    background: var(--km-surface);
+    border-radius: var(--km-radius-sm);
     overflow: hidden;
   }
   .km-cta__form-input {
@@ -189,32 +189,32 @@
     border: 0;
     background: transparent;
     font-size: 14px;
-    color: #111;
+    color: var(--km-heading);
     outline: none;
     font-family: inherit;
   }
-  .km-cta__form-input::placeholder { color: #9ca3af; }
+  .km-cta__form-input::placeholder { color: var(--km-text-dim); }
   .km-cta__form-submit {
     flex: 0 0 auto;
     padding: 14px 26px;
     border: 0;
     background: var(--km-accent);
-    color: #000;
+    color: var(--km-on-accent);
     font-size: 14px;
     font-weight: 700;
     cursor: pointer;
     font-family: inherit;
-    transition: background var(--km-transition, .2s ease);
+    transition: background var(--km-transition);
   }
-  .km-cta__form-submit:hover { background: #e69a2b; }
+  .km-cta__form-submit:hover { background: var(--km-accent-hot); }
   .km-cta__form-msg {
     flex-basis: 100%;
     margin: 6px 0 0;
     font-size: 13px;
     padding: 10px 14px;
   }
-  .km-cta__form-msg--ok  { color: #065f46; background: #d1fae5; }
-  .km-cta__form-msg--err { color: #991b1b; background: #fee2e2; }
+  .km-cta__form-msg--ok  { color: var(--km-success); background: var(--km-success-bg); }
+  .km-cta__form-msg--err { color: var(--km-danger); background: var(--km-danger-bg); }
 
   @media (max-width: 900px) {
     .km-cta__grid { grid-template-columns: 1fr; border-radius: var(--km-radius); }

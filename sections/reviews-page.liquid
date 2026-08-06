@@ -215,38 +215,38 @@
 </section>
 
 <style>
-  .km-reviews-page { padding-bottom: 96px; background: var(--km-body-bg, #EDEDED); }
-  .km-reviews-page__hero { background: #000; color: #fff; padding: 80px 0 64px; position: relative; overflow: hidden; isolation: isolate; }
+  .km-reviews-page { padding-bottom: 96px; background: var(--km-body-bg); }
+  .km-reviews-page__hero { background: var(--km-surface); color: var(--km-on-dark); padding: 80px 0 64px; position: relative; overflow: hidden; isolation: isolate; }
   .km-reviews-page__hero::before { content: ''; position: absolute; inset: 0; z-index: -1; background: radial-gradient(60% 80% at 80% 30%, rgba(251,176,61,.15), transparent 60%); }
   .km-reviews-page__hero-inner { text-align: center; max-width: 760px; margin: 0 auto; }
-  .km-reviews-page__eyebrow { display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--km-accent, #FBB03D); margin-bottom: 14px; }
-  .km-reviews-page__h1 { font-size: clamp(40px, 5.4vw, 64px); font-weight: 700; letter-spacing: -.02em; color: #fff; margin: 0 0 16px; line-height: 1.05; }
+  .km-reviews-page__eyebrow { display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--km-accent); margin-bottom: 14px; }
+  .km-reviews-page__h1 { font-size: clamp(40px, 5.4vw, 64px); font-weight: 700; letter-spacing: -.02em; color: var(--km-on-dark); margin: 0 0 16px; line-height: 1.05; }
   .km-reviews-page__sub { font-size: 16px; line-height: 1.65; color: rgba(255,255,255,.8); margin: 0 auto 40px; max-width: 560px; }
   
   .km-reviews-page__stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; padding-top: 36px; border-top: 1px solid rgba(255,255,255,.15); max-width: 640px; margin: 0 auto; }
   .km-reviews-page__stat { text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; }
   .km-reviews-page__num-row { min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
-  .km-reviews-page__num { font-size: 36px; font-weight: 800; color: #fff; line-height: 1; letter-spacing: -.01em; }
-  .km-reviews-page__num-stars { display: inline-flex; gap: 2px; color: var(--km-accent, #FBB03D); }
+  .km-reviews-page__num { font-size: 36px; font-weight: 800; color: var(--km-on-dark); line-height: 1; letter-spacing: -.01em; }
+  .km-reviews-page__num-stars { display: inline-flex; gap: 2px; color: var(--km-accent); }
   .km-reviews-page__num-stars svg { width: 12px; height: 12px; }
   .km-reviews-page__label { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.6); margin-top: 10px; }
 
   .km-reviews-page__tabs-wrap { display: flex; flex-direction: column; align-items: center; gap: 14px; margin: 48px auto 28px; }
-  .km-reviews-page__tabs { display: flex; gap: 4px; padding: 8px; background: #fff; border: 1px solid var(--km-border, #DDDDDD); border-radius: 9999px; overflow-x: auto; max-width: 100%; scrollbar-width: none; }
+  .km-reviews-page__tabs { display: flex; gap: 4px; padding: 8px; background: var(--km-surface); border: 1px solid var(--km-border); border-radius: var(--km-radius-pill); overflow-x: auto; max-width: 100%; scrollbar-width: none; }
   .km-reviews-page__tabs::-webkit-scrollbar { display: none; }
-  .km-reviews-page__tab { padding: 12px 24px; font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--km-text, #4B5563); background: transparent; border: 0; border-radius: 9999px; cursor: pointer; font-family: inherit; transition: background .25s ease, color .25s ease; white-space: nowrap; }
-  .km-reviews-page__tab:hover { color: #000; background: var(--km-body-bg, #EDEDED); }
-  .km-reviews-page__tab.is-active { background: #000; color: #fff; }
+  .km-reviews-page__tab { padding: 12px 24px; font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--km-text); background: transparent; border: 0; border-radius: var(--km-radius-pill); cursor: pointer; font-family: inherit; transition: background .25s ease, color .25s ease; white-space: nowrap; }
+  .km-reviews-page__tab:hover { color: var(--km-heading); background: var(--km-body-bg); }
+  .km-reviews-page__tab.is-active { background: var(--km-primary); color: var(--km-primary-contrast); }
 
   .km-reviews-panel { display: none; margin-bottom: 64px; }
   .km-reviews-panel.is-active { display: block; }
   
-  .km-reviews-list { background: #fff; border: 1px solid var(--km-border, #DDDDDD); border-radius: 24px; padding: 48px; min-height: 400px; display: flex; flex-direction: column; gap: 24px; }
+  .km-reviews-list { background: var(--km-surface); border: 1px solid var(--km-border); border-radius: var(--km-radius-lg); padding: 48px; min-height: 400px; display: flex; flex-direction: column; gap: 24px; }
   .km-review-card { border-bottom: 1px solid var(--km-border); padding-bottom: 32px; }
   .km-review-card:last-child { border-bottom: 0; padding-bottom: 0; }
   .km-review-header { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; }
   .km-review-author { font-weight: 800; font-size: 15px; color: var(--km-heading); }
-  .km-review-stars { color: var(--km-accent, #FBB03D); font-size: 18px; letter-spacing: 2px; }
+  .km-review-stars { color: var(--km-accent); font-size: 18px; letter-spacing: 2px; }
   .km-review-date { font-size: 13px; color: var(--km-text); margin-left: auto; }
   .km-review-title { font-size: 18px; font-weight: 700; color: var(--km-heading); margin: 0 0 8px; }
   .km-review-body { font-size: 15px; line-height: 1.6; color: var(--km-text); margin-bottom: 12px; }
@@ -255,19 +255,19 @@
   .km-reviews-loading, .km-reviews-empty, .km-reviews-error { text-align: center; padding: 80px 0; color: var(--km-text); font-weight: 600; font-size: 16px; }
 
   /* Judge.me Custom Styling (All Reviews Tab) */
-  .km-reviews-panel#panel-all { background: #fff; border: 1px solid var(--km-border, #DDDDDD); border-radius: 24px; padding: 48px; }
+  .km-reviews-panel#panel-all { background: var(--km-surface); border: 1px solid var(--km-border); border-radius: var(--km-radius-lg); padding: 48px; }
   #km-judgeme-all-reviews-wrapper .jdgm-all-reviews-widget { font-family: inherit !important; border: 0 !important; padding: 0 !important; }
   #km-judgeme-all-reviews-wrapper .jdgm-all-reviews-widget__title { display: none !important; }
-  #km-judgeme-all-reviews-wrapper .jdgm-star { color: var(--km-accent, #FBB03D) !important; }
+  #km-judgeme-all-reviews-wrapper .jdgm-star { color: var(--km-accent) !important; }
   #km-judgeme-all-reviews-wrapper .jdgm-btn { 
-    background: #000 !important; color: #fff !important; border-radius: 9999px !important; 
+    background: var(--km-primary) !important; color: var(--km-primary-contrast) !important; border-radius: var(--km-radius-pill) !important; 
     text-transform: uppercase !important; font-weight: 800 !important; letter-spacing: .1em !important; 
     padding: 12px 24px !important; font-size: 12px !important; border: 0 !important;
   }
-  #km-judgeme-all-reviews-wrapper .jdgm-btn:hover { background: var(--km-accent, #FBB03D) !important; color: #000 !important; }
+  #km-judgeme-all-reviews-wrapper .jdgm-btn:hover { background: var(--km-accent) !important; color: var(--km-on-accent) !important; }
 
   @media (max-width: 700px) { 
-    .km-reviews-page__tabs { border-radius: 20px; padding: 6px; } 
+    .km-reviews-page__tabs { border-radius: var(--km-radius-lg); padding: 6px; } 
     .km-reviews-page__tab { padding: 10px 16px; font-size: 10px; } 
     .km-reviews-list, .km-reviews-panel#panel-all { padding: 24px 16px; border-radius: 0; border-left: 0; border-right: 0; }
     .km-review-header { flex-wrap: wrap; gap: 8px; }

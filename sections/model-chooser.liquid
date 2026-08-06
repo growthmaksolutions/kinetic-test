@@ -127,7 +127,7 @@
 </section>
 
 <style>
-  .km-models { background: var(--km-body-bg, #EDEDED); padding: 64px 0; }
+  .km-models { background: var(--km-body-bg); padding: 64px 0; }
   .km-models__header { text-align: center; max-width: 680px; margin: 0 auto 48px; }
   .km-models__header h2 { margin-bottom: 8px; }
 
@@ -150,11 +150,11 @@
   .km-models__compare {
     position: relative;
     aspect-ratio: 16/10;
-    border-radius: 20px;
+    border-radius: var(--km-radius-lg);
     overflow: hidden;
     cursor: ew-resize;
     user-select: none;
-    background: #000;
+    background: var(--km-plate);
   }
   .km-models__compare-before,
   .km-models__compare-after {
@@ -174,9 +174,9 @@
     position: absolute;
     top: 16px;
     padding: 6px 14px;
-    border-radius: 9999px;
+    border-radius: var(--km-radius-pill);
     background: rgba(0,0,0,.7);
-    color: #fff;
+    color: var(--km-on-dark);
     font-size: 11px;
     font-weight: 700;
     letter-spacing: .14em;
@@ -185,14 +185,14 @@
     z-index: 3;
   }
   .km-models__compare-label.is-before { left: 16px; }
-  .km-models__compare-label.is-after { right: 16px; background: rgba(251,176,61,.95); color: #000; }
+  .km-models__compare-label.is-after { right: 16px; background: rgba(251,176,61,.95); color: var(--km-on-accent); }
 
   .km-models__compare-handle {
     position: absolute;
     top: 0; bottom: 0;
     left: 50%;
     width: 3px;
-    background: #fff;
+    background: var(--km-surface);
     transform: translateX(-50%);
     z-index: 2;
     pointer-events: none;
@@ -204,8 +204,8 @@
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background: #fff;
-    color: #000;
+    background: var(--km-surface);
+    color: var(--km-heading);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -222,11 +222,11 @@
     font-size: clamp(22px, 2.2vw, 30px);
     font-weight: 700;
     margin: 0 0 12px;
-    color: var(--km-heading, #000);
+    color: var(--km-heading);
     letter-spacing: -.01em;
   }
   .km-models__desc {
-    color: var(--km-text, #4B5563);
+    color: var(--km-text);
     line-height: 1.7;
     font-size: 14px;
     margin: 0 0 22px;
@@ -238,7 +238,7 @@
     font-size: 13px;
     font-weight: 700;
     margin-bottom: 12px;
-    color: var(--km-heading, #000);
+    color: var(--km-heading);
   }
   .km-models__cats-list {
     display: flex;
@@ -254,9 +254,9 @@
     font-weight: 700;
     letter-spacing: .08em;
     text-transform: uppercase;
-    background: #000;
-    color: #fff;
-    border-radius: 9999px;
+    background: var(--km-primary);
+    color: var(--km-primary-contrast);
+    border-radius: var(--km-radius-pill);
     text-decoration: none;
     transition: background .2s ease;
     max-width: 100%;
@@ -266,7 +266,7 @@
     text-align: center;
     justify-content: center;
   }
-  .km-models__cat-pill:hover { background: var(--km-accent, #FBB03D); color: #000; }
+  .km-models__cat-pill:hover { background: var(--km-accent); color: var(--km-on-accent); }
   .km-models__cat-pill svg { width: 12px; height: 12px; }
 
   @media (max-width: 900px) {

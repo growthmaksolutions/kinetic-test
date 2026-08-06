@@ -90,7 +90,7 @@
   }
 
   .km-faq__image-col { display: flex; flex-direction: column; justify-content: flex-start; }
-  .km-faq__side-image { border-radius: var(--km-radius-lg, 16px); overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,.1); max-width: 450px; }
+  .km-faq__side-image { border-radius: var(--km-radius-lg); overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,.1); max-width: 450px; }
   .km-faq__side-image img { width: 100%; height: auto; display: block; }
 
   .km-faq__list {
@@ -103,7 +103,7 @@
     border: 1px solid var(--km-border);
     border-radius: var(--km-radius-lg);
     padding: 0 28px;
-    transition: box-shadow var(--km-transition, .25s ease), border-color var(--km-transition, .25s ease);
+    transition: box-shadow var(--km-transition), border-color var(--km-transition);
   }
   .km-faq__item[open] {
     border-color: var(--km-heading);
@@ -135,11 +135,11 @@
     align-items: center;
     justify-content: center;
     color: var(--km-heading);
-    transition: background var(--km-transition, .25s ease), color var(--km-transition, .25s ease);
+    transition: background var(--km-transition), color var(--km-transition);
   }
   .km-faq__item[open] .km-faq__toggle {
     background: var(--km-heading);
-    color: #fff;
+    color: var(--km-primary-contrast);
   }
   .km-faq__toggle-plus { display: inline-flex; }
   .km-faq__toggle-minus { display: none; }

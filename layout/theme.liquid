@@ -29,45 +29,170 @@
       <meta name="description" content="{{ page_description | escape }}">
     {%- endif -%}
 
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
     <style>
+      /* ==========================================================
+         KINETIC DESIGN SYSTEM — "Performance Garage"
+         Dark, high-contrast, technical. Condensed display type,
+         monospace for part data, amber signal accent, sharp edges.
+         ========================================================== */
       :root {
-        --km-body-bg: #EDEDED;
-        --km-surface: #FFFFFF;
-        --km-text: #4B5563;
-        --km-heading: #000000;
-        --km-primary: #000000;
-        --km-primary-contrast: #FFFFFF;
-        --km-accent: #FBB03D;
-        --km-sale: #FFDEDE;
-        --km-border: #DDDDDD;
-        --km-header-bar: #000000;
-        --km-radius-sm: 6px;
-        --km-radius: 12px;
-        --km-radius-lg: 20px;
-        --km-radius-pill: 9999px;
+        /* --- Canvas & surfaces (warm-neutral near-black) --- */
+        --km-body-bg: #0B0B0C;   /* page canvas          */
+        --km-surface: #141416;   /* cards, panels        */
+        --km-surface-2:        #1C1C1F;   /* raised / hover       */
+        --km-surface-3:        #232327;   /* inset wells, inputs  */
+        --km-header-bar: #0B0B0C;
+
+        /* --- Ink --- */
+        --km-heading: #F4F4F5;   /* headlines            */
+        --km-text: #A1A1AA;   /* body copy            */
+        --km-text-dim: #71717A;   /* meta, captions       */
+        --km-on-dark: #FFFFFF;   /* text over imagery    */
+        --km-on-accent: #0B0B0C;   /* text on amber        */
+
+        /* --- Brand --- */
+        --km-accent: #FBB03D;   /* signal amber         */
+        --km-accent-hot: #FF7A18;   /* hover / gradient end */
+        --km-accent-dim: rgba(251,176,61,.14);
+        --km-primary: #F4F4F5;   /* primary CTA = light  */
+        --km-primary-contrast: #0B0B0C;
+        --km-primary-hover: #FFFFFF;
+
+        /* --- Product media plate ---
+           The catalogue is photographed on white, so product media sits on a
+           deliberate bright plate rather than fighting the dark canvas. Art
+           with a baked white background blends into it seamlessly, and cut-out
+           art still reads the way it was drawn. Anything placed ON a plate
+           must use --km-on-plate, never --km-heading. */
+        --km-plate: #FFFFFF;
+        --km-plate-2: #F4F4F2;
+        --km-plate-border: #E4E4E7;
+        --km-on-plate: #0B0B0C;
+
+        /* --- Lines --- */
+        --km-border: #26262A;
+        --km-border-strong: #3A3A40;
+        --km-border-accent: rgba(251,176,61,.38);
+
+        /* --- Signal --- */
+        --km-success: #34D399;
+        --km-success-bg: rgba(52,211,153,.12);
+        --km-warn: #FBBF24;
+        --km-danger: #F87171;
+        --km-danger-bg: rgba(248,113,113,.12);
+        --km-sale: rgba(248,113,113,.16);
+
+        /* --- Geometry: sharp, machined --- */
+        --km-radius-sm:        2px;
+        --km-radius: 3px;
+        --km-radius-lg: 4px;
+        --km-radius-pill: 2px;      /* pills flattened       */
         --km-page-max: 1440px;
         --km-gutter: 32px;
-        --km-transition: 200ms cubic-bezier(.4,0,.2,1);
-        --km-shadow: 0 8px 24px rgba(0,0,0,.08);
+        --km-gutter-sm: 16px;
+
+        /* --- Motion & depth --- */
+        --km-transition: 180ms cubic-bezier(.2,.7,.3,1);
+        --km-shadow-sm: 0 2px 8px rgba(0,0,0,.4);
+        --km-shadow: 0 10px 30px rgba(0,0,0,.55);
+        --km-shadow-lg: 0 24px 60px rgba(0,0,0,.65);
+
+        /* --- Type --- */
+        --km-font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+        --km-font-body: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        --km-font-heading: "Barlow Condensed", "Arial Narrow", sans-serif;
+        --km-font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+        /* Scale runs hotter at the display end: condensed faces read
+           optically smaller than the Manrope sizes these replaced. */
+        --km-fs-xs: 12px;
+        --km-fs-sm: 14px;
+        --km-fs-base: 16px;
+        --km-fs-lg: 18px;
+        --km-fs-xl: 24px;
+        --km-fs-2xl: 32px;
+        --km-fs-3xl: 44px;
+        --km-fs-4xl: 60px;
+        --km-fs-5xl: 80px;
+        --km-fs-6xl: 104px;
       }
+
+      *, *::before, *::after { box-sizing: border-box; }
+
       body {
         margin: 0;
         background: var(--km-body-bg);
         color: var(--km-text);
-        font-family: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-family: var(--km-font-body);
         font-size: 16px;
         line-height: 1.55;
         -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
       }
+
+      /* Condensed uppercase display voice */
+      h1, h2, h3, .km-display {
+        font-family: var(--km-font-display);
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: .01em;
+        line-height: .95;
+        color: var(--km-heading);
+      }
+
+      /* Technical data reads as machine output */
+      .km-mono, .km-partno, .km-spec-value {
+        font-family: var(--km-font-mono);
+        font-variant-numeric: tabular-nums;
+        letter-spacing: -.01em;
+      }
+
+      a { color: inherit; }
+      ::selection { background: var(--km-accent); color: var(--km-on-accent); }
+
+      /* Visible focus ring — the dark canvas hides the UA default */
+      :focus-visible {
+        outline: 2px solid var(--km-accent);
+        outline-offset: 2px;
+        border-radius: var(--km-radius-sm);
+      }
+
+      /* Dark scrollbars, or the page frames itself in white */
+      * { scrollbar-color: var(--km-border-strong) transparent; }
+      ::-webkit-scrollbar { width: 10px; height: 10px; }
+      ::-webkit-scrollbar-track { background: var(--km-body-bg); }
+      ::-webkit-scrollbar-thumb {
+        background: var(--km-border-strong);
+        border-radius: 0;
+        border: 2px solid var(--km-body-bg);
+      }
+      ::-webkit-scrollbar-thumb:hover { background: var(--km-accent); }
+
+      /* Form controls inherit the dark scheme (date pickers, selects) */
+      :root { color-scheme: dark; }
+      input, select, textarea, button { font-family: inherit; }
+
+      img { max-width: 100%; }
+
       #shopify-section-sections--26587897266481__header,
       .shopify-section-group-header-group,
       header-group {
         position: sticky;
         top: 0;
         z-index: 1000;
-        background: var(--km-surface);
+        background: var(--km-header-bar);
+        border-bottom: 1px solid var(--km-border);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: .01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: .01ms !important;
+          scroll-behavior: auto !important;
+        }
       }
     </style>
 

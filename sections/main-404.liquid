@@ -26,17 +26,17 @@
 </section>
 
 <style>
-  .km-section.km-404 { background: var(--km-body-bg, #EDEDED); min-height: 60vh; display: flex; align-items: center; padding: 80px 0; }
+  .km-section.km-404 { background: var(--km-body-bg); min-height: 60vh; display: flex; align-items: center; padding: 80px 0; }
   .km-container--narrow { max-width: 720px; }
   .km-404__inner { text-align: center; padding: 40px 0; }
-  .km-404__eyebrow { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--km-accent, #FBB03D); margin-bottom: 16px; }
-  .km-404__title { font-size: clamp(32px, 4.2vw, 56px); font-weight: 700; letter-spacing: -.02em; line-height: 1.1; color: var(--km-heading, #000); margin: 0 0 16px; }
-  .km-404__subtext { font-size: 16px; color: var(--km-text, #4B5563); line-height: 1.6; margin: 0 auto 32px; max-width: 480px; }
+  .km-404__eyebrow { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--km-accent); margin-bottom: 16px; }
+  .km-404__title { font-size: clamp(32px, 4.2vw, 56px); font-weight: 700; letter-spacing: -.02em; line-height: 1.1; color: var(--km-heading); margin: 0 0 16px; }
+  .km-404__subtext { font-size: 16px; color: var(--km-text); line-height: 1.6; margin: 0 auto 32px; max-width: 480px; }
   .km-404__actions { display: inline-flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
-  .km-btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 9999px; text-decoration: none; font-weight: 700; font-size: 14px; }
-  .km-btn-primary { background: #000; color: #fff; }
-  .km-btn-primary:hover { background: var(--km-accent, #FBB03D); color: #000; }
-  .km-btn-ghost { background: transparent; color: #000; border: 1px solid var(--km-border, #DDDDDD); }
+  .km-btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: var(--km-radius-pill); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .km-btn-primary { background: var(--km-primary); color: var(--km-primary-contrast); }
+  .km-btn-primary:hover { background: var(--km-accent); color: var(--km-on-accent); }
+  .km-btn-ghost { background: transparent; color: var(--km-heading); border: 1px solid var(--km-border); }
 </style>
 
 {% schema %}

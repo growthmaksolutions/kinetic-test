@@ -211,10 +211,22 @@
   .km-header__nav { display: flex; justify-content: center; }
   .km-header__menu {
     display: flex;
+    align-items: center;
     list-style: none;
     margin: 0;
     padding: 0;
     gap: 44px;
+  }
+  /* Every top-level item must lay out identically. The mega item is an
+     inline-flex row (link + chevron) while plain items are list-items, so
+     under the flex default of align-items:stretch the mega item centred
+     itself while its siblings sat at the top — "Shop" rendered a line lower
+     than the rest, with its chevron pushed onto its own row. */
+  .km-header__menu > .km-header__menu-item {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    white-space: nowrap;
   }
   .km-header__menu-link {
     display: block;
@@ -412,12 +424,17 @@
       cursor: pointer;
       color: var(--km-heading);
     }
-    .km-header__menu { flex-direction: column; gap: 0; }
-    .km-header__menu-item {
+    .km-header__menu { flex-direction: column; align-items: stretch; gap: 0; }
+    /* Match the specificity of the desktop `.km-header__menu > .item` rule,
+       or the drawer keeps the nowrap inline-flex row and the accordion
+       cannot open. */
+    .km-header__menu > .km-header__menu-item {
       position: relative;
+      display: block;
+      white-space: normal;
       border-bottom: 1px solid var(--km-border);
     }
-    .km-header__menu-item--mega {
+    .km-header__menu > .km-header__menu-item--mega {
       position: relative;
       display: flex;
       flex-wrap: wrap;

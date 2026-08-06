@@ -1,0 +1,27 @@
+# ---------------------------------------------------------------------------
+# Secrets — never commit these. The Shopify Admin API token in .env grants
+# full read/write access to the store's products, orders and customers.
+# ---------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Shopify CLI
+.shopify/
+.theme-check.yml.local
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Dependencies / build output
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/

@@ -1,0 +1,54 @@
+{%- comment -%} Browse by Categories — 4 brand tiles. {%- endcomment -%}
+<section class="km-section km-categories">
+  <div class="km-container">
+    <div class="km-section-row">
+      <h2 class="km-section-heading">Browse by Categories</h2>
+      <a href="{{ routes.all_products_collection_url }}" class="km-btn-view-all">View All</a>
+    </div>
+    <div class="km-categories__grid">
+      {%- assign cats = 'Indian,model-sportster-after.png|Dyna,model-dyna-after.webp|Honda,model-honda-after.webp|Triumph,model-triumph-after.webp' | split: '|' -%}
+      {%- for c in cats -%}
+        {%- assign p = c | split: ',' -%}
+        <a href="#" class="km-categories__card">
+          <div class="km-categories__image-wrap">
+            <img src="{{ p[1] | asset_url }}" width="300" height="300" loading="lazy" alt="{{ p[0] }}" class="km-categories__image">
+          </div>
+          <div class="km-categories__meta">
+            <h3 class="km-categories__label">{{ p[0] }}</h3>
+            <span class="km-categories__cta">Shop Now {%- render 'icon', icon: 'arrow-right' -%}</span>
+          </div>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .km-categories { padding: 64px 0; background: var(--km-body-bg, #EDEDED); }
+  .km-section-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+  .km-btn-view-all { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #000; text-decoration: none; }
+  .km-btn-view-all:hover { color: var(--km-accent, #FBB03D); }
+  .km-categories__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
+  .km-categories__card {
+    display: block; background: #fff; border-radius: 20px; overflow: hidden;
+    border: 1px solid var(--km-border, #DDDDDD); text-decoration: none; color: inherit;
+    transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .km-categories__card:hover { transform: translateY(-3px); box-shadow: 0 8px 22px rgba(0,0,0,.06); }
+  .km-categories__image-wrap { aspect-ratio: 1 / 1; overflow: hidden; background: var(--km-body-bg, #EDEDED); }
+  .km-categories__image { width: 100%; height: 100%; object-fit: cover; transition: transform 400ms ease; }
+  .km-categories__card:hover .km-categories__image { transform: scale(1.05); }
+  .km-categories__meta {
+    padding: 20px 22px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  }
+  .km-categories__label { margin: 0; font-size: 18px; font-weight: 700; color: #000; }
+  .km-categories__cta {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase; color: #000; white-space: nowrap;
+  }
+  @media (max-width: 900px) { .km-categories__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 480px) {
+    .km-categories__meta { padding: 14px 16px; }
+    .km-categories__label { font-size: 16px; }
+  }
+</style>

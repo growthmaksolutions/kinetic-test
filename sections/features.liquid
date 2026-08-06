@@ -1,0 +1,132 @@
+{%- comment -%}
+  ------------------------------------------------------------
+  Features (Why Choose) — image + label + description columns
+  ------------------------------------------------------------
+{%- endcomment -%}
+
+<section class="km-section km-features" id="Section-{{ section.id }}">
+  <div class="km-container">
+    <header class="km-features__header">
+      <h2 class="km-section-heading">{{ section.settings.heading | default: 'Why Choose Kinetic Motorcycles' }}</h2>
+      {%- if section.settings.subheading != blank -%}
+        <p class="km-muted km-features__sub">{{ section.settings.subheading }}</p>
+      {%- endif -%}
+    </header>
+
+    <div class="km-features__grid">
+      {%- if section.blocks.size > 0 -%}
+        {%- for block in section.blocks -%}
+          <div class="km-features__card" {{ block.shopify_attributes }}>
+            <div class="km-features__media">
+              {%- if block.settings.image != blank -%}
+                {{ block.settings.image | image_url: width: 600 | image_tag: width: 300, height: 300, loading: 'lazy', alt: block.settings.title, class: 'km-features__img' }}
+              {%- elsif block.settings.asset_name != blank -%}
+                <img src="{{ block.settings.asset_name | asset_url }}" width="300" height="300" loading="lazy" alt="{{ block.settings.title }}" class="km-features__img">
+              {%- endif -%}
+            </div>
+            <h3 class="km-features__title">{{ block.settings.title }}</h3>
+            <p class="km-features__desc">{{ block.settings.description }}</p>
+          </div>
+        {%- endfor -%}
+      {%- else -%}
+        {%- assign fallback_features = 'Made in USA|feature-made-in-usa.webp|Every product is designed and manufactured in the USA, ensuring top-notch quality and supporting local craftsmanship. When you choose us, you are choosing reliability and homegrown excellence.||Established in 2014|feature-garage.webp|For over 11 years, we have been delivering unmatched quality and expertise. Our track record reflects a deep commitment to customer satisfaction and industry-leading solutions.||Free Shipping|feature-shipping.webp|Enjoy the convenience of free delivery anywhere in the US. We prioritize your satisfaction by making your shopping experience seamless and hassle-free.' | split: '||' -%}
+        {%- for entry in fallback_features -%}
+          {%- assign p = entry | split: '|' -%}
+          <div class="km-features__card">
+            <div class="km-features__media">
+              <img src="{{ p[1] | asset_url }}" width="300" height="300" loading="lazy" alt="{{ p[0] }}" class="km-features__img">
+            </div>
+            <h3 class="km-features__title">{{ p[0] }}</h3>
+            <p class="km-features__desc">{{ p[2] }}</p>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .km-features { background: var(--km-body-bg); }
+  .km-features__header { text-align: center; max-width: 720px; margin: 0 auto 48px; }
+  .km-features__sub { font-size: 16px; }
+
+  .km-features__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 32px;
+  }
+  .km-features__card {
+    background: transparent;
+    padding: 24px 16px;
+    text-align: center;
+    border: 0;
+    transition: transform var(--km-transition, .25s ease);
+  }
+  .km-features__card:hover { transform: translateY(-2px); }
+  .km-features__media {
+    width: 100%;
+    max-width: 240px;
+    aspect-ratio: 1 / 1;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+  }
+  .km-features__img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+  }
+  .km-features__title {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--km-heading);
+    margin-bottom: 14px;
+  }
+  .km-features__desc {
+    color: var(--km-text);
+    line-height: 1.65;
+    font-size: 15px;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  @media (max-width: 900px) {
+    .km-features__grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Features",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Why Choose Kinetic Motorcycles" },
+    { "type": "textarea", "id": "subheading", "label": "Subheading" }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "asset_name", "label": "Asset filename (fallback)" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Made in USA" },
+        { "type": "textarea", "id": "description", "label": "Description", "default": "Every product is designed and manufactured in the USA, ensuring top-notch quality and durability." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Features",
+      "blocks": [
+        { "type": "feature", "settings": { "title": "Made in USA",       "asset_name": "feature-made-in-usa.webp", "description": "Every product is designed and manufactured in the USA, ensuring top-notch quality and supporting local craftsmanship. When you choose us, you're choosing reliability and homegrown excellence." } },
+        { "type": "feature", "settings": { "title": "Established in 2014", "asset_name": "feature-garage.webp",       "description": "For over 11 years, we've been delivering unmatched quality and expertise. Our track record reflects a deep commitment to customer satisfaction and industry-leading solutions." } },
+        { "type": "feature", "settings": { "title": "Free Shipping",      "asset_name": "feature-shipping.webp",      "description": "Enjoy the convenience of free delivery anywhere in the US. We prioritize your satisfaction by making your shopping experience seamless and hassle-free." } }
+      ]
+    }
+  ]
+}
+{% endschema %}
+{% comment %} Sync: Wed Apr 22 14:49:52 IST 2026 {% endcomment %}

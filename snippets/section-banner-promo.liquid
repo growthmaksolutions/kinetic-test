@@ -1,0 +1,89 @@
+{%- comment -%} Banner Promo — 3 promo tiles inline. {%- endcomment -%}
+<section class="km-section km-banner-promo">
+  <div class="km-container">
+    <div class="km-banner-promo__grid">
+      <a href="#" class="km-banner-promo__feature">
+        <div class="km-banner-promo__feature-copy">
+          <span class="km-pill--sale">Get 45% Off</span>
+          <h3 class="km-banner-promo__feature-heading">Instrument cluster</h3>
+          <span class="km-banner-promo__feature-cta">
+            Shop Now {%- render 'icon', icon: 'arrow-right' -%}
+          </span>
+        </div>
+        <div class="km-banner-promo__feature-media">
+          <img src="{{ 'banner-latest.avif' | asset_url }}" alt="Instrument cluster" width="700" height="560" loading="lazy" class="km-banner-promo__feature-img">
+        </div>
+      </a>
+
+      <div class="km-banner-promo__offers">
+        <a href="#" class="km-banner-promo__offer" style="background-color: #F2F2F2;">
+          <div class="km-banner-promo__offer-copy">
+            <span class="km-banner-promo__offer-tag">New Product</span>
+            <h4 class="km-banner-promo__offer-heading">Fuel pressure regulator</h4>
+            <span class="km-banner-promo__offer-link">Shop Now {%- render 'icon', icon: 'arrow-right' -%}</span>
+          </div>
+          <div class="km-banner-promo__offer-media">
+            <img src="{{ 'banner-offer-1.avif' | asset_url }}" alt="Fuel pressure regulator" width="200" height="180" loading="lazy" class="km-banner-promo__offer-img">
+          </div>
+        </a>
+        <a href="#" class="km-banner-promo__offer" style="background-color: #E6EEF7;">
+          <div class="km-banner-promo__offer-copy">
+            <span class="km-banner-promo__offer-tag">New Arrivals</span>
+            <h4 class="km-banner-promo__offer-heading">Fuel pressure regulator</h4>
+            <p class="km-banner-promo__offer-subtext">Optimizes engine performance. Starting from $89.40 USD.</p>
+            <span class="km-banner-promo__offer-link">Shop Now {%- render 'icon', icon: 'arrow-right' -%}</span>
+          </div>
+          <div class="km-banner-promo__offer-media">
+            <img src="{{ 'banner-offer-2.avif' | asset_url }}" alt="Fuel pressure regulator" width="200" height="180" loading="lazy" class="km-banner-promo__offer-img">
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .km-banner-promo { padding: 64px 0; background: var(--km-body-bg, #EDEDED); }
+  .km-banner-promo__grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 24px; }
+  .km-banner-promo__feature {
+    position: relative; display: grid; grid-template-columns: 1fr 1fr;
+    border-radius: 20px; overflow: hidden; color: #fff; text-decoration: none;
+    min-height: 380px; isolation: isolate; background: #111; transition: transform .25s ease;
+  }
+  .km-banner-promo__feature:hover { transform: translateY(-3px); }
+  .km-banner-promo__feature-copy { padding: 44px 40px; display: flex; flex-direction: column; justify-content: center; gap: 14px; }
+  .km-pill--sale {
+    align-self: flex-start; display: inline-block; padding: 6px 14px; font-size: 11px;
+    font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+    background: var(--km-accent, #FBB03D); color: #000; border-radius: 9999px;
+  }
+  .km-banner-promo__feature-heading {
+    font-size: clamp(30px, 3.6vw, 44px); font-weight: 700; letter-spacing: -.02em;
+    line-height: 1.05; color: #fff; margin: 0;
+  }
+  .km-banner-promo__feature-cta {
+    margin-top: 14px; display: inline-flex; align-items: center; gap: 8px; font-weight: 700;
+    font-size: 14px; letter-spacing: .06em; text-transform: uppercase; color: var(--km-accent, #FBB03D);
+  }
+  .km-banner-promo__feature-media { position: relative; overflow: hidden; }
+  .km-banner-promo__feature-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .km-banner-promo__offers { display: flex; flex-direction: column; gap: 24px; }
+  .km-banner-promo__offer {
+    position: relative; display: grid; grid-template-columns: 1.1fr .9fr; gap: 12px;
+    border-radius: 20px; overflow: hidden; text-decoration: none; color: #111;
+    min-height: 170px; transition: transform .25s ease;
+  }
+  .km-banner-promo__offer:hover { transform: translateY(-2px); }
+  .km-banner-promo__offer-copy { padding: 22px 22px 22px 26px; display: flex; flex-direction: column; justify-content: center; gap: 6px; }
+  .km-banner-promo__offer-tag { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #000; opacity: .7; }
+  .km-banner-promo__offer-heading { font-size: 22px; font-weight: 700; letter-spacing: -.01em; line-height: 1.15; color: #000; margin: 0; }
+  .km-banner-promo__offer-subtext { font-size: 13px; line-height: 1.5; color: rgba(0,0,0,.7); margin: 0; }
+  .km-banner-promo__offer-link { margin-top: 8px; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #000; }
+  .km-banner-promo__offer-media { position: relative; overflow: hidden; }
+  .km-banner-promo__offer-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  @media (max-width: 900px) {
+    .km-banner-promo__grid { grid-template-columns: 1fr; }
+    .km-banner-promo__feature { grid-template-columns: 1fr; min-height: 0; }
+    .km-banner-promo__feature-media { height: 240px; }
+  }
+</style>

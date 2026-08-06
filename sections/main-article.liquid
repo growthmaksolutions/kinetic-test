@@ -1,0 +1,77 @@
+{%- comment -%}
+  Article — editable section with configurable back link label and content styling.
+{%- endcomment -%}
+<article class="km-section km-article" id="Section-{{ section.id }}">
+  <div class="km-container km-container--narrow">
+    <header class="km-article__header">
+      <a href="{{ blog.url | default: '/blogs' }}" class="km-article__back">{%- render 'icon', icon: 'chevron-left' -%} {{ section.settings.back_label | default: 'Back to blog' }}</a>
+      <div class="km-article__date">{{ article.published_at | date: '%b %d, %Y' }}</div>
+      <h1 class="km-article__title">{{ article.title }}</h1>
+      {%- if article.author != blank -%}
+        <div class="km-article__author">By {{ article.author }}</div>
+      {%- endif -%}
+    </header>
+
+    {%- if article.image != blank -%}
+      <div class="km-article__hero">
+        {{ article.image | image_url: width: 1600 | image_tag:
+           width: 1280, height: 720, loading: 'eager',
+           alt: article.title, class: 'km-article__hero-img' }}
+      </div>
+    {%- endif -%}
+
+    <div class="km-article__body km-rte">
+      {{ article.content }}
+    </div>
+
+    {%- if section.settings.show_share -%}
+      <div class="km-article__share">
+        <span class="km-article__share-label">Share this article</span>
+        <a href="https://twitter.com/intent/tweet?url={{ request.origin }}{{ article.url }}&text={{ article.title | url_encode }}" target="_blank" rel="noopener" aria-label="Share on Twitter">{%- render 'icon', icon: 'twitter' -%}</a>
+        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.origin }}{{ article.url }}" target="_blank" rel="noopener" aria-label="Share on Facebook">{%- render 'icon', icon: 'facebook' -%}</a>
+      </div>
+    {%- endif -%}
+
+    <footer class="km-article__footer">
+      <a href="{{ blog.url | default: '/blogs' }}" class="km-btn-view-all">← {{ section.settings.back_label | default: 'Back to blog' }}</a>
+    </footer>
+  </div>
+</article>
+
+<style>
+  .km-article { background: #fff; padding: 80px 0; }
+  .km-container--narrow { max-width: var(--km-page-max, 1440px); }
+  .km-article__header { text-align: center; margin-bottom: 36px; }
+  .km-article__back { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: var(--km-text, #4B5563); text-decoration: none; margin-bottom: 24px; }
+  .km-article__back:hover { color: var(--km-accent, #FBB03D); }
+  .km-article__date { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--km-accent, #FBB03D); margin-bottom: 14px; }
+  .km-article__title { font-size: clamp(34px, 4.6vw, 56px); font-weight: 700; line-height: 1.1; letter-spacing: -.02em; color: #000; margin: 0 0 14px; }
+  .km-article__author { font-size: 14px; color: var(--km-text, #4B5563); }
+  .km-article__hero { margin-bottom: 48px; border-radius: 20px; overflow: hidden; }
+  .km-article__hero-img { width: 100%; height: auto; display: block; }
+  .km-article__body { font-size: 17px; line-height: 1.8; color: var(--km-text, #4B5563); }
+  .km-article__body h2 { font-size: 28px; font-weight: 700; color: #000; margin: 2em 0 .6em; }
+  .km-article__body h3 { font-size: 22px; font-weight: 700; color: #000; margin: 1.6em 0 .5em; }
+  .km-article__body p { margin: 0 0 1.2em; }
+  .km-article__body img { width: 100%; height: auto; border-radius: 16px; margin: 1.5em 0; display: block; }
+  .km-article__body ul, .km-article__body ol { padding-left: 1.4em; margin: 0 0 1.2em; }
+  .km-article__body li { margin-bottom: .4em; }
+  .km-article__body a { color: var(--km-heading, #000); text-decoration: underline; text-underline-offset: 3px; }
+  .km-article__body blockquote { margin: 1.6em 0; padding: 1.2em 1.6em; border-left: 3px solid var(--km-accent, #FBB03D); background: var(--km-body-bg, #EDEDED); border-radius: 8px; font-style: italic; }
+  .km-article__share { display: flex; align-items: center; gap: 14px; margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--km-border, #DDD); }
+  .km-article__share-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--km-text, #4B5563); }
+  .km-article__share a { color: var(--km-heading, #000); transition: color .2s ease; }
+  .km-article__share a:hover { color: var(--km-accent, #FBB03D); }
+  .km-article__share svg { width: 20px; height: 20px; }
+  .km-article__footer { margin-top: 56px; padding-top: 32px; border-top: 1px solid var(--km-border, #DDDDDD); text-align: center; }
+</style>
+
+{% schema %}
+{
+  "name": "Article Page",
+  "settings": [
+    { "type": "text", "id": "back_label", "label": "Back to blog label", "default": "Back to blog" },
+    { "type": "checkbox", "id": "show_share", "label": "Show share buttons", "default": true }
+  ]
+}
+{% endschema %}

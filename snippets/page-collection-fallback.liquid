@@ -1,0 +1,77 @@
+{%- comment -%}
+  Per-collection fallback — used when /collections/{handle} doesn't exist as a real Shopify collection.
+  Reads the URL slug, prettifies it as a heading, shows real featured products.
+{%- endcomment -%}
+
+{%- assign slug = request.path | split: '/collections/' | last | split: '?' | first -%}
+{%- assign pretty = slug | replace: '-', ' ' | replace: 'harley davidson', 'Harley-Davidson' | capitalize -%}
+
+<section class="km-section km-coll-fb">
+  <div class="km-container">
+    <header class="km-coll-fb__header">
+      <a href="/collections" class="km-coll-fb__back">← All Collections</a>
+      <h1 class="km-coll-fb__title">{{ pretty | default: 'Collection' }}</h1>
+      <p class="km-coll-fb__sub">Browse our hand-picked parts and accessories. Free shipping on orders over $100.</p>
+    </header>
+
+    <div class="km-coll-fb__grid">
+      {%- assign featured = 'RIDGE 2-INTO-1 Full Custom Exhaust System for Indian Scout Models|Indian|$ 1,250.00 USD|product-1.webp|5||Slims Handlebars — 18&quot; Wide Harley Sportster Handlebars: Clean Look, CNC Notched|Sportster|$ 170.00 USD|product-2.avif|4||Slims Handlebars — 18&quot; Wide Harley Sportster Handlebars: Clean Look, CNC Notched|Sportster|$ 170.00 USD|product-3.avif|4||MiniZ Handlebars — Aggressive Harley Sportster Handlebars: Narrow, Nimble, Stock Compatible|Sportster|$ 155.00 USD|product-4.avif|4||CB 421 Exhaust System — Custom Stainless Steel 4-1 for CB Motorcycles|Honda CB|$ 985.00 USD|product-5.avif|5||Momentum 21 Exhaust System for Triumph|Triumph|$ 1,075.00 USD|product-6.avif|4||Windsor 2-Into-1 Performance Exhaust for Harley-Davidson Dyna|Dyna|$ 1,150.00 USD|product-7.avif|5||Lane Splitter Dropdowns — Narrow Sportster Handlebars|Sportster|$ 165.00 USD|product-8.avif|4' | split: '||' -%}
+      {%- for entry in featured -%}
+        {%- assign p = entry | split: '|' -%}
+        <a href="#" class="km-coll-fb__card">
+          <div class="km-coll-fb__media">
+            <img src="{{ p[3] | asset_url }}" width="300" height="300" loading="lazy" alt="{{ p[0] }}" class="km-coll-fb__img">
+          </div>
+          <div class="km-coll-fb__info">
+            <h3 class="km-coll-fb__name">{{ p[0] }}</h3>
+            <div class="km-coll-fb__vendor">
+              <img src="{{ 'icon-motor.png' | asset_url }}" width="14" height="14" alt="" class="km-coll-fb__vendor-icon">
+              <span>{{ p[1] }}</span>
+            </div>
+            <div class="km-coll-fb__price">{{ p[2] }}</div>
+            <div class="km-coll-fb__rating">
+              {%- assign stars = p[4] | plus: 0 -%}
+              {%- for i in (1..5) -%}
+                <span class="km-coll-fb__star{% if i > stars %} km-coll-fb__star--off{% endif %}">{%- render 'icon', icon: 'star' -%}</span>
+              {%- endfor -%}
+            </div>
+          </div>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .km-coll-fb { padding: 80px 0; background: var(--km-body-bg, #EDEDED); }
+  .km-coll-fb__header { max-width: 880px; margin: 0 auto 48px; text-align: center; }
+  .km-coll-fb__back { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--km-text, #4B5563); text-decoration: none; margin-bottom: 16px; }
+  .km-coll-fb__back:hover { color: var(--km-accent, #FBB03D); }
+  .km-coll-fb__title { font-size: clamp(32px, 4.4vw, 52px); font-weight: 700; letter-spacing: -.02em; color: #000; margin: 0 0 12px; text-transform: capitalize; }
+  .km-coll-fb__sub { font-size: 15px; color: var(--km-text, #4B5563); margin: 0; }
+  .km-coll-fb__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
+  .km-coll-fb__card {
+    background: #fff; border: 1px solid var(--km-border, #DDDDDD); border-radius: 20px;
+    overflow: hidden; text-decoration: none; color: inherit;
+    transition: transform .25s ease, box-shadow .25s ease;
+    display: flex; flex-direction: column;
+  }
+  .km-coll-fb__card:hover { transform: translateY(-3px); box-shadow: 0 8px 22px rgba(0,0,0,.06); }
+  .km-coll-fb__media { aspect-ratio: 1/1; overflow: hidden; background: #f9fafb; }
+  .km-coll-fb__img { width: 100%; height: 100%; object-fit: cover; transition: transform 400ms ease; }
+  .km-coll-fb__card:hover .km-coll-fb__img { transform: scale(1.04); }
+  .km-coll-fb__info { padding: 16px 18px 22px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .km-coll-fb__name {
+    font-size: 14px; font-weight: 600; line-height: 1.4; color: #000; margin: 0;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .km-coll-fb__vendor { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--km-text, #4B5563); }
+  .km-coll-fb__vendor-icon { width: 14px; height: 14px; }
+  .km-coll-fb__price { font-size: 15px; font-weight: 700; color: #000; margin-top: auto; }
+  .km-coll-fb__rating { display: inline-flex; gap: 1px; color: var(--km-accent, #FBB03D); }
+  .km-coll-fb__rating svg { width: 12px; height: 12px; }
+  .km-coll-fb__star--off { color: #d1d5db; }
+  @media (max-width: 1000px) { .km-coll-fb__grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 760px)  { .km-coll-fb__grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px)  { .km-coll-fb__grid { grid-template-columns: 1fr; } }
+</style>

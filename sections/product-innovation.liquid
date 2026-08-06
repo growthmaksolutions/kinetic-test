@@ -1,0 +1,49 @@
+{%- comment -%}
+  Innovation Meets Passion — text + image split section
+{%- endcomment -%}
+
+<section class="km-pp-innov" id="Section-{{ section.id }}">
+  <div class="km-container km-pp-innov__grid">
+    <div class="km-pp-innov__copy">
+      <h2 class="km-pp-innov__h2">{{ section.settings.heading | default: 'Innovation Meets Passion' }}</h2>
+      <h3 class="km-pp-innov__sub">{{ section.settings.subheading | default: 'Made in the USA' }}</h3>
+      {%- if section.settings.text != blank -%}
+        {{ section.settings.text }}
+      {%- else -%}
+        <p>Founded in 2013 by Mike Le, Kinetic Motorcycles was built on a simple belief: motorcycle parts aren't generic hardware — they're personal. Every product begins as an original idea, designed by Mike and developed entirely in-house.</p>
+        <p>We don't rely on templates or outsourced shortcuts. Each part is shipped by hands-on fabrication experience and time spent riding, testing, and refining.</p>
+      {%- endif -%}
+    </div>
+    <div class="km-pp-innov__media">
+      {%- if section.settings.image != blank -%}
+        {{ section.settings.image | image_url: width: 1200 | image_tag: loading: 'lazy', width: 600, height: 400, alt: section.settings.heading, class: 'km-pp-innov__img' }}
+      {%- else -%}
+        <img src="{{ 'cta-bike.avif' | asset_url }}" loading="lazy" alt="Kinetic Motorcycles" width="600" height="400" class="km-pp-innov__img">
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .km-pp-innov { padding: 72px 0; background: #fff; border-top: 1px solid var(--km-border, #DDDDDD); }
+  .km-pp-innov__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+  .km-pp-innov__h2 { font-size: clamp(28px, 3.4vw, 40px); font-weight: 700; letter-spacing: -.02em; text-transform: uppercase; color: #000; margin: 0 0 6px; line-height: 1.1; }
+  .km-pp-innov__sub { font-size: 20px; font-weight: 700; color: var(--km-accent, #FBB03D); margin: 0 0 24px; }
+  .km-pp-innov p { font-size: 15px; line-height: 1.7; color: var(--km-text, #4B5563); margin: 0 0 14px; }
+  .km-pp-innov__media { aspect-ratio: 4/3; border-radius: 20px; overflow: hidden; background: #000; }
+  .km-pp-innov__img { width: 100%; height: 100%; object-fit: cover; }
+  @media (max-width: 1000px) { .km-pp-innov__grid { grid-template-columns: 1fr; gap: 24px; } }
+</style>
+
+{% schema %}
+{
+  "name": "Product Innovation",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Innovation Meets Passion" },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "Made in the USA" },
+    { "type": "richtext", "id": "text", "label": "Body text" },
+    { "type": "image_picker", "id": "image", "label": "Image" }
+  ],
+  "presets": [{ "name": "Product Innovation" }]
+}
+{% endschema %}

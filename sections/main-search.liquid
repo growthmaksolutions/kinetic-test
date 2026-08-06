@@ -1,0 +1,91 @@
+{%- comment -%}
+  Search Results — editable section with configurable heading, placeholder, and grid columns.
+{%- endcomment -%}
+<section class="km-section km-search" id="Section-{{ section.id }}">
+  <div class="km-container">
+    <header class="km-search__header">
+      <h1 class="km-search__title">{{ section.settings.heading | default: 'Search' }}</h1>
+      <form action="{{ routes.search_url }}" method="get" role="search" class="km-search__form">
+        <label for="SearchInput" class="km-visually-hidden">Search</label>
+        <input id="SearchInput" type="search" name="q" value="{{ search.terms | escape }}"
+               placeholder="{{ section.settings.placeholder | default: 'Search for parts, models, guides…' }}" class="km-search__input">
+        <button type="submit" class="km-btn km-btn-primary km-search__submit">
+          {%- render 'icon', icon: 'search' -%}
+          {{ section.settings.button_label | default: 'Search' }}
+        </button>
+      </form>
+    </header>
+
+    {%- if search.performed -%}
+      {%- paginate search.results by 12 -%}
+        {%- if search.results_count > 0 -%}
+          <p class="km-search__summary">
+            {{ search.results_count }} result{% if search.results_count != 1 %}s{% endif %} for
+            &ldquo;<strong>{{ search.terms | escape }}</strong>&rdquo;
+          </p>
+
+          <div class="km-search__grid" style="grid-template-columns: repeat({{ section.settings.columns | default: 4 }}, 1fr);">
+            {%- for item in search.results -%}
+              <a href="{{ item.url }}" class="km-search__card">
+                {%- if item.featured_image or item.image -%}
+                  {%- assign result_img = item.featured_image | default: item.image -%}
+                  <div class="km-search__media">
+                    {{ result_img | image_url: width: 800 | image_tag:
+                       loading: 'lazy',
+                       alt: item.title, class: 'km-search__img' }}
+                  </div>
+                {%- endif -%}
+                <div class="km-search__info">
+                  <span class="km-search__kind">{{ item.object_type }}</span>
+                  <h3 class="km-search__name">{{ item.title }}</h3>
+                </div>
+              </a>
+            {%- endfor -%}
+          </div>
+
+          {%- if paginate.pages > 1 -%}
+            <nav class="km-pagination">{{ paginate | default_pagination }}</nav>
+          {%- endif -%}
+        {%- else -%}
+          <p class="km-search__empty">
+            {{ section.settings.no_results | default: 'No results found. Try different keywords.' }}
+          </p>
+        {%- endif -%}
+      {%- endpaginate -%}
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+  .km-search { background: var(--km-surface); }
+  .km-search__header { max-width: 720px; margin: 0 auto 36px; text-align: center; }
+  .km-search__title { font-size: clamp(28px, 3.6vw, 40px); font-weight: 800; color: var(--km-heading); letter-spacing: -.02em; margin: 0 0 20px; }
+  .km-search__form { display: flex; gap: 10px; }
+  .km-search__input { flex: 1 1 auto; padding: 14px 18px; border: 1px solid var(--km-border); border-radius: var(--km-radius-pill); background: var(--km-body-bg); font-size: 15px; color: var(--km-heading); outline: none; }
+  .km-search__input:focus { border-color: var(--km-heading); }
+  .km-search__submit { padding: 14px 22px; }
+  .km-search__summary { color: var(--km-text); margin-bottom: 20px; }
+  .km-search__empty { color: var(--km-text); text-align: center; padding: 40px 0; }
+  .km-search__grid { display: grid; gap: 20px; }
+  .km-search__card { display: flex; flex-direction: column; gap: 10px; background: var(--km-surface); border: 1px solid var(--km-border); border-radius: var(--km-radius); padding: 10px; text-decoration: none; color: inherit; transition: transform var(--km-transition, .25s ease); }
+  .km-search__card:hover { transform: translateY(-2px); }
+  .km-search__media { aspect-ratio: 1 / 1; border-radius: var(--km-radius-sm); overflow: hidden; background: var(--km-body-bg); }
+  .km-search__img { width: 100%; height: 100%; object-fit: cover; }
+  .km-search__kind { font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--km-accent); }
+  .km-search__name { font-size: 16px; font-weight: 700; color: var(--km-heading); margin: 0; line-height: 1.4; }
+  @media (max-width: 900px) { .km-search__grid { grid-template-columns: repeat(2, 1fr) !important; } }
+  @media (max-width: 500px) { .km-search__form { flex-direction: column; } }
+</style>
+
+{% schema %}
+{
+  "name": "Search Results",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Search" },
+    { "type": "text", "id": "placeholder", "label": "Search placeholder", "default": "Search for parts, models, guides…" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Search" },
+    { "type": "range", "id": "columns", "label": "Results columns (desktop)", "min": 2, "max": 5, "step": 1, "default": 4 },
+    { "type": "text", "id": "no_results", "label": "No results message", "default": "No results found. Try different keywords." }
+  ]
+}
+{% endschema %}

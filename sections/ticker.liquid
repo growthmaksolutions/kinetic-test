@@ -1,0 +1,133 @@
+{%- comment -%}
+  ------------------------------------------------------------
+  USP Ticker — "Free Shipping • Established 2014 • Made in USA"
+  Scrolling marquee with icons, infinite loop
+  ------------------------------------------------------------
+{%- endcomment -%}
+
+<section class="km-ticker" aria-label="Highlights">
+  <div class="km-ticker__track" aria-hidden="true">
+    {%- if section.blocks.size > 0 -%}
+      {%- for i in (1..2) -%}
+        {%- for block in section.blocks -%}
+          <div class="km-ticker__item" {{ block.shopify_attributes }}>
+            {%- if block.settings.image != blank -%}
+              {{ block.settings.image | image_url: width: 160 | image_tag: width: 56, height: 56, alt: block.settings.label, class: 'km-ticker__icon' }}
+            {%- elsif block.settings.asset_name != blank -%}
+              <img src="{{ block.settings.asset_name | asset_url }}" alt="{{ block.settings.label }}" width="56" height="56" class="km-ticker__icon">
+            {%- endif -%}
+            <span class="km-ticker__label">{{ block.settings.label }}</span>
+            {%- unless forloop.last -%}<span class="km-ticker__dot" aria-hidden="true">•</span>{%- endunless -%}
+          </div>
+        {%- endfor -%}
+      {%- endfor -%}
+    {%- else -%}
+      {%- assign fallback_items = 'Free Shipping on Orders Over $100|ticker-shipping.avif||30-Day Easy Returns|ticker-established.avif||Made in USA|ticker-usa.avif' | split: '||' -%}
+      {%- for i in (1..3) -%}
+        {%- for entry in fallback_items -%}
+          {%- assign parts = entry | split: '|' -%}
+          <div class="km-ticker__item">
+            <img src="{{ parts[1] | asset_url }}" alt="{{ parts[0] }}" width="56" height="56" class="km-ticker__icon">
+            <span class="km-ticker__label">{{ parts[0] }}</span>
+            <span class="km-ticker__dot" aria-hidden="true">•</span>
+          </div>
+        {%- endfor -%}
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+  .km-ticker {
+    background: var(--km-surface);
+    border-top: 1px solid var(--km-border);
+    border-bottom: 1px solid var(--km-border);
+    overflow: hidden;
+    padding: 18px 0;
+  }
+  .km-ticker__track {
+    display: flex;
+    gap: 48px;
+    align-items: center;
+    width: max-content;
+    animation: km-scroll-left 30s linear infinite;
+    white-space: nowrap;
+  }
+  .km-ticker:hover .km-ticker__track {
+    animation-play-state: paused;
+  }
+  .km-ticker__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+  }
+  .km-ticker__icon {
+    height: 32px;
+    width: auto;
+    object-fit: contain;
+  }
+  .km-ticker__label {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--km-heading);
+  }
+  .km-ticker__dot {
+    color: var(--km-accent);
+    font-size: 22px;
+    margin-left: 32px;
+  }
+
+  @media (max-width: 640px) {
+    .km-ticker { padding: 12px 0; }
+    .km-ticker__track { gap: 32px; animation-duration: 22s; }
+    .km-ticker__label { font-size: 13px; }
+    .km-ticker__icon { height: 24px; }
+    .km-ticker__dot { margin-left: 20px; font-size: 18px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "USP Ticker",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Ticker item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Icon (image)"
+        },
+        {
+          "type": "text",
+          "id": "asset_name",
+          "label": "Asset filename (alternative to image picker)",
+          "info": "Use a file from /assets, e.g. ticker-shipping.avif"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Free Shipping"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "USP Ticker",
+      "blocks": [
+        { "type": "item", "settings": { "label": "Free Shipping on Orders Over $100", "asset_name": "ticker-shipping.avif" } },
+        { "type": "item", "settings": { "label": "30-Day Easy Returns", "asset_name": "ticker-established.avif" } },
+        { "type": "item", "settings": { "label": "Made in USA", "asset_name": "ticker-usa.avif" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
+{% comment %} Sync: Wed Apr 22 14:49:52 IST 2026 {% endcomment %}

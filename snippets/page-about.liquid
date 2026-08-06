@@ -1,0 +1,496 @@
+{%- comment -%}
+  About Kinetic Motorcycles — matches Webflow layout:
+    1. H1 + split hero (big rider photo + small card with about blurb)
+    2. White strip — tagline + 3 stats
+    3. Vision/Mission/Innovation tabs (clickable, swap content)
+    4. Why Choose Kinetic Motorcycles + 3 illustrated cards
+    5. Advancing Motorcycle Design CTA + newsletter
+{%- endcomment -%}
+<section class="km-about-page">
+  <div class="km-container">
+
+    <header class="km-about-page__header">
+      <h1 class="km-about-page__h1">About Kinetic Motorcycles</h1>
+    </header>
+
+    {%- comment -%} HERO SPLIT: big image + info card {%- endcomment -%}
+    <div class="km-about-page__hero-grid">
+      <div class="km-about-page__hero-img">
+        <img src="{{ 'hero-bg.webp' | asset_url }}" alt="Kinetic rider on the road" loading="eager" class="km-about-page__img">
+      </div>
+
+      <aside class="km-about-page__hero-card">
+        <div class="km-about-page__card-media">
+          <img src="{{ 'cta-bike.avif' | asset_url }}" alt="Kinetic custom bike" loading="lazy">
+        </div>
+        <h2 class="km-about-page__card-h">About Kinetic Motorcycles</h2>
+        <p>Kinetic Motorcycles was founded in 2013 by Mike Le with a focus on original design, functional innovation, and in-house manufacturing. From the beginning, the goal has been to create well-engineered motorcycle parts that combine performance, usability, and distinctive design.</p>
+        <p>We specialize in products designed by Mike and manufactured in the United States, allowing for consistent quality control and close attention to detail. Our work is rooted in the hand-built motorcycle community, where fitment, function, and individuality matter. We focus on original designs built to support customization, reliability, and long-term use.</p>
+        <p class="km-about-page__card-tag"><strong>Our goal is simple:</strong> provide the right parts, at the right standard, backed by real support.</p>
+        <a href="/collections" class="km-about-page__card-link">View Our Collection {%- render 'icon', icon: 'arrow-right' -%}</a>
+        <div class="km-about-page__card-meta">Founded in 2013</div>
+      </aside>
+    </div>
+
+    {%- comment -%} WHITE STATS STRIP {%- endcomment -%}
+    <div class="km-about-page__stats-strip">
+      <div class="km-about-page__stats-tagline">
+        <h3>Stop mix-and-matching. Start building.</h3>
+        <p>As a dedicated manufacturer, we don’t just stock parts — we engineer them. Our comprehensive catalog of U.S.-made components is designed to flow seamlessly together, saving you the headache of modifying generic parts to fit. Get the custom look you want, straight from the fabricator who designed it.</p>
+      </div>
+      <div class="km-about-page__stats-grid">
+        <div class="km-about-page__stat">
+          <div class="km-about-page__stat-num">10+</div>
+          <div class="km-about-page__stat-label">Years<br><span>Designing &amp; Manufacturing</span></div>
+        </div>
+        <div class="km-about-page__stat">
+          <div class="km-about-page__stat-num">11,900+</div>
+          <div class="km-about-page__stat-label"><span>Custom parts delivered</span></div>
+        </div>
+        <div class="km-about-page__stat">
+          <div class="km-about-page__stat-num">$2.3M+</div>
+          <div class="km-about-page__stat-label"><span>In American-made inventory shipped</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} VISION / MISSION / INNOVATION TABS {%- endcomment -%}
+  <div class="km-about-page__vmi-wrap">
+    <div class="km-container">
+      <div class="km-about-page__vmi-tabs" role="tablist" data-km-vmi-tabs>
+        <button type="button" class="km-about-page__vmi-tab" role="tab" aria-selected="false" data-vmi="vision">Our Vision</button>
+        <button type="button" class="km-about-page__vmi-tab" role="tab" aria-selected="false" data-vmi="mission">Our Mission</button>
+        <button type="button" class="km-about-page__vmi-tab is-active" role="tab" aria-selected="true" data-vmi="innovation">Our Innovation</button>
+      </div>
+
+      <div class="km-about-page__vmi-panel" data-vmi-panel>
+        <div class="km-about-page__vmi-media">
+          <img src="{{ 'cta-bike.avif' | asset_url }}" alt="Kinetic custom bike on the road" loading="lazy">
+        </div>
+        <article class="km-about-page__vmi-card">
+          <h3 data-vmi-h>Our Innovation</h3>
+          <p data-vmi-p>We are shaping the future of automotive innovation &amp; leading the way towards a more innovative, rider-first approach to motorcycle parts. Every component is engineered from scratch in-house — no templates, no outsourced shortcuts.</p>
+          <a href="/collections" class="km-about-page__vmi-btn">View Collection {%- render 'icon', icon: 'arrow-right' -%}</a>
+        </article>
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} WHY CHOOSE {%- endcomment -%}
+  <div class="km-about-page__why">
+    <div class="km-container">
+      <h2 class="km-about-page__why-h">Why Choose Kinetic Motorcycles</h2>
+      <div class="km-about-page__why-grid">
+        <article class="km-about-page__why-card">
+          <div class="km-about-page__why-media">
+            <img src="{{ 'feature-made-in-usa.webp' | asset_url }}" alt="Made in USA badge" loading="lazy">
+          </div>
+          <h3>Crafted with Pride, Made in America</h3>
+          <p>Every product is designed and manufactured in the United States, giving you consistent quality, strict quality control, and dependable performance you can trust. By building in-house, we maintain complete oversight from design to final production, so you can ride with confidence knowing your parts are built to last.</p>
+        </article>
+        <article class="km-about-page__why-card">
+          <div class="km-about-page__why-media">
+            <img src="{{ 'feature-garage.webp' | asset_url }}" alt="Kinetic garage established 2014" loading="lazy">
+          </div>
+          <h3>Experience You Can Trust</h3>
+          <p>With 11 years of hands-on experience, we deliver proven quality and dependable expertise. Every product and interaction reflects a long-term commitment to precision, consistency, and rider satisfaction.</p>
+        </article>
+        <article class="km-about-page__why-card">
+          <div class="km-about-page__why-media">
+            <img src="{{ 'feature-shipping.webp' | asset_url }}" alt="Free shipping rider illustration" loading="lazy">
+          </div>
+          <h3>Fast, Free U.S. Shipping</h3>
+          <p>Your order ships free anywhere in the United States, without hidden fees or unnecessary delays. We make it easy to get the parts you need quickly, so you can spend less time waiting and more time riding.</p>
+        </article>
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} CTA SPLIT {%- endcomment -%}
+  <div class="km-about-page__cta-wrap">
+    <div class="km-container">
+      <div class="km-about-page__cta-grid">
+        <div class="km-about-page__cta-left">
+          <h3>Advancing Motorcycle Design</h3>
+          <p>We build original, in-house components focused on fitment, function, and reliability — pushing thoughtful design forward with every product we make.</p>
+          <a href="/collections" class="km-about-page__cta-link">Explore by Collections {%- render 'icon', icon: 'arrow-right' -%}</a>
+        </div>
+        <div class="km-about-page__cta-right">
+          <div class="km-about-page__cta-right-bg" aria-hidden="true">
+            <img src="{{ 'cta-bike.avif' | asset_url }}" alt="" loading="lazy">
+          </div>
+          <div class="km-about-page__cta-right-inner">
+            <span class="km-about-page__cta-eyebrow">Join The Kinetic Community</span>
+            <h4>Get exclusive offers, new product alerts &amp; expert riding tips</h4>
+            <form action="/contact#contact_form" method="post" class="km-about-page__form">
+              <input type="hidden" name="form_type" value="customer">
+              <input type="hidden" name="utf8" value="✓">
+              <input type="hidden" name="contact[tags]" value="newsletter">
+              <input type="email" name="contact[email]" placeholder="Email address" required class="km-about-page__form-input">
+              <button type="submit" class="km-about-page__form-btn">Submit</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<style>
+  .km-about-page { padding: 56px 0 0; background: var(--km-body-bg, #EDEDED); }
+
+  .km-about-page__header { margin-bottom: 36px; }
+  .km-about-page__h1 {
+    font-size: clamp(32px, 4.4vw, 52px);
+    font-weight: 700;
+    letter-spacing: -.02em;
+    color: #000;
+    margin: 0;
+    line-height: 1.1;
+  }
+
+  /* HERO SPLIT */
+  .km-about-page__hero-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 32px;
+    margin-bottom: 24px;
+  }
+  .km-about-page__hero-img {
+    aspect-ratio: 4/5;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #000;
+  }
+  .km-about-page__img { width: 100%; height: 100%; object-fit: cover; }
+
+  .km-about-page__hero-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    border: 1px solid var(--km-border, #DDDDDD);
+  }
+  .km-about-page__card-media {
+    aspect-ratio: 16/10;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #f3f4f6;
+    margin-bottom: 4px;
+  }
+  .km-about-page__card-media img { width: 100%; height: 100%; object-fit: cover; }
+  .km-about-page__card-h {
+    font-size: 15px;
+    font-weight: 700;
+    color: #000;
+    margin: 0;
+    letter-spacing: .02em;
+  }
+  .km-about-page__hero-card p {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--km-text, #4B5563);
+    margin: 0;
+  }
+  .km-about-page__card-tag strong { color: #000; font-weight: 700; }
+  .km-about-page__card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #000;
+    text-decoration: none;
+    margin-top: auto;
+  }
+  .km-about-page__card-link:hover { color: var(--km-accent, #FBB03D); }
+  .km-about-page__card-link svg { width: 12px; height: 12px; }
+  .km-about-page__card-meta {
+    padding-top: 12px;
+    border-top: 1px solid var(--km-border, #DDDDDD);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--km-text, #4B5563);
+  }
+
+  /* STATS STRIP */
+  .km-about-page__stats-strip {
+    background: #fff;
+    padding: 40px 32px;
+    border-radius: 18px;
+    display: grid;
+    grid-template-columns: 1.2fr 2fr;
+    gap: 40px;
+    align-items: center;
+    border: 1px solid var(--km-border, #DDDDDD);
+    margin-bottom: 48px;
+  }
+  .km-about-page__stats-tagline h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #000;
+    margin: 0 0 8px;
+    letter-spacing: -.005em;
+  }
+  .km-about-page__stats-tagline p {
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--km-text, #4B5563);
+    margin: 0;
+  }
+  .km-about-page__stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    border-left: 1px solid var(--km-border, #DDDDDD);
+    padding-left: 40px;
+  }
+  .km-about-page__stat { display: flex; flex-direction: column; gap: 4px; }
+  .km-about-page__stat-num {
+    font-size: clamp(28px, 3.4vw, 40px);
+    font-weight: 800;
+    color: #000;
+    line-height: 1;
+    letter-spacing: -.02em;
+  }
+  .km-about-page__stat-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: #000;
+    line-height: 1.2;
+  }
+  .km-about-page__stat-label span {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--km-text, #4B5563);
+    letter-spacing: .02em;
+    margin-top: 2px;
+  }
+
+  /* VISION / MISSION / INNOVATION */
+  .km-about-page__vmi-wrap {
+    padding: 40px 0 72px;
+    background: var(--km-body-bg, #EDEDED);
+  }
+  .km-about-page__vmi-tabs {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    padding: 6px;
+    background: #fff;
+    border: 1px solid var(--km-border, #DDDDDD);
+    border-radius: 9999px;
+    max-width: max-content;
+    margin: 0 auto 32px;
+  }
+  .km-about-page__vmi-tab {
+    padding: 10px 22px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .02em;
+    color: var(--km-text, #4B5563);
+    background: transparent;
+    border: 0;
+    border-radius: 9999px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .25s ease, color .25s ease;
+  }
+  .km-about-page__vmi-tab:hover { color: #000; }
+  .km-about-page__vmi-tab.is-active {
+    background: #000;
+    color: #fff;
+  }
+
+  .km-about-page__vmi-panel {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    aspect-ratio: 16/6;
+    min-height: 320px;
+    background: #000;
+  }
+  .km-about-page__vmi-media { position: absolute; inset: 0; z-index: 0; }
+  .km-about-page__vmi-media img { width: 100%; height: 100%; object-fit: cover; }
+  .km-about-page__vmi-card {
+    position: absolute;
+    right: 32px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #fff;
+    border-radius: 14px;
+    padding: 28px;
+    width: 340px;
+    max-width: 42%;
+    z-index: 2;
+    box-shadow: 0 10px 30px rgba(0,0,0,.15);
+  }
+  .km-about-page__vmi-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #000;
+    margin: 0 0 10px;
+    letter-spacing: -.005em;
+  }
+  .km-about-page__vmi-card p {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--km-text, #4B5563);
+    margin: 0 0 18px;
+  }
+  .km-about-page__vmi-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: var(--km-accent, #FBB03D);
+    color: #000;
+    border-radius: 9999px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    transition: background .2s ease;
+  }
+  .km-about-page__vmi-btn:hover { background: #e69a2b; }
+  .km-about-page__vmi-btn svg { width: 12px; height: 12px; }
+
+  /* WHY CHOOSE */
+  .km-about-page__why {
+    padding: 72px 0;
+    background: var(--km-body-bg, #EDEDED);
+  }
+  .km-about-page__why-h {
+    font-size: clamp(28px, 3.4vw, 42px);
+    font-weight: 700;
+    color: #000;
+    margin: 0 0 48px;
+    letter-spacing: -.015em;
+    line-height: 1.1;
+  }
+  .km-about-page__why-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+  .km-about-page__why-card { text-align: center; }
+  .km-about-page__why-media {
+    aspect-ratio: 1/1;
+    max-width: 240px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .km-about-page__why-media img { width: 100%; height: 100%; object-fit: contain; }
+  .km-about-page__why-card h3 {
+    font-size: 18px;
+    font-weight: 800;
+    color: #000;
+    margin: 0 0 14px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+  .km-about-page__why-card p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--km-text, #4B5563);
+    margin: 0 auto;
+    max-width: 340px;
+  }
+
+  /* CTA */
+  .km-about-page__cta-wrap { padding: 0 0 96px; background: var(--km-body-bg, #EDEDED); }
+  .km-about-page__cta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-radius: 18px;
+    overflow: hidden;
+  }
+  .km-about-page__cta-left {
+    background: #fff;
+    padding: 48px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+  }
+  .km-about-page__cta-left h3 {
+    font-size: clamp(22px, 2.4vw, 28px);
+    font-weight: 700;
+    color: #000;
+    margin: 0;
+    letter-spacing: -.015em;
+    line-height: 1.2;
+  }
+  .km-about-page__cta-left p { font-size: 14px; line-height: 1.65; color: var(--km-text, #4B5563); margin: 0; max-width: 440px; }
+  .km-about-page__cta-link { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: #000; text-decoration: none; }
+  .km-about-page__cta-link:hover { color: var(--km-accent, #FBB03D); }
+  .km-about-page__cta-link svg { width: 12px; height: 12px; }
+
+  .km-about-page__cta-right { position: relative; background: #111; color: #fff; overflow: hidden; isolation: isolate; min-height: 240px; }
+  .km-about-page__cta-right-bg { position: absolute; inset: 0; z-index: -1; }
+  .km-about-page__cta-right-bg img { width: 100%; height: 100%; object-fit: cover; opacity: .55; }
+  .km-about-page__cta-right-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.7) 0%, rgba(0,0,0,.3) 100%); }
+  .km-about-page__cta-right-inner { padding: 48px 40px; display: flex; flex-direction: column; justify-content: center; gap: 14px; height: 100%; }
+  .km-about-page__cta-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.8); }
+  .km-about-page__cta-right-inner h4 { font-size: clamp(18px, 2vw, 22px); font-weight: 700; color: #fff; margin: 0 0 8px; line-height: 1.25; max-width: 400px; }
+  .km-about-page__form { display: flex; background: #fff; border-radius: 6px; overflow: hidden; max-width: 400px; }
+  .km-about-page__form-input { flex: 1; padding: 14px 16px; border: 0; font-size: 14px; color: #111; outline: none; font-family: inherit; }
+  .km-about-page__form-btn { flex: 0 0 auto; padding: 14px 24px; background: var(--km-accent, #FBB03D); color: #000; border: 0; font-weight: 800; font-size: 13px; letter-spacing: .04em; cursor: pointer; font-family: inherit; transition: background .2s ease; }
+  .km-about-page__form-btn:hover { background: #e69a2b; }
+
+  @media (max-width: 1000px) {
+    .km-about-page__hero-grid { grid-template-columns: 1fr; }
+    .km-about-page__stats-strip { grid-template-columns: 1fr; }
+    .km-about-page__stats-grid { border-left: 0; padding-left: 0; border-top: 1px solid var(--km-border, #DDDDDD); padding-top: 20px; }
+    .km-about-page__vmi-panel { aspect-ratio: auto; min-height: 0; display: flex; flex-direction: column; }
+    .km-about-page__vmi-media { position: static; aspect-ratio: 16/9; }
+    .km-about-page__vmi-card { position: static; transform: none; width: 100%; max-width: none; border-radius: 0; box-shadow: none; }
+    .km-about-page__why-grid { grid-template-columns: 1fr; }
+    .km-about-page__cta-grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<script>
+(() => {
+  const tabs = document.querySelectorAll('[data-vmi]');
+  const h = document.querySelector('[data-vmi-h]');
+  const p = document.querySelector('[data-vmi-p]');
+  if (!tabs.length || !h || !p) return;
+
+  const content = {
+    vision: {
+      h: 'Our Vision',
+      p: 'We aim to set a higher standard in the motorcycle parts industry — a future where riders can confidently find the right parts for their bikes without confusion, delays, or uncertainty.'
+    },
+    mission: {
+      h: 'Our Mission',
+      p: 'Deliver motorcycle solutions that meet real-world riding needs. By focusing on trust, innovation, and consistent quality, we make sure every product and every interaction adds value to your experience as a rider.'
+    },
+    innovation: {
+      h: 'Our Innovation',
+      p: 'We are shaping the future of automotive innovation & leading the way towards a more innovative, rider-first approach to motorcycle parts. Every component is engineered from scratch in-house — no templates, no outsourced shortcuts.'
+    }
+  };
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const key = tab.getAttribute('data-vmi');
+      tabs.forEach((t) => {
+        t.classList.toggle('is-active', t === tab);
+        t.setAttribute('aria-selected', t === tab ? 'true' : 'false');
+      });
+      const c = content[key];
+      if (!c) return;
+      h.textContent = c.h;
+      p.textContent = c.p;
+    });
+  });
+})();
+</script>

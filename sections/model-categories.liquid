@@ -1,0 +1,253 @@
+{%- comment -%}
+  Model Categories Grid Section — Grid of category cards.
+  Supports dynamic categories via collection metafields (custom.category_collections).
+  Each sub-collection can have a custom.category_description metafield for card text.
+{%- endcomment -%}
+
+{%- assign current_coll = section.settings.collection | default: collection -%}
+{%- assign dynamic_categories = current_coll.metafields.custom.category_collections.value -%}
+
+<section class="km-model-cats" id="Section-{{ section.id }}">
+  <div class="km-container">
+    <header class="km-model-cats__header">
+      <h2 class="km-model-cats__title">
+        {%- if section.settings.heading != blank -%}
+          {{ section.settings.heading }}
+        {%- else -%}
+          {{ current_coll.title }} Categories
+        {%- endif -%}
+      </h2>
+    </header>
+
+    <div class="km-model-cats__grid">
+      {%- if dynamic_categories != blank -%}
+        {%- comment -%} DYNAMIC MODE — From Metafields {%- endcomment -%}
+        {%- for cat in dynamic_categories -%}
+          <div class="km-model-cats__card">
+            <div class="km-model-cats__card-image">
+              {%- if cat.image != blank -%}
+                {{ cat.image | image_url: width: 1200 | image_tag: 
+                   loading: 'lazy', 
+                   sizes: '(min-width: 1200px) 600px, (min-width: 768px) 50vw, 100vw',
+                   widths: '400, 600, 800, 1200',
+                   alt: cat.title, class: 'km-model-cats__img' }}
+              {%- else -%}
+                <img src="{{ 'category_illustration_vintage.png' | asset_url }}" width="800" height="520" loading="lazy" alt="{{ cat.title }}" class="km-model-cats__img">
+              {%- endif -%}
+            </div>
+            <div class="km-model-cats__card-content">
+              <h3 class="km-model-cats__card-title">{{ cat.title }}</h3>
+              {%- assign cat_desc = cat.metafields.custom.category_description.value | default: cat.description | strip_html -%}
+              {%- if cat_desc != blank -%}
+                <p class="km-model-cats__card-desc">{{ cat_desc | truncatewords: 30 }}</p>
+              {%- endif -%}
+              <a href="{{ cat.url }}" class="km-btn km-btn-outline km-model-cats__card-btn">
+                View {{ cat.title }} {%- render 'icon', icon: 'arrow-right' -%}
+              </a>
+            </div>
+          </div>
+        {%- endfor -%}
+
+      {%- elsif section.blocks.size > 0 -%}
+        {%- comment -%} MANUAL MODE — From Blocks {%- endcomment -%}
+        {%- for block in section.blocks -%}
+          <div class="km-model-cats__card" {{ block.shopify_attributes }}>
+            <div class="km-model-cats__card-image">
+              {%- if block.settings.image != blank -%}
+                {{ block.settings.image | image_url: width: 1200 | image_tag: 
+                   loading: 'lazy', 
+                   sizes: '(min-width: 1200px) 600px, (min-width: 768px) 50vw, 100vw',
+                   widths: '400, 600, 800, 1200',
+                   alt: block.settings.title, class: 'km-model-cats__img' }}
+              {%- else -%}
+                <img src="{{ 'category_illustration_vintage.png' | asset_url }}" width="800" height="520" loading="lazy" alt="{{ block.settings.title }}" class="km-model-cats__img">
+              {%- endif -%}
+            </div>
+            <div class="km-model-cats__card-content">
+              <h3 class="km-model-cats__card-title">{{ block.settings.title }}</h3>
+              {%- if block.settings.description != blank -%}
+                <p class="km-model-cats__card-desc">{{ block.settings.description }}</p>
+              {%- endif -%}
+              {%- if block.settings.url != blank -%}
+                {%- assign btn_text = block.settings.btn_label -%}
+                {%- if btn_text == blank -%}
+                  {%- assign btn_text = 'View ' | append: block.settings.title -%}
+                {%- endif -%}
+                <a href="{{ block.settings.url }}" class="km-btn km-btn-outline km-model-cats__card-btn">
+                  {{ btn_text }} {%- render 'icon', icon: 'arrow-right' -%}
+                </a>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .km-model-cats {
+    background: #fff;
+    padding: 0 0 80px;
+  }
+  .km-model-cats__header {
+    margin-bottom: 40px;
+  }
+  .km-model-cats__title {
+    font-size: clamp(24px, 3.5vw, 36px);
+    font-weight: 700;
+    color: #000;
+    margin: 0;
+  }
+
+  .km-model-cats__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px;
+  }
+
+  .km-model-cats__card {
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .km-model-cats__card-image {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    aspect-ratio: 1.5/1;
+    background: #f9fafb;
+    border: 1px solid #E5E7EB;
+  }
+  .km-model-cats__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .km-model-cats__card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex-grow: 1;
+  }
+  .km-model-cats__card-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #000;
+    margin: 0;
+  }
+  .km-model-cats__card-desc {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--km-text, #4B5563);
+    margin: 0 0 8px;
+  }
+  .km-model-cats__card-btn {
+    width: fit-content;
+    max-width: 100%;
+    padding: 12px 24px;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.2;
+    border-radius: 9999px;
+    border-color: #D1D5DB;
+    background: var(--km-accent, #FBB03D);
+    color: #000;
+    border: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
+    word-break: break-word;
+    white-space: normal;
+    text-decoration: none;
+    transition: background .2s ease;
+  }
+  .km-model-cats__card-btn:hover {
+    background: #e69a2b;
+  }
+  .km-model-cats__card-btn svg { width: 14px; height: 14px; }
+
+  @media (max-width: 768px) {
+    .km-model-cats { padding-bottom: 60px; }
+    .km-model-cats__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 24px;
+    }
+    .km-model-cats__card-content {
+      padding: 0 4px;
+    }
+    .km-model-cats__card-title {
+      font-size: 20px;
+    }
+    .km-model-cats__card-btn {
+      width: 100%;
+      padding: 14px 20px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Model Categories Grid",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Leave blank to use '[Model Name] Categories'"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Select Collection",
+      "info": "Optional: Pull dynamic categories from a specific collection's metafields. Defaults to the current page collection."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Illustration/Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Accessories"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Personalize your ride with accessories designed to improve comfort, usability, and finishing details. These components complement stock and custom setups while maintaining the bike's balance and classic lines."
+        },
+        {
+          "type": "text",
+          "id": "btn_label",
+          "label": "Button Label"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Category Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Model Categories Grid"
+    }
+  ]
+}
+{% endschema %}
+

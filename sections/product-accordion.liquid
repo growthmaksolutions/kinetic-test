@@ -1,0 +1,170 @@
+{%- comment -%}
+  Product Accordion — Product Info, Specs, Features, Fitment, Why Choose, FAQs
+  Each item is a block, connected to product metafields.
+  Fully editable in the theme editor.
+{%- endcomment -%}
+
+<div class="km-pp__accordion-wrap" id="Section-{{ section.id }}">
+  <div class="km-container">
+    <div class="km-pp__accordion">
+      {%- for block in section.blocks -%}
+        {%- assign content = '' -%}
+
+        {%- comment -%} Pull content from the metafield specified in the block settings {%- endcomment -%}
+        {%- case block.settings.metafield_key -%}
+          {%- when 'product_information' -%}
+            {%- assign content = product.metafields.custom.product_information.value -%}
+          {%- when 'specifications' -%}
+            {%- assign content = product.metafields.custom.specifications.value -%}
+          {%- when 'features' -%}
+            {%- assign content = product.metafields.custom.features.value -%}
+          {%- when 'fitment' -%}
+            {%- assign content = product.metafields.custom.fitment.value -%}
+          {%- when 'why_choose_this' -%}
+            {%- assign content = product.metafields.custom.why_choose_this.value -%}
+          {%- when 'faqs' -%}
+            {%- assign content = product.metafields.custom.faqs.value -%}
+          {%- when 'description' -%}
+            {%- assign content = product.description -%}
+          {%- when 'none' -%}
+            {%- assign content = block.settings.custom_content -%}
+        {%- endcase -%}
+
+        {%- comment -%} Fall back to custom_content if metafield is empty {%- endcomment -%}
+        {%- if content == blank and block.settings.custom_content != blank -%}
+          {%- assign content = block.settings.custom_content -%}
+        {%- endif -%}
+
+        <details class="km-pp__acc-item{% if forloop.first %}" open{% else %}"{% endif %} {{ block.shopify_attributes }}>
+          <summary class="km-pp__acc-q">
+            <span>{{ block.settings.title }}</span>
+            <span class="km-pp__acc-toggle">{%- render 'icon', icon: 'plus' -%}{%- render 'icon', icon: 'minus' -%}</span>
+          </summary>
+          <div class="km-pp__acc-a">
+            {%- if content != blank -%}
+              {{ content }}
+            {%- else -%}
+              <p style="color: #9ca3af; font-style: italic;">No content available. Add content via the product metafield "custom.{{ block.settings.metafield_key }}" or enter custom content in the theme editor.</p>
+            {%- endif -%}
+          </div>
+        </details>
+      {%- endfor -%}
+
+      {%- if section.blocks.size == 0 -%}
+        {%- comment -%} Default accordion items when no blocks configured {%- endcomment -%}
+        <details class="km-pp__acc-item" open>
+          <summary class="km-pp__acc-q">
+            <span>Product Information</span>
+            <span class="km-pp__acc-toggle">{%- render 'icon', icon: 'plus' -%}{%- render 'icon', icon: 'minus' -%}</span>
+          </summary>
+          <div class="km-pp__acc-a">
+            {%- if product.metafields.custom.product_information.value != blank -%}
+              {{ product.metafields.custom.product_information.value }}
+            {%- elsif product.description != blank -%}
+              {{ product.description }}
+            {%- else -%}
+              <p style="color: #9ca3af; font-style: italic;">No product information available.</p>
+            {%- endif -%}
+          </div>
+        </details>
+        <details class="km-pp__acc-item">
+          <summary class="km-pp__acc-q"><span>Specifications</span><span class="km-pp__acc-toggle">{%- render 'icon', icon: 'plus' -%}{%- render 'icon', icon: 'minus' -%}</span></summary>
+          <div class="km-pp__acc-a">{{ product.metafields.custom.specifications.value | default: '<p style="color: #9ca3af; font-style: italic;">No specifications available.</p>' }}</div>
+        </details>
+        <details class="km-pp__acc-item">
+          <summary class="km-pp__acc-q"><span>Features</span><span class="km-pp__acc-toggle">{%- render 'icon', icon: 'plus' -%}{%- render 'icon', icon: 'minus' -%}</span></summary>
+          <div class="km-pp__acc-a">{{ product.metafields.custom.features.value | default: '<p style="color: #9ca3af; font-style: italic;">No features available.</p>' }}</div>
+        </details>
+        <details class="km-pp__acc-item">
+          <summary class="km-pp__acc-q"><span>Fitment</span><span class="km-pp__acc-toggle">{%- render 'icon', icon: 'plus' -%}{%- render 'icon', icon: 'minus' -%}</span></summary>
+          <div class="km-pp__acc-a">{{ product.metafields.custom.fitment.value | default: '<p style="color: #9ca3af; font-style: italic;">No fitment data available.</p>' }}</div>
+        </details>
+        <details class="km-pp__acc-item">
+          <summary class="km-pp__acc-q"><span>Why Choose</span><span class="km-pp__acc-toggle">{%- render 'icon', icon: 'plus' -%}{%- render 'icon', icon: 'minus' -%}</span></summary>
+          <div class="km-pp__acc-a">{{ product.metafields.custom.why_choose_this.value | default: '<p style="color: #9ca3af; font-style: italic;">No content available.</p>' }}</div>
+        </details>
+        <details class="km-pp__acc-item">
+          <summary class="km-pp__acc-q"><span>FAQs</span><span class="km-pp__acc-toggle">{%- render 'icon', icon: 'plus' -%}{%- render 'icon', icon: 'minus' -%}</span></summary>
+          <div class="km-pp__acc-a">{{ product.metafields.custom.faqs.value | default: '<p style="color: #9ca3af; font-style: italic;">No FAQs available.</p>' }}</div>
+        </details>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  .km-pp__accordion-wrap { padding: 0 0 40px; background: var(--km-body-bg, #EDEDED); }
+  .km-pp__accordion { display: flex; flex-direction: column; gap: 10px; }
+  .km-pp__acc-item { background: #fff; border: 1px solid var(--km-border, #DDDDDD); border-radius: 14px; padding: 0 24px; transition: border-color .2s ease; }
+  .km-pp__acc-item[open] { border-color: #000; }
+  .km-pp__acc-q { list-style: none; cursor: pointer; padding: 18px 0; display: flex; align-items: center; justify-content: space-between; gap: 20px; font-weight: 700; font-size: 14px; letter-spacing: .08em; text-transform: uppercase; color: #000; }
+  .km-pp__acc-q::-webkit-details-marker { display: none; }
+  .km-pp__acc-toggle { width: 28px; height: 28px; border-radius: 50%; background: var(--km-body-bg, #EDEDED); display: inline-flex; align-items: center; justify-content: center; color: #000; transition: background .2s ease, color .2s ease; }
+  .km-pp__acc-toggle svg { width: 14px; height: 14px; }
+  .km-pp__acc-toggle svg:last-child { display: none; }
+  .km-pp__acc-item[open] .km-pp__acc-toggle { background: #000; color: #fff; }
+  .km-pp__acc-item[open] .km-pp__acc-toggle svg:first-child { display: none; }
+  .km-pp__acc-item[open] .km-pp__acc-toggle svg:last-child { display: inline-flex; }
+  .km-pp__acc-a { padding: 10px 0 24px; border-top: 1px solid var(--km-border, #DDDDDD); font-size: 14px; line-height: 1.7; color: var(--km-text, #4B5563); }
+  .km-pp__acc-a p { margin: 0 0 12px; }
+  .km-pp__acc-a p:last-child { margin-bottom: 0; }
+  .km-pp__spec-list { padding-left: 18px; margin: 0; }
+  .km-pp__spec-list li { margin-bottom: 6px; }
+</style>
+
+{% schema %}
+{
+  "name": "Product Accordion",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "accordion_item",
+      "name": "Accordion item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Product Information"
+        },
+        {
+          "type": "select",
+          "id": "metafield_key",
+          "label": "Content source (metafield)",
+          "options": [
+            { "value": "product_information", "label": "Product Information (custom.product_information)" },
+            { "value": "specifications", "label": "Specifications (custom.specifications)" },
+            { "value": "features", "label": "Features (custom.features)" },
+            { "value": "fitment", "label": "Fitment (custom.fitment)" },
+            { "value": "why_choose_this", "label": "Why Choose (custom.why_choose_this)" },
+            { "value": "faqs", "label": "FAQs (custom.faqs)" },
+            { "value": "description", "label": "Product Description" },
+            { "value": "none", "label": "Custom content only" }
+          ],
+          "default": "product_information",
+          "info": "Select which product metafield to display. Set metafields in Shopify Admin → Products → Product → Metafields."
+        },
+        {
+          "type": "richtext",
+          "id": "custom_content",
+          "label": "Custom content (fallback)",
+          "info": "Shown when the selected metafield is empty, or when 'Custom content only' is chosen."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Accordion",
+      "blocks": [
+        { "type": "accordion_item", "settings": { "title": "Product Information", "metafield_key": "product_information" } },
+        { "type": "accordion_item", "settings": { "title": "Specifications", "metafield_key": "specifications" } },
+        { "type": "accordion_item", "settings": { "title": "Features", "metafield_key": "features" } },
+        { "type": "accordion_item", "settings": { "title": "Fitment", "metafield_key": "fitment" } },
+        { "type": "accordion_item", "settings": { "title": "Why Choose", "metafield_key": "why_choose_this" } },
+        { "type": "accordion_item", "settings": { "title": "FAQs", "metafield_key": "faqs" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

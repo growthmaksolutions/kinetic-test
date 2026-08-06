@@ -1,0 +1,298 @@
+{%- comment -%}
+  ------------------------------------------------------------
+  Product Carousel — Best Sellers / Best Selling Exhausts etc.
+  4-card grid (horizontal scroll on mobile) with prev/next controls
+  ------------------------------------------------------------
+{%- endcomment -%}
+
+<section class="km-section km-pcarousel" id="Section-{{ section.id }}">
+  <div class="km-container">
+    <div class="km-section-row">
+      <h2 class="km-section-heading">{{ section.settings.heading | default: 'Best Sellers' }}</h2>
+      <div class="km-pcarousel__actions">
+        {%- if section.settings.view_all_url != blank -%}
+          <a href="{{ section.settings.view_all_url }}" class="km-btn-view-all">{{ section.settings.view_all_label | default: 'View All' }}</a>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <div class="km-pcarousel__viewport" data-km-carousel>
+      <div class="km-pcarousel__track" data-km-track>
+        {%- assign carousel_collection = section.settings.collection -%}
+        {%- if carousel_collection == blank and product != blank and product.collections.size > 0 -%}
+          {%- assign carousel_collection = product.collections.first.handle -%}
+        {%- endif -%}
+        {%- if carousel_collection == blank -%}
+          {%- assign carousel_collection = 'all' -%}
+        {%- endif -%}
+
+        {%- if carousel_collection != blank -%}
+          {%- assign coll = collections[carousel_collection] -%}
+          {%- assign filtered_products = coll.products -%}
+          
+          {%- if section.settings.filter_tag != blank -%}
+            {%- assign filtered_products = coll.products | where: 'tags', section.settings.filter_tag -%}
+          {%- endif -%}
+          
+          {%- for product_item in filtered_products limit: section.settings.limit -%}
+            {%- if product_item.id != product.id -%}
+              {%- render 'product-card', product: product_item, class: 'km-pcarousel__card' -%}
+            {%- endif -%}
+          {%- else -%}
+            <div class="km-pcarousel__empty" style="padding: 20px; font-size: 14px; color: #6b7280;">
+              No products found in the collection.
+            </div>
+          {%- endfor -%}
+        {%- elsif section.blocks.size > 0 -%}
+          {%- for block in section.blocks -%}
+            <article class="km-pcarousel__card" {{ block.shopify_attributes }}>
+              <a href="{{ block.settings.url | default: routes.all_products_collection_url }}" class="km-pcarousel__imgwrap">
+                {%- if block.settings.badge != blank -%}<span class="km-pcarousel__badge">{{ block.settings.badge }}</span>{%- endif -%}
+                {%- if block.settings.image != blank -%}
+                  {{ block.settings.image | image_url: width: 1200 | image_tag: 
+                     loading: 'lazy', 
+                     sizes: '(min-width: 1200px) 300px, (min-width: 768px) 50vw, 100vw',
+                     widths: '400, 600, 800, 1200',
+                     alt: block.settings.title, 
+                     class: 'km-pcarousel__img' 
+                  }}
+                {%- elsif block.settings.asset_name != blank -%}
+                  <img src="{{ block.settings.asset_name | asset_url }}" width="800" height="800" loading="lazy" alt="{{ block.settings.title }}" class="km-pcarousel__img">
+                {%- endif -%}
+              </a>
+              <div class="km-pcarousel__meta">
+                <h3 class="km-pcarousel__title"><a href="{{ block.settings.url | default: routes.all_products_collection_url }}">{{ block.settings.title }}</a></h3>
+                {%- if block.settings.model != blank -%}
+                  <div class="km-pcarousel__model"><img src="{{ 'icon-motor.png' | asset_url }}" width="16" height="16" alt="" class="km-pcarousel__model-icon" loading="lazy"><span>{{ block.settings.model }}</span></div>
+                {%- endif -%}
+                <div class="km-pcarousel__pricerow">
+                  <span class="km-pcarousel__price">{{ block.settings.price | default: '$ 0.00 USD' }}</span>
+                  {%- if block.settings.compare_price != blank -%}<span class="km-pcarousel__compare">{{ block.settings.compare_price }}</span>{%- endif -%}
+                </div>
+                {%- assign stars = block.settings.rating | default: 5 -%}
+                <div class="km-pcarousel__rating" aria-label="{{ stars }} out of 5 stars">
+                  {%- for i in (1..5) -%}<span class="km-pcarousel__star{% if i > stars %} km-pcarousel__star--off{% endif %}">{%- render 'icon', icon: 'star' -%}</span>{%- endfor -%}
+                </div>
+              </div>
+            </article>
+          {%- endfor -%}
+        {%- else -%}
+          {%- assign fallback_products = 'RIDGE 2-INTO-1 Full Custom Exhaust System for Indian Scout Models|Indian|$ 1,250.00 USD|product-1.webp|5||Slims Handlebars — 18&quot; Wide Harley Sportster Handlebars|Sportster|$ 170.00 USD|product-2.avif|5||Slims Handlebars — 18&quot; Wide Harley Sportster Handlebars|Sportster|$ 170.00 USD|product-3.avif|5||MiniZ Handlebars — Aggressive Harley Sportster Handlebars|Sportster|$ 155.00 USD|product-4.avif|5' | split: '||' -%}
+          {%- for entry in fallback_products -%}
+            {%- assign p = entry | split: '|' -%}
+            <article class="km-pcarousel__card">
+              <a href="{{ routes.all_products_collection_url }}" class="km-pcarousel__imgwrap">
+                <img src="{{ p[3] | asset_url }}" width="400" height="400" loading="lazy" alt="{{ p[0] }}" class="km-pcarousel__img">
+              </a>
+              <div class="km-pcarousel__meta">
+                <h3 class="km-pcarousel__title"><a href="{{ routes.all_products_collection_url }}">{{ p[0] }}</a></h3>
+                <div class="km-pcarousel__model"><img src="{{ 'icon-motor.png' | asset_url }}" width="16" height="16" alt="" class="km-pcarousel__model-icon" loading="lazy"><span>{{ p[1] }}</span></div>
+                <div class="km-pcarousel__pricerow"><span class="km-pcarousel__price">{{ p[2] }}</span></div>
+                {%- assign stars = p[4] | plus: 0 -%}
+                <div class="km-pcarousel__rating" aria-label="{{ stars }} out of 5 stars">
+                  {%- for i in (1..5) -%}<span class="km-pcarousel__star{% if i > stars %} km-pcarousel__star--off{% endif %}">{%- render 'icon', icon: 'star' -%}</span>{%- endfor -%}
+                </div>
+              </div>
+            </article>
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .km-pcarousel { overflow: hidden; }
+  .km-pcarousel__actions { display: flex; align-items: center; gap: 20px; }
+  .km-pcarousel__arrows { display: flex; gap: 8px; }
+  .km-pcarousel__arrow {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--km-border);
+    background: var(--km-surface);
+    color: var(--km-heading);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--km-transition);
+  }
+  .km-pcarousel__arrow:hover {
+    background: var(--km-primary);
+    color: var(--km-primary-contrast);
+    border-color: var(--km-primary);
+  }
+
+  .km-pcarousel__viewport {
+    overflow: hidden;
+    margin: 0 calc(var(--km-gutter) * -1);
+    padding: 0 var(--km-gutter);
+  }
+  .km-pcarousel__track {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  .km-pcarousel__card {
+    background: var(--km-surface);
+    border-radius: var(--km-radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--km-border);
+    display: flex;
+    flex-direction: column;
+    transition: transform var(--km-transition), box-shadow var(--km-transition);
+  }
+  .km-pcarousel__card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--km-shadow);
+  }
+  .km-pcarousel__imgwrap {
+    position: relative;
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    background: #f9fafb;
+    display: block;
+  }
+  .km-pcarousel__img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 400ms ease;
+  }
+  .km-pcarousel__card:hover .km-pcarousel__img { transform: scale(1.04); }
+
+  .km-pcarousel__badge {
+    position: absolute;
+    top: 12px; left: 12px;
+    padding: 6px 12px;
+    border-radius: var(--km-radius-pill);
+    background: var(--km-accent);
+    color: #000;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    z-index: 1;
+  }
+
+  .km-pcarousel__meta {
+    padding: 20px 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+  }
+  .km-pcarousel__model {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--km-text);
+  }
+  .km-pcarousel__title {
+    font-size: 15px;
+    line-height: 1.4;
+    font-weight: 600;
+    color: var(--km-heading);
+    margin: 0;
+    /* 2-line clamp */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .km-pcarousel__title a { color: inherit; }
+  .km-pcarousel__title a:hover { text-decoration: underline; }
+
+  .km-pcarousel__pricerow {
+    margin-top: auto;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .km-pcarousel__price {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--km-heading);
+  }
+  .km-pcarousel__compare {
+    font-size: 13px;
+    color: #9ca3af;
+    text-decoration: line-through;
+  }
+
+  .km-pcarousel__model {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--km-text);
+    margin: 6px 0 10px;
+  }
+  .km-pcarousel__model-icon {
+    width: 16px; height: 16px;
+    object-fit: contain;
+  }
+  .km-pcarousel__rating {
+    display: inline-flex;
+    gap: 1px;
+    margin-top: 6px;
+    color: var(--km-accent);
+  }
+  .km-pcarousel__rating svg { width: 14px; height: 14px; }
+  .km-pcarousel__star--off { color: #d1d5db; }
+
+  @media (max-width: 1000px) {
+    .km-pcarousel__track { display: flex; }
+    .km-pcarousel__card { flex: 0 0 calc(50% - 12px); scroll-snap-align: start; }
+    .km-pcarousel__viewport { overflow-x: auto; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; }
+  }
+  @media (max-width: 640px) {
+    .km-pcarousel__arrows { display: none; }
+    .km-pcarousel__card { flex: 0 0 100%; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Product Carousel",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Best Sellers" },
+    { "type": "text", "id": "view_all_label", "label": "View all label", "default": "View All" },
+    { "type": "url", "id": "view_all_url", "label": "View all URL" },
+    { "type": "collection", "id": "collection", "label": "Collection (for dynamic products)" },
+    { "type": "text", "id": "filter_tag", "label": "Filter by tag", "info": "e.g. best-seller, best-seller-exhaust (optional)" },
+    { "type": "range", "id": "limit", "label": "Product limit", "min": 2, "max": 12, "step": 1, "default": 8 }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "asset_name", "label": "Asset filename (fallback)" },
+        { "type": "text", "id": "title", "label": "Title", "default": "RIDGE 2-INTO-1 Full Custom Exhaust System" },
+        { "type": "text", "id": "model", "label": "Model tag", "default": "Indian" },
+        { "type": "text", "id": "price", "label": "Price", "default": "$ 1,250.00 USD" },
+        { "type": "text", "id": "compare_price", "label": "Compare-at price" },
+        { "type": "text", "id": "badge", "label": "Badge", "info": "e.g. NEW, SALE, +12 HP" },
+        { "type": "range", "id": "rating", "label": "Star rating", "min": 0, "max": 5, "step": 1, "default": 4 },
+        { "type": "url", "id": "url", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Carousel",
+      "blocks": [
+        { "type": "product", "settings": { "title": "RIDGE 2-INTO-1 Full Custom Exhaust System for Indian Scout Models", "model": "Indian",    "price": "$ 1,250.00 USD", "asset_name": "product-1.webp" } },
+        { "type": "product", "settings": { "title": "Slims Handlebars — 18\" Wide Harley Sportster Handlebars: Clean Look, CNC Machined",       "model": "Sportster", "price": "$ 170.00 USD",   "asset_name": "product-2.avif" } },
+        { "type": "product", "settings": { "title": "Slims Handlebars — 18\" Wide Harley Sportster Handlebars: Clean Look, CNC Machined",       "model": "Sportster", "price": "$ 170.00 USD",   "asset_name": "product-3.avif" } },
+        { "type": "product", "settings": { "title": "MiniZ Handlebars — Aggressive Harley Sportster Handlebars: Narrow, Nimble, Controlled",    "model": "Sportster", "price": "$ 155.00 USD",   "asset_name": "product-4.avif" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
+{% comment %} Sync: Wed Apr 22 14:49:52 IST 2026 {% endcomment %}

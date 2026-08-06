@@ -1,0 +1,276 @@
+{%- comment -%} Customer Reviews page — hero, stats, FUNCTIONAL filter tabs, 3-col cards, CTA. {%- endcomment -%}
+<section class="km-reviews-page">
+
+  {%- comment -%} HERO STRIP {%- endcomment -%}
+  <div class="km-reviews-page__hero">
+    <div class="km-container km-reviews-page__hero-inner">
+      <span class="km-reviews-page__eyebrow">Real Rider Feedback</span>
+      <h1 class="km-reviews-page__h1">Customer Reviews</h1>
+      <p class="km-reviews-page__sub">The stories behind 12,000+ builds. Every review below is from a verified customer who purchased and installed our parts.</p>
+      <div class="km-reviews-page__stats">
+        <div class="km-reviews-page__stat">
+          <div class="km-reviews-page__num-row">
+            <span class="km-reviews-page__num">4.9</span>
+            <span class="km-reviews-page__num-stars" aria-hidden="true">
+              {%- for i in (1..5) -%}<span>{%- render 'icon', icon: 'star' -%}</span>{%- endfor -%}
+            </span>
+          </div>
+          <div class="km-reviews-page__label">Average rating</div>
+        </div>
+        <div class="km-reviews-page__stat">
+          <div class="km-reviews-page__num-row"><span class="km-reviews-page__num">12k+</span></div>
+          <div class="km-reviews-page__label">Bikes built</div>
+        </div>
+        <div class="km-reviews-page__stat">
+          <div class="km-reviews-page__num-row"><span class="km-reviews-page__num">10 yrs</span></div>
+          <div class="km-reviews-page__label">Houston-built</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} FUNCTIONAL FILTER TABS {%- endcomment -%}
+  <div class="km-container km-reviews-page__tabs-wrap">
+    <div class="km-reviews-page__tabs" role="tablist" data-km-rev-tabs>
+      <button type="button" class="km-reviews-page__tab is-active" role="tab" aria-selected="true" data-filter="all">All reviews</button>
+      <button type="button" class="km-reviews-page__tab" role="tab" aria-selected="false" data-filter="exhausts">Exhausts</button>
+      <button type="button" class="km-reviews-page__tab" role="tab" aria-selected="false" data-filter="handlebars">Handlebars</button>
+      <button type="button" class="km-reviews-page__tab" role="tab" aria-selected="false" data-filter="accessories">Accessories</button>
+      <button type="button" class="km-reviews-page__tab" role="tab" aria-selected="false" data-filter="service">Service</button>
+    </div>
+    <div class="km-reviews-page__result-count" data-km-rev-count>Showing 11 reviews</div>
+  </div>
+
+  {%- comment -%} REVIEW GRID — each card tagged with data-category for filter {%- endcomment -%}
+  <div class="km-container km-reviews-page__grid-wrap">
+    <div class="km-reviews-page__grid" data-km-rev-grid>
+
+      {%- comment -%} Each review: quote | author | product | rating | category {%- endcomment -%}
+      {%- assign reviews =
+        'Great quality parts. Fast shipping.^^Chad Ramsey^^Complete Tank Lift &amp; Coil + Key Relocation Kit^^5^^accessories||They’re quick and effective. Products perfect as described. Recommended to everyone. They’re also quick on call-backs when you leave a message.^^Verified Buyer^^Slip-On Exhaust — Harley Sportster^^5^^exhausts||Little hiccup in the delivery, but as usual Kinetic made haste to correct the missing brake line from my order.^^Christopher Cook^^Composite Wide Grip for Harley Sportster^^5^^accessories||Very high quality, excellent fit. Look great.^^Steven Harrold^^Heavy Knurl Shifter Peg for Sportster^^5^^accessories||Bolt-on fit was flawless. Throttle response is night-and-day better. Would buy again.^^Jordan M.^^Slip-On Exhaust for Harley Sportster^^5^^exhausts||Shipped fast and packed well. The finish matches the photos exactly.^^Priya S.^^Moto-style Handlebars for Triumph Street Twin^^5^^handlebars||Great kit, simple install. Took me about 2 hours start to finish.^^Diego L.^^Tank Lift &amp; Coil Relocation Kit^^5^^accessories||Customer service was on point — answered every question I had pre-purchase.^^Sarah K.^^MiniZ Handlebars — Aggressive Sportster^^5^^handlebars||Outstanding craftsmanship. The CNC work on these footpegs is unreal.^^Tom R.^^Kinetic CNC Footpegs — Sportster^^5^^accessories||Response time from support was under 2 hours. Helped me pick the right pipes for my ’18 Dyna.^^Marcus T.^^Consultation &amp; Fitment Check^^5^^service||Deep, throaty tone exactly like the video. Installation took 45 minutes.^^Eli R.^^2-into-1 Exhaust — Indian Scout^^5^^exhausts||Went back and forth on phone before ordering — the team was patient and knowledgeable.^^Kendall P.^^Pre-sale support^^5^^service'
+        | split: '||'
+      -%}
+
+      {%- for entry in reviews -%}
+        {%- assign p = entry | split: '^^' -%}
+        <article class="km-reviews-page__card" data-category="{{ p[4] }}">
+          <div class="km-reviews-page__verified">
+            <span class="km-reviews-page__verified-dot"></span>
+            Verified Purchase
+          </div>
+          <div class="km-reviews-page__stars" aria-label="{{ p[3] }} out of 5 stars">
+            {%- for i in (1..5) -%}<span>{%- render 'icon', icon: 'star' -%}</span>{%- endfor -%}
+          </div>
+          <p class="km-reviews-page__quote">{{ p[0] }}</p>
+          <div class="km-reviews-page__meta">
+            <div class="km-reviews-page__author">{{ p[1] }}</div>
+            <div class="km-reviews-page__product">{{ p[2] }}</div>
+          </div>
+        </article>
+      {%- endfor -%}
+
+    </div>
+
+    <div class="km-reviews-page__empty" data-km-rev-empty hidden>
+      No reviews in this category yet.
+    </div>
+  </div>
+
+  {%- comment -%} CTA STRIP {%- endcomment -%}
+  <div class="km-container">
+    <div class="km-reviews-page__cta">
+      <div>
+        <h2>Bought something? Tell us how it went.</h2>
+        <p>Your review helps other riders pick the right parts — and helps us keep making better ones.</p>
+      </div>
+      <a href="/pages/contact" class="km-btn km-btn-primary">Leave a review {%- render 'icon', icon: 'arrow-right' -%}</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .km-reviews-page { padding-bottom: 96px; background: var(--km-body-bg, #EDEDED); }
+  .km-reviews-page__hero { background: #000; color: #fff; padding: 80px 0 64px; position: relative; overflow: hidden; isolation: isolate; }
+  .km-reviews-page__hero::before { content: ''; position: absolute; inset: 0; z-index: -1; background: radial-gradient(60% 80% at 80% 30%, rgba(251,176,61,.15), transparent 60%); }
+  .km-reviews-page__hero-inner { text-align: center; max-width: 760px; margin: 0 auto; }
+  .km-reviews-page__eyebrow { display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--km-accent, #FBB03D); margin-bottom: 14px; }
+  .km-reviews-page__h1 { font-size: clamp(40px, 5.4vw, 64px); font-weight: 700; letter-spacing: -.02em; color: #fff; margin: 0 0 16px; line-height: 1.05; }
+  .km-reviews-page__sub { font-size: 16px; line-height: 1.65; color: rgba(255,255,255,.8); margin: 0 auto 40px; max-width: 560px; }
+  .km-reviews-page__stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 40px;
+    padding-top: 36px;
+    border-top: 1px solid rgba(255,255,255,.15);
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .km-reviews-page__stat {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .km-reviews-page__num-row {
+    min-height: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .km-reviews-page__num {
+    font-size: 36px;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1;
+    letter-spacing: -.01em;
+  }
+  .km-reviews-page__num-stars {
+    display: inline-flex;
+    gap: 2px;
+    color: var(--km-accent, #FBB03D);
+  }
+  .km-reviews-page__num-stars svg { width: 12px; height: 12px; }
+  .km-reviews-page__label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.6);
+    margin-top: 10px;
+  }
+
+  .km-reviews-page__tabs-wrap { display: flex; flex-direction: column; align-items: center; gap: 14px; margin: 48px auto 28px; }
+  .km-reviews-page__tabs {
+    display: flex;
+    gap: 4px;
+    padding: 8px;
+    background: #fff;
+    border: 1px solid var(--km-border, #DDDDDD);
+    border-radius: 9999px;
+  }
+  .km-reviews-page__tab {
+    padding: 12px 24px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--km-text, #4B5563);
+    background: transparent;
+    border: 0;
+    border-radius: 9999px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .25s ease, color .25s ease;
+    white-space: nowrap;
+  }
+  .km-reviews-page__tab:hover { color: #000; background: var(--km-body-bg, #EDEDED); }
+  .km-reviews-page__tab.is-active { background: #000; color: #fff; }
+  .km-reviews-page__result-count { font-size: 12px; color: var(--km-text, #4B5563); font-weight: 600; letter-spacing: .02em; }
+
+  .km-reviews-page__grid-wrap { margin-bottom: 64px; }
+  .km-reviews-page__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .km-reviews-page__card {
+    background: #fff;
+    border: 1px solid var(--km-border, #DDDDDD);
+    border-radius: 20px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: transform .25s ease, box-shadow .25s ease, opacity .3s ease, scale .3s ease;
+    transform-origin: center;
+  }
+  .km-reviews-page__card:hover { transform: translateY(-3px); box-shadow: 0 8px 22px rgba(0,0,0,.06); }
+  .km-reviews-page__card[hidden] { display: none; }
+  .km-reviews-page__card.is-entering { animation: km-rev-fade .35s ease both; }
+  @keyframes km-rev-fade {
+    from { opacity: 0; transform: translateY(8px) scale(.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .km-reviews-page__verified { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #0a8453; background: rgba(10,132,83,.08); padding: 6px 12px; border-radius: 9999px; align-self: flex-start; }
+  .km-reviews-page__verified-dot { width: 6px; height: 6px; border-radius: 50%; background: #0a8453; }
+  .km-reviews-page__stars { display: inline-flex; gap: 2px; color: var(--km-accent, #FBB03D); }
+  .km-reviews-page__quote { font-size: 15px; line-height: 1.65; color: var(--km-text, #4B5563); margin: 0; font-weight: 500; flex: 1; }
+  .km-reviews-page__meta { padding-top: 14px; border-top: 1px solid var(--km-border, #DDDDDD); }
+  .km-reviews-page__author { font-weight: 700; font-size: 14px; color: #000; }
+  .km-reviews-page__product { font-size: 12px; color: var(--km-text, #4B5563); margin-top: 4px; line-height: 1.4; }
+
+  .km-reviews-page__empty {
+    text-align: center;
+    padding: 60px 20px;
+    background: #fff;
+    border: 1px dashed var(--km-border, #DDDDDD);
+    border-radius: 20px;
+    color: var(--km-text, #4B5563);
+    font-size: 15px;
+  }
+
+  .km-reviews-page__cta { background: #fff; border: 1px solid var(--km-border, #DDDDDD); border-radius: 24px; padding: 40px 48px; display: flex; justify-content: space-between; align-items: center; gap: 32px; }
+  .km-reviews-page__cta h2 { font-size: 24px; font-weight: 700; color: #000; margin: 0 0 6px; letter-spacing: -.01em; }
+  .km-reviews-page__cta p { font-size: 14px; color: var(--km-text, #4B5563); margin: 0; max-width: 520px; }
+  .km-btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 9999px; text-decoration: none; font-weight: 700; font-size: 14px; white-space: nowrap; }
+  .km-btn-primary { background: #000; color: #fff; }
+  .km-btn-primary:hover { background: var(--km-accent, #FBB03D); color: #000; }
+
+  @media (max-width: 900px) { .km-reviews-page__grid { grid-template-columns: 1fr; } .km-reviews-page__cta { flex-direction: column; text-align: center; padding: 32px 24px; } }
+  @media (max-width: 700px) {
+    .km-reviews-page__tabs { flex-wrap: wrap; justify-content: center; gap: 6px; border-radius: 20px; }
+    .km-reviews-page__tab { padding: 10px 16px; font-size: 11px; }
+  }
+  @media (max-width: 600px) { .km-reviews-page__stats { gap: 24px; } .km-reviews-page__num { font-size: 24px; } }
+</style>
+
+<script>
+(() => {
+  const tabsRoot = document.querySelector('[data-km-rev-tabs]');
+  const grid = document.querySelector('[data-km-rev-grid]');
+  const count = document.querySelector('[data-km-rev-count]');
+  const empty = document.querySelector('[data-km-rev-empty]');
+  if (!tabsRoot || !grid) return;
+
+  const tabs = [...tabsRoot.querySelectorAll('[data-filter]')];
+  const cards = [...grid.querySelectorAll('[data-category]')];
+
+  const applyFilter = (filter) => {
+    let visible = 0;
+    cards.forEach((card) => {
+      const matches = filter === 'all' || card.getAttribute('data-category') === filter;
+      if (matches) {
+        card.hidden = false;
+        card.classList.remove('is-entering');
+        // trigger reflow so animation replays
+        void card.offsetWidth;
+        card.classList.add('is-entering');
+        visible++;
+      } else {
+        card.hidden = true;
+        card.classList.remove('is-entering');
+      }
+    });
+    if (count) count.textContent = visible === 1 ? 'Showing 1 review' : 'Showing ' + visible + ' reviews';
+    if (empty) empty.hidden = visible > 0;
+  };
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const filter = tab.getAttribute('data-filter') || 'all';
+      tabs.forEach((t) => {
+        t.classList.toggle('is-active', t === tab);
+        t.setAttribute('aria-selected', t === tab ? 'true' : 'false');
+      });
+      applyFilter(filter);
+      // Scroll the grid into view on mobile so the user sees the filtered results
+      if (window.innerWidth < 900) {
+        grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  // Initialise count on first load
+  applyFilter('all');
+})();
+</script>

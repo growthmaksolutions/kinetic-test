@@ -1,0 +1,338 @@
+{%- comment -%}
+  ------------------------------------------------------------
+  Reviews — "What Our Customers Say" (matches live Kinetic layout)
+  Left-aligned heading, prev/next arrows on the right
+  2-column testimonial cards, each with:
+    • 5 gold stars (or block rating)
+    • Quote
+    • Author name
+    • Product / bike line
+  NO photos. NO verified badges.
+  ------------------------------------------------------------
+{%- endcomment -%}
+
+<section class="km-section km-reviews" id="Section-{{ section.id }}" 
+         data-source="{{ section.settings.source }}"
+         data-limit="{{ section.settings.dynamic_limit | default: 6 }}">
+  <div class="km-container">
+    <div class="km-reviews__top">
+      <h2 class="km-reviews__heading">{{ section.settings.heading | default: 'What Our Customers Say' }}</h2>
+      {%- if section.settings.show_arrows -%}
+        <div class="km-reviews__nav">
+          <button type="button" class="km-reviews__arrow" data-km-prev aria-label="Previous review">
+            {%- render 'icon', icon: 'arrow-right' -%}
+          </button>
+          <button type="button" class="km-reviews__arrow" data-km-next aria-label="Next review">
+            {%- render 'icon', icon: 'arrow-right' -%}
+          </button>
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="km-reviews__grid" data-km-reviews>
+      {%- if section.settings.source == 'manual' -%}
+        {%- if section.blocks.size > 0 -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'review' -%}
+              <article class="km-reviews__card" {{ block.shopify_attributes }}>
+                {%- assign rating = block.settings.rating | default: 5 -%}
+                <div class="km-reviews__stars" aria-label="{{ rating }} out of 5 stars">
+                  {%- for i in (1..5) -%}<span class="km-reviews__star{% if i > rating %} km-reviews__star--off{% endif %}">{%- render 'icon', icon: 'star' -%}</span>{%- endfor -%}
+                </div>
+                <p class="km-reviews__quote">{{ block.settings.quote }}</p>
+                <div class="km-reviews__meta">
+                  <div class="km-reviews__author">{{ block.settings.author }}</div>
+                  {%- if block.settings.product != blank -%}<div class="km-reviews__product">{{ block.settings.product }}</div>{%- endif -%}
+                </div>
+              </article>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- else -%}
+          {%- assign fallback_reviews = 'Little hiccup in the delivery, but as usual Kinetic made haste to correct the missing brake line from my order.|Christopher Cook|Composite Wide Grip for Harley Sportster||Very high quality, excellent fit. Look great.|Steven Harrold|Heavy Knurl Shifter Peg for Sportster||Bolt-on fit was flawless. Throttle response is night-and-day better. Would buy again.|Jordan M.|Slip-On Exhaust for Harley Sportster||Shipped fast and packed well. The finish matches the photos exactly.|Priya S.|Moto-style Handlebars for Triumph Street Twin' | split: '||' -%}
+          {%- for entry in fallback_reviews -%}
+            {%- assign p = entry | split: '|' -%}
+            <article class="km-reviews__card">
+              <div class="km-reviews__stars" aria-label="5 out of 5 stars">
+                {%- for i in (1..5) -%}<span class="km-reviews__star">{%- render 'icon', icon: 'star' -%}</span>{%- endfor -%}
+              </div>
+              <p class="km-reviews__quote">{{ p[0] }}</p>
+              <div class="km-reviews__meta">
+                <div class="km-reviews__author">{{ p[1] }}</div>
+                <div class="km-reviews__product">{{ p[2] }}</div>
+              </div>
+            </article>
+          {%- endfor -%}
+        {%- endif -%}
+      {%- else -%}
+        <div class="km-reviews__loading">Loading latest reviews...</div>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const section = document.getElementById('Section-{{ section.id }}');
+      if (!section) return;
+
+      const container = section.querySelector('[data-km-reviews]');
+
+      // --- Carousel arrow navigation (works for both manual + dynamic sources) ---
+      function setupArrows() {
+        const prevBtn = section.querySelector('[data-km-prev]');
+        const nextBtn = section.querySelector('[data-km-next]');
+        if (!prevBtn || !nextBtn || !container) return;
+
+        function scrollAmount() {
+          const card = container.querySelector('.km-reviews__card');
+          if (!card) return container.clientWidth;
+          const style = getComputedStyle(container);
+          const gap = parseFloat(style.columnGap || style.gap) || 0;
+          return card.offsetWidth + gap;
+        }
+
+        function updateArrows() {
+          const maxScroll = container.scrollWidth - container.clientWidth - 1;
+          const atStart = container.scrollLeft <= 1;
+          const atEnd = container.scrollLeft >= maxScroll;
+          prevBtn.disabled = atStart;
+          nextBtn.disabled = atEnd;
+        }
+
+        prevBtn.addEventListener('click', function() {
+          container.scrollBy({ left: -scrollAmount(), behavior: 'smooth' });
+        });
+        nextBtn.addEventListener('click', function() {
+          container.scrollBy({ left: scrollAmount(), behavior: 'smooth' });
+        });
+        container.addEventListener('scroll', updateArrows, { passive: true });
+        window.addEventListener('resize', updateArrows);
+        updateArrows();
+      }
+      document.addEventListener('DOMContentLoaded', setupArrows);
+
+      if (section.dataset.source !== 'judgeme') return;
+
+      const SHOP_DOMAIN = 'gpr0c5-md.myshopify.com';
+      const limit = parseInt(section.dataset.limit) || 6;
+
+      async function fetchDynamicReviews() {
+        const BASE_URL = 'https://judge.me/reviews/reviews_for_widget';
+        // Note: For a "Shop Wide" latest reviews, we often have to fetch specific high-selling products 
+        // or use the 'all reviews' widget data if available. 
+        // For this implementation, we pull from the main store domain to get recent activity.
+        
+        try {
+          const response = await fetch(`${BASE_URL}?shop_domain=${SHOP_DOMAIN}&platform=shopify&per_page=${limit}`);
+          const data = await response.json();
+          return data.reviews || [];
+        } catch (e) {
+          console.error('Failed to fetch dynamic reviews:', e);
+          return [];
+        }
+      }
+
+      function renderStars(rating) {
+        let stars = '';
+        const r = Math.round(rating);
+        for(let i=0; i<5; i++) {
+          const isOff = i >= r;
+          stars += `<span class="km-reviews__star ${isOff ? 'km-reviews__star--off' : ''}">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+          </span>`;
+        }
+        return stars;
+      }
+
+      async function initDynamicReviews() {
+        const reviews = await fetchDynamicReviews();
+        if (!reviews.length) {
+          container.innerHTML = '<p class="km-reviews__empty">No recent reviews found.</p>';
+          return;
+        }
+
+        container.innerHTML = reviews.slice(0, limit).map(review => `
+          <article class="km-reviews__card">
+            <div class="km-reviews__stars" aria-label="${review.rating} out of 5 stars">
+              ${renderStars(review.rating)}
+            </div>
+            <p class="km-reviews__quote">${review.body || review.body_html || ''}</p>
+            <div class="km-reviews__meta">
+              <div class="km-reviews__author">${review.reviewer_name || 'Anonymous'}</div>
+              ${review.product_title ? `<div class="km-reviews__product">${review.product_title}</div>` : ''}
+            </div>
+          </article>
+        `).join('');
+
+        // Content size changed — refresh arrow enabled/disabled state.
+        container.dispatchEvent(new Event('scroll'));
+      }
+
+      document.addEventListener('DOMContentLoaded', initDynamicReviews);
+    })();
+  </script>
+</section>
+
+<style>
+  .km-reviews { background: var(--km-body-bg); padding: 80px 0; }
+
+  .km-reviews__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 48px;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .km-reviews__heading {
+    font-size: clamp(28px, 3.5vw, 42px);
+    font-weight: 700;
+    letter-spacing: -.02em;
+    color: var(--km-heading);
+    margin: 0;
+  }
+
+  .km-reviews__nav { display: flex; gap: 12px; }
+  .km-reviews__arrow {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--km-border);
+    background: #fff;
+    color: var(--km-heading);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all .25s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,.04);
+  }
+  .km-reviews__arrow:first-child svg { transform: rotate(180deg); }
+  .km-reviews__arrow:hover { background: #000; color: #fff; border-color: #000; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,.12); }
+  .km-reviews__arrow:disabled { opacity: .35; cursor: not-allowed; }
+  .km-reviews__arrow:disabled:hover { background: #fff; color: var(--km-heading); border-color: var(--km-border); transform: none; box-shadow: 0 2px 4px rgba(0,0,0,.04); }
+
+  .km-reviews__grid {
+    display: flex;
+    gap: 32px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+  }
+  .km-reviews__grid::-webkit-scrollbar { display: none; }
+
+  .km-reviews__card {
+    flex: 0 0 calc(50% - 16px);
+    scroll-snap-align: start;
+    background: #fff;
+    padding: 32px;
+    border-radius: 20px;
+    border: 1px solid var(--km-border);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.02);
+    transition: transform .3s ease;
+  }
+  .km-reviews__card:hover { transform: translateY(-4px); }
+
+  .km-reviews__stars {
+    display: inline-flex;
+    gap: 3px;
+    color: var(--km-accent, #FBB03D);
+  }
+  .km-reviews__stars svg { width: 14px; height: 14px; }
+  .km-reviews__star--off { color: #E5E7EB; }
+
+  .km-reviews__quote {
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--km-text);
+    margin: 0;
+    font-weight: 500;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .km-reviews__meta {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid #F3F4F6;
+  }
+  .km-reviews__author {
+    font-weight: 800;
+    color: var(--km-heading);
+    font-size: 14px;
+    letter-spacing: .02em;
+  }
+  .km-reviews__product {
+    font-size: 12px;
+    color: var(--km-text);
+    margin-top: 4px;
+    opacity: 0.7;
+  }
+
+  .km-reviews__loading, .km-reviews__empty {
+    flex: 1 0 100%;
+    text-align: center;
+    padding: 60px 0;
+    color: var(--km-text);
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  @media (max-width: 800px) {
+    .km-reviews__grid { gap: 24px; }
+    .km-reviews__card { flex: 0 0 85%; padding: 24px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Reviews Carousel",
+  "settings": [
+    {
+      "type": "select",
+      "id": "source",
+      "label": "Review Source",
+      "options": [
+        { "value": "manual", "label": "Manual Blocks" },
+        { "value": "judgeme", "label": "Judge.me Dynamic" }
+      ],
+      "default": "manual"
+    },
+    { "type": "text",     "id": "heading",     "label": "Heading", "default": "What Our Customers Say" },
+    { "type": "checkbox", "id": "show_arrows", "label": "Show prev/next arrows", "default": true },
+    { "type": "range",    "id": "dynamic_limit", "label": "Dynamic limit", "min": 2, "max": 12, "step": 2, "default": 6 }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Manual Review",
+      "settings": [
+        { "type": "range",    "id": "rating",  "label": "Rating (stars)", "min": 1, "max": 5, "step": 1, "default": 5 },
+        { "type": "textarea", "id": "quote",   "label": "Quote",   "default": "Really happy with the product. Took a while to get my order..." },
+        { "type": "text",     "id": "author",  "label": "Author",  "default": "Brian Hopkins" },
+        { "type": "text",     "id": "product", "label": "Product info", "default": "Ignition Coils Relocator" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Reviews Carousel",
+      "category": "Social",
+      "settings": {
+        "source": "judgeme"
+      },
+      "blocks": [
+        { "type": "review", "settings": { "author": "Brian Hopkins" } },
+        { "type": "review", "settings": { "author": "Chet Michaelsen" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
+{% comment %} Sync: Wed Apr 22 14:49:52 IST 2026 {% endcomment %}

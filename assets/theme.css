@@ -1,0 +1,2755 @@
+/* ==========================================================================
+   Kinetic Motorcycles — Base theme styles
+   Cloned from https://kinetic-motorcycles.webflow.io/
+   ========================================================================== */
+
+:root {
+  --km-body-bg: #EDEDED;
+  --km-surface: #FFFFFF;
+  --km-text: #4B5563;
+  --km-heading: #000000;
+  --km-primary: #000000;
+  --km-primary-contrast: #FFFFFF;
+  --km-accent: #FBB03D;
+  --km-sale: #FFDEDE;
+  --km-border: #DDDDDD;
+  --km-header-bar: #000000;
+
+  --km-radius-sm: 6px;
+  --km-radius: 12px;
+  --km-radius-lg: 20px;
+  --km-radius-pill: 9999px;
+
+  --km-page-max: 1440px;
+  --km-gutter: 32px;
+  --km-gutter-sm: 16px;
+
+  --km-font-body: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --km-font-heading: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  --km-fs-xs: 12px;
+  --km-fs-sm: 14px;
+  --km-fs-base: 16px;
+  --km-fs-lg: 18px;
+  --km-fs-xl: 22px;
+  --km-fs-2xl: 28px;
+  --km-fs-3xl: 36px;
+  --km-fs-4xl: 48px;
+  --km-fs-5xl: 64px;
+  --km-fs-6xl: 80px;
+
+  --km-shadow-sm: 0 2px 6px rgba(0, 0, 0, .06);
+  --km-shadow: 0 8px 24px rgba(0, 0, 0, .08);
+  --km-shadow-lg: 0 20px 60px rgba(0, 0, 0, .12);
+
+  --km-transition: 200ms cubic-bezier(.4, 0, .2, 1);
+}
+
+/* ---------- Resets ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--km-body-bg);
+  color: var(--km-text);
+  font-family: var(--km-font-body);
+  font-size: var(--km-fs-base);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--km-font-heading);
+  color: var(--km-heading);
+  font-weight: 700;
+  letter-spacing: -.02em;
+  line-height: 1.1;
+  margin: 0 0 .5em;
+}
+
+h1 {
+  font-size: clamp(40px, 5vw, var(--km-fs-5xl));
+}
+
+h2 {
+  font-size: clamp(28px, 3.2vw, var(--km-fs-3xl));
+}
+
+h3 {
+  font-size: clamp(22px, 2.2vw, var(--km-fs-2xl));
+}
+
+p {
+  margin: 0 0 1em;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------- Layout ---------- */
+.km-container {
+  width: 100%;
+  max-width: var(--km-page-max);
+  margin: 0 auto;
+  padding-left: var(--km-gutter);
+  padding-right: var(--km-gutter);
+}
+
+.km-section {
+  padding-top: 64px;
+  padding-bottom: 64px;
+}
+
+.km-section-heading {
+  font-size: clamp(28px, 3.2vw, 44px);
+  margin-bottom: 32px;
+  color: var(--km-heading);
+}
+
+.km-section-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.km-section-row h2 {
+  margin: 0;
+}
+
+/* ---------- Buttons ---------- */
+.km-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 28px;
+  font-weight: 700;
+  font-size: var(--km-fs-sm);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  border-radius: var(--km-radius-pill);
+  border: 1px solid transparent;
+  transition: all var(--km-transition);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.km-btn-primary {
+  background: var(--km-primary);
+  color: var(--km-primary-contrast);
+}
+
+.km-btn-primary:hover {
+  background: #1a1a1a;
+  transform: translateY(-1px);
+}
+
+.km-btn-outline {
+  background: transparent;
+  color: var(--km-primary);
+  border-color: var(--km-primary);
+}
+
+.km-btn-outline:hover {
+  background: var(--km-primary);
+  color: var(--km-primary-contrast);
+}
+
+.km-btn-ghost {
+  background: transparent;
+  color: var(--km-primary);
+  padding: 8px 14px;
+  font-size: var(--km-fs-sm);
+}
+
+.km-btn-ghost:hover {
+  text-decoration: underline;
+}
+
+.km-btn-view-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--km-fs-sm);
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--km-primary);
+  padding: 10px 0;
+  border-bottom: 2px solid var(--km-primary);
+}
+
+.km-btn-view-all::after {
+  content: "→";
+  transition: transform var(--km-transition);
+}
+
+.km-btn-view-all:hover::after {
+  transform: translateX(4px);
+}
+
+/* ---------- Utility classes ---------- */
+.km-eyebrow {
+  display: inline-block;
+  font-size: var(--km-fs-xs);
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--km-accent);
+  margin-bottom: 12px;
+}
+
+.km-muted {
+  color: var(--km-text);
+}
+
+.km-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--km-radius-pill);
+  font-size: var(--km-fs-xs);
+  font-weight: 600;
+  background: var(--km-surface);
+  color: var(--km-heading);
+  border: 1px solid var(--km-border);
+}
+
+.km-badge-sale {
+  background: var(--km-sale);
+  color: #B4363F;
+}
+
+.km-badge-new {
+  background: #E8F4FE;
+  color: #1A72C6;
+}
+
+.km-badge-gold {
+  background: var(--km-accent);
+  color: #000;
+}
+
+.km-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- Grid helpers ---------- */
+.km-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.km-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.km-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+/* ---------- Desktop defaults for mobile-only bits ----------
+   These elements exist in the DOM for the mobile drawer / accordion
+   but must be hidden on desktop. Mobile @media queries re-enable them. */
+.km-header__mobile-expand {
+  display: none;
+}
+
+.km-mega-mobile {
+  display: none;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+  :root {
+    --km-gutter: 24px;
+  }
+
+  .km-grid-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .km-grid-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ============================================================
+   MOBILE (≤ 640px)
+   ============================================================ */
+@media (max-width: 640px) {
+  :root {
+    --km-gutter: 16px;
+  }
+
+  .km-section {
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+
+  .km-grid-4,
+  .km-grid-3,
+  .km-grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .km-section-row {
+    flex-wrap: wrap;
+  }
+}
+
+/* ---------- Animations ---------- */
+@keyframes km-scroll-left {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes km-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes km-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.km-fade-up {
+  animation: km-fade-up .6s cubic-bezier(.2, .8, .2, 1) both;
+}
+
+.km-fade-in {
+  animation: km-fade-in .5s ease both;
+}
+
+/* ==========================================================================
+   Product carousel — needs to live in theme.css because it's now rendered
+   via a snippet (snippet styles aren't picked up like section <style> blocks)
+   ========================================================================== */
+
+.km-pcarousel__actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.km-pcarousel__arrows {
+  display: flex;
+  gap: 8px;
+}
+
+.km-pcarousel__arrow {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--km-border);
+  background: var(--km-surface);
+  color: var(--km-heading);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--km-transition);
+}
+
+.km-pcarousel__arrow:hover {
+  background: var(--km-primary);
+  color: var(--km-primary-contrast);
+  border-color: var(--km-primary);
+}
+
+.km-pcarousel__viewport {
+  overflow: hidden;
+  margin: 0 calc(var(--km-gutter) * -1);
+  padding: 0 var(--km-gutter);
+}
+
+.km-pcarousel__track {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.km-pcarousel__card {
+  background: var(--km-surface);
+  border-radius: var(--km-radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--km-border);
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--km-transition), box-shadow var(--km-transition);
+}
+
+.km-pcarousel__card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--km-shadow);
+}
+
+.km-pcarousel__imgwrap {
+  position: relative;
+  aspect-ratio: 1/1;
+  overflow: hidden;
+  background: #f9fafb;
+  display: block;
+}
+
+.km-pcarousel__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 400ms ease;
+}
+
+.km-pcarousel__card:hover .km-pcarousel__img {
+  transform: scale(1.04);
+}
+
+.km-pcarousel__meta {
+  padding: 20px 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.km-pcarousel__title {
+  font-size: 15px;
+  line-height: 1.4;
+  font-weight: 600;
+  color: var(--km-heading);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.km-pcarousel__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.km-pcarousel__title a:hover {
+  text-decoration: underline;
+}
+
+.km-pcarousel__pricerow {
+  margin-top: auto;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.km-pcarousel__price {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--km-heading);
+}
+
+.km-pcarousel__model {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--km-text);
+  margin: 0;
+}
+
+.km-pcarousel__model-icon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.km-pcarousel__rating {
+  display: inline-flex;
+  gap: 1px;
+  color: var(--km-accent);
+}
+
+.km-pcarousel__rating svg {
+  width: 14px;
+  height: 14px;
+}
+
+.km-pcarousel__star--off {
+  color: #d1d5db;
+}
+
+@media (max-width: 1000px) {
+  .km-pcarousel__track {
+    display: flex;
+    grid-template-columns: none;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+  }
+
+  .km-pcarousel__card {
+    flex: 0 0 calc(50% - 12px);
+    scroll-snap-align: start;
+  }
+
+  .km-pcarousel__viewport {
+    overflow-x: visible;
+  }
+}
+
+@media (max-width: 640px) {
+  .km-pcarousel__arrows {
+    display: none;
+  }
+  .km-pcarousel__card {
+    flex: 0 0 100%;
+  }
+}
+
+/* Section utilities used by snippets */
+.km-section {
+  padding-top: 64px;
+  padding-bottom: 64px;
+}
+
+.km-section-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.km-section-heading {
+  font-size: clamp(28px, 3.2vw, 44px);
+  font-weight: 700;
+  letter-spacing: -.015em;
+  color: var(--km-heading);
+  margin: 0;
+}
+
+.km-btn-view-all {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--km-heading);
+  text-decoration: none;
+}
+
+.km-btn-view-all:hover {
+  color: var(--km-accent);
+}
+
+/* ==========================================================================
+   PRODUCTION MOBILE RESPONSIVE — page by page
+   Breakpoints:
+     • ≤ 1024px — tablet adjustments
+     • ≤ 768px  — mobile (main)
+     • ≤ 480px  — small phones
+   ========================================================================== */
+
+/* Global safety (non-destructive) */
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ============================================================
+   TABLET (≤ 1024px)
+   ============================================================ */
+@media (max-width: 1024px) {
+  .km-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  /* iPad Footer: 2-column grid for links and brands */
+  .km-footer__grid,
+  .km-footer__brands {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 60px !important;
+    width: 100% !important;
+  }
+
+  .km-footer__brand {
+    max-width: 100% !important;
+    width: 100% !important;
+    margin-bottom: 40px !important;
+  }
+
+  /* Footer Alignment */
+  .km-footer__top,
+  .km-footer__brand,
+  .km-footer__grid,
+  .km-footer__col,
+  .km-footer__heading,
+  .km-footer__links,
+  .km-footer__contact,
+  .km-footer__brands,
+  .km-footer__brand-col,
+  .km-footer__brand-label,
+  .km-footer__brand-subs {
+    text-align: left !important;
+    align-items: flex-start !important;
+  }
+
+  .km-footer__social {
+    justify-content: flex-start !important;
+  }
+}
+
+/* ============================================================
+   TABLET (≤ 900px)
+   ============================================================ */
+@media (max-width: 900px) {
+  .km-container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .km-grid-4,
+  .km-grid-3,
+  .km-grid-2,
+  .km-coll__grid,
+  .km-pp-related__grid,
+  .km-pp-trending__grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Prevent long strings/emails from breaking layout */
+  body {
+    overflow-x: hidden;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  a,
+  p,
+  span,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    max-width: 100%;
+    overflow-wrap: break-word;
+  }
+
+  /* Form inputs: prevent iOS zoom on focus */
+  input[type="email"],
+  input[type="text"],
+  input[type="number"],
+  input[type="search"],
+  input[type="password"],
+  input[type="tel"],
+  textarea,
+  select {
+    font-size: 16px;
+  }
+
+  /* ---------- HEADER (matches Webflow mobile: 48px navbar, no search bar) ---------- */
+  .km-header__top-inner {
+    gap: 10px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .km-header__logo {
+    margin: 0;
+  }
+
+  .km-header__actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .km-header__logo-img {
+    height: 40px !important;
+    width: auto !important;
+  }
+
+  /* Webflow hides the search bar on mobile entirely — only hamburger + cart remain */
+  .km-header__search-wrap {
+    display: none !important;
+  }
+
+  .km-header__icon-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .km-header__menu-toggle {
+    display: inline-flex !important;
+  }
+
+  /* Keep .km-header__bottom in the box tree (display:block, not none) so its child drawer
+     can render via position:fixed. display:none on a parent hides ALL descendants,
+     including position:fixed ones. Strip the bottom-bar visuals instead. */
+  .km-header__bottom {
+    display: block !important;
+    background: transparent !important;
+    border: 0 !important;
+    padding: 0 !important;
+    height: 0 !important;
+    overflow: visible !important;
+  }
+
+  .km-header__bottom>.km-container {
+    display: block !important;
+    padding: 0 !important;
+    height: 0;
+    overflow: visible;
+  }
+
+  /* Mobile drawer nav: hidden by default; rendered fixed overlay when .is-open.
+     !important required — header.liquid's inline <style> has `.km-header__nav { display: flex }`
+     with no media query, and it loads AFTER theme.css so it wins source-order tie. */
+  .km-header__nav {
+    display: none !important;
+  }
+
+  /* All properties !important — header.liquid's inline <style> has a conflicting
+     @media (max-width:900px) rule (position:fixed, inset:0, z-index:999) that
+     would otherwise win source-order tie and break the side-drawer layout. */
+  .km-header__nav.is-open {
+    display: block !important;
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    inset: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    background: #fff !important;
+    z-index: 1001 !important;
+    padding: 72px 24px 32px !important;
+    overflow-y: auto !important;
+  }
+
+  .km-header__nav.is-open .km-header__menu {
+    flex-direction: column;
+    gap: 0;
+    align-items: stretch;
+  }
+
+  .km-header__menu-item {
+    border-bottom: 1px solid #eee;
+  }
+
+  .km-header__nav.is-open .km-header__menu-link {
+    padding: 16px 0;
+    font-size: 14px;
+    letter-spacing: .06em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  .km-header__nav.is-open .km-header__menu-link svg {
+    display: none;
+  }
+
+  .km-header__nav.is-open .km-header__menu-link::after {
+    display: none;
+  }
+
+  /* Mobile backdrop */
+  body.km-menu-open {
+    overflow: hidden;
+  }
+
+  body.km-menu-open::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .55);
+    z-index: 900;
+  }
+
+  /* ---------- MEGA MENU ---------- */
+  .km-mega {
+    display: none !important;
+  }
+
+  /* On mobile, the COLLECTIONS link itself toggles the accordion (no separate button).
+     Hide the mobile-expand button (it was redundant + hard to tap). */
+  .km-header__mobile-expand {
+    display: none !important;
+  }
+
+  .km-header__menu-item--mega {
+    position: relative;
+  }
+
+  /* Show chevron icon inside the COLLECTIONS link visibly on mobile (drawer state) */
+  .km-header__nav.is-open .km-header__menu-link--has-dropdown svg {
+    display: inline-block !important;
+    width: 14px !important;
+    height: 14px !important;
+    transition: transform .25s ease;
+  }
+
+  .km-header__menu-item--mega.is-mega-open .km-header__menu-link--has-dropdown svg {
+    transform: rotate(180deg);
+    color: var(--km-accent);
+  }
+
+  /* ---------- MOBILE MEGA ACCORDION (clean white, tap-to-expand each brand) ---------- */
+  .km-mega-mobile {
+    display: none;
+    background: transparent !important;
+  }
+
+  .km-header__menu-item--mega.is-mega-open .km-mega-mobile {
+    display: block;
+    padding: 8px 0 16px;
+    animation: km-slide-down .25s ease;
+  }
+
+  @keyframes km-slide-down {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Each brand <details> — collapsed by default, tap summary to expand */
+  .km-mega-mobile__item {
+    border-bottom: 1px solid #f0f0f0;
+    background: #fff !important;
+  }
+
+  .km-mega-mobile__item:last-child {
+    border-bottom: 0;
+  }
+
+  /* Brand name row (summary) — chevron on right, rotates when open */
+  .km-mega-mobile__summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 8px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .04em;
+    color: #000;
+    background: #fff;
+    text-transform: none;
+  }
+
+  .km-mega-mobile__summary::-webkit-details-marker,
+  .km-mega-mobile__summary::marker {
+    display: none;
+    content: '';
+  }
+
+  .km-mega-mobile__brand-name {
+    color: #000;
+  }
+
+  .km-mega-mobile__chev {
+    display: inline-flex;
+    width: 20px;
+    height: 20px;
+    align-items: center;
+    justify-content: center;
+    transition: transform .25s ease;
+    color: #4B5563;
+    flex-shrink: 0;
+  }
+
+  .km-mega-mobile__item[open] .km-mega-mobile__summary {
+    color: var(--km-accent);
+  }
+
+  .km-mega-mobile__item[open] .km-mega-mobile__brand-name {
+    color: var(--km-accent);
+  }
+
+  .km-mega-mobile__item[open] .km-mega-mobile__chev {
+    transform: rotate(180deg);
+    color: var(--km-accent);
+  }
+
+  /* Sub-items list — only visible when <details> is open (browser-native behavior).
+     No display:flex — it would override <details> default hide. */
+  .km-mega-mobile__list {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 8px;
+    background: #fafafa;
+  }
+
+  .km-mega-mobile__list li {
+    margin: 0;
+    padding: 0;
+  }
+
+  .km-mega-mobile__list a {
+    display: block;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 400;
+    color: #4B5563;
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .km-mega-mobile__list a:active,
+  .km-mega-mobile__list a:hover {
+    color: #000;
+    border-left-color: var(--km-accent);
+    background: #fff;
+  }
+
+  .km-mega-mobile__shop-all {
+    font-weight: 700 !important;
+    color: #000 !important;
+    background: #fff !important;
+  }
+
+  /* ---------- HERO (Webflow mobile: 676px tall, 32px H1, 0 vertical pad, 20px side pad) ---------- */
+  .km-hero {
+    min-height: 620px !important;
+    padding: 0 !important;
+  }
+
+  .km-hero__inner {
+    padding: 40px 20px 120px !important;
+    min-height: 620px !important;
+  }
+
+  .km-hero__content {
+    max-width: 100%;
+  }
+
+  .km-hero__eyebrow {
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+
+  .km-hero__heading {
+    font-size: 32px !important;
+    line-height: 1.2 !important;
+    font-weight: 700 !important;
+    margin-bottom: 14px !important;
+  }
+
+  /* Keep the explicit <br> so "Seamless Fit." wraps to its own line */
+  .km-hero__heading br {
+    display: inline;
+  }
+
+  .km-hero__subtext {
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+    max-width: 100%;
+    margin-bottom: 22px;
+  }
+
+  .km-hero__cta {
+    padding: 11px 22px !important;
+    font-size: 13px !important;
+  }
+
+  .km-hero__chips {
+    bottom: 16px !important;
+  }
+
+  .km-hero__chips-row {
+    gap: 6px !important;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding: 0 20px !important;
+  }
+
+  .km-hero__chips-label {
+    font-size: 11px;
+    width: 100%;
+    margin: 0 0 6px;
+  }
+
+  .km-hero__chip {
+    padding: 6px 12px !important;
+    font-size: 10px !important;
+    letter-spacing: .06em !important;
+  }
+
+  /* ---------- TICKER ---------- */
+  .km-ticker {
+    padding: 12px 0 !important;
+  }
+
+  .km-ticker__track {
+    gap: 24px !important;
+    animation-duration: 24s !important;
+  }
+
+  .km-ticker__item {
+    gap: 10px !important;
+  }
+
+  .km-ticker__badge {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  .km-ticker__badge svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  .km-ticker__label {
+    font-size: 11px !important;
+    letter-spacing: .04em !important;
+  }
+
+  .km-ticker__divider {
+    height: 16px !important;
+  }
+
+  /* ---------- MODEL CHOOSER (homepage) ---------- */
+  .km-models {
+    padding: 40px 0 !important;
+  }
+
+  .km-models__header {
+    margin-bottom: 24px !important;
+  }
+
+  .km-models__list {
+    gap: 40px !important;
+  }
+
+  .km-models__row,
+  .km-models__row:nth-child(even) {
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+  }
+
+  .km-models__row:nth-child(even) .km-models__compare,
+  .km-models__row:nth-child(even) .km-models__info {
+    order: initial !important;
+  }
+
+  .km-models__info {
+    padding: 0 !important;
+  }
+
+  .km-models__title {
+    font-size: 20px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .km-models__desc {
+    font-size: 13px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .km-models__cats-label {
+    font-size: 12px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .km-models__cats-list {
+    gap: 6px !important;
+  }
+
+  .km-models__cat-pill {
+    padding: 7px 12px !important;
+    font-size: 10px !important;
+  }
+
+  /* ---------- SHOP BY MODEL (/collections) ---------- */
+  .km-shop-models {
+    padding: 60px 0 !important;
+  }
+
+  .km-shop-models__h1 {
+    font-size: 36px !important;
+    font-weight: 600 !important;
+    line-height: 1.4 !important;
+    margin-bottom: 24px !important;
+  }
+
+  .km-shop-models__list {
+    gap: 40px !important;
+  }
+
+  .km-shop-models__row,
+  .km-shop-models__row.is-reverse {
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+  }
+
+  .km-shop-models__row.is-reverse .km-shop-models__compare,
+  .km-shop-models__row.is-reverse .km-shop-models__info {
+    order: initial !important;
+  }
+
+  .km-shop-models__name {
+    font-size: 20px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .km-shop-models__desc {
+    font-size: 13px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .km-shop-models__pill {
+    padding: 7px 12px !important;
+    font-size: 10px !important;
+  }
+
+  /* ---------- PRODUCT CAROUSELS (Webflow mobile: ~145px cards, horizontal scroll) ---------- */
+  .km-pcarousel {
+    padding: 60px 0 !important;
+  }
+
+  .km-section-heading {
+    font-size: 28px !important;
+    font-weight: 700 !important;
+    line-height: 1.3 !important;
+    margin: 0 !important;
+  }
+
+  .km-pcarousel__viewport {
+    margin: 0 -20px;
+    padding: 0 20px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .km-pcarousel__viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+  .km-pcarousel__track {
+    display: flex !important;
+    grid-template-columns: none !important;
+    gap: 12px !important;
+    scroll-snap-type: x mandatory;
+    padding-right: 20px;
+  }
+
+  .km-pcarousel__card {
+    flex: 0 0 calc(50% - 12px) !important;
+    max-width: calc(50% - 12px) !important;
+    scroll-snap-align: start;
+  }
+
+  .km-pcarousel__arrows {
+    display: none !important;
+  }
+
+  .km-pcarousel__viewall {
+    font-size: 11px !important;
+  }
+
+  .km-pcarousel__title {
+    font-size: 13px !important;
+    line-height: 1.35 !important;
+  }
+
+  .km-pcarousel__price {
+    font-size: 13px !important;
+  }
+
+
+  /* ---------- FEATURES (Webflow mobile: 50px pad, 28px H2, stacked) ---------- */
+  .km-features {
+    padding: 50px 0 !important;
+  }
+
+  .km-features__header {
+    margin-bottom: 28px !important;
+  }
+
+  .km-features__heading {
+    font-size: 28px !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+  }
+
+  .km-features__grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+
+  .km-features__media {
+    max-width: 180px !important;
+    margin-bottom: 14px !important;
+  }
+
+  .km-features__title {
+    font-size: 16px !important;
+  }
+
+  .km-features__desc {
+    font-size: 13px !important;
+    max-width: 100% !important;
+  }
+
+  /* ---------- REVIEWS (Webflow mobile: 60px pad, 28px H2) ---------- */
+  .km-reviews {
+    padding: 0 0 60px !important;
+  }
+
+  .km-reviews__top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 24px !important;
+  }
+
+  .km-reviews__heading {
+    font-size: 28px !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+  }
+
+  .km-reviews__grid {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+
+  .km-reviews__quote {
+    font-size: 14px !important;
+  }
+
+  /* ---------- BLOGS (Webflow mobile: 60px top + bottom pad, 28px H2, full-width cards) ---------- */
+  .km-blogs {
+    padding: 60px 0 !important;
+  }
+
+  .km-blogs__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 24px !important;
+  }
+
+  .km-blogs__heading {
+    font-size: 28px !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+  }
+
+  .km-blogs__grid {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+
+  .km-blogs__title {
+    font-size: 16px !important;
+    line-height: 1.35 !important;
+  }
+
+  .km-blogs__card {
+    width: 100% !important;
+  }
+
+  /* ---------- CTA (Webflow mobile: 30px pad, split panel stacks) ---------- */
+  .km-cta {
+    padding: 30px 0 !important;
+  }
+
+  .km-cta__grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .km-cta__left,
+  .km-cta__right {
+    min-height: 0 !important;
+  }
+
+  .km-cta__left {
+    padding: 32px 22px !important;
+  }
+
+  .km-cta__left-heading {
+    font-size: 24px !important;
+    font-weight: 700 !important;
+  }
+
+  .km-cta__left-sub {
+    font-size: 13px !important;
+  }
+
+  .km-cta__right-inner {
+    padding: 32px 22px !important;
+  }
+
+  .km-cta__right-heading {
+    font-size: 20px !important;
+    font-weight: 700 !important;
+  }
+
+  .km-cta__form-input {
+    padding: 12px 14px !important;
+  }
+
+  .km-cta__form-submit {
+    padding: 12px 18px !important;
+    font-size: 12px !important;
+  }
+
+  /* ---------- FOOTER ---------- */
+  .km-footer__top {
+    padding: 40px 0 24px !important;
+  }
+
+  .km-footer__brand {
+    margin-bottom: 24px !important;
+    max-width: 100% !important;
+  }
+
+  .km-footer__logo-img {
+    height: 48px !important;
+  }
+
+  .km-footer__tagline {
+    font-size: 13px !important;
+  }
+
+  .km-footer__social a {
+    width: 34px !important;
+    height: 34px !important;
+  }
+
+  /* Grid is handled by 1024px block above, but keeping layout basics here */
+  .km-footer__grid {
+    gap: 22px !important;
+  }
+
+  .km-footer__heading {
+    font-size: 12px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .km-footer__links a,
+  .km-footer__contact a {
+    font-size: 13px !important;
+  }
+
+  .km-footer__address {
+    font-size: 13px !important;
+  }
+
+  .km-footer__brands {
+    gap: 18px !important;
+    padding: 24px 0 !important;
+  }
+
+  .km-footer__brand-label {
+    font-size: 11px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .km-footer__brand-subs a {
+    font-size: 10px !important;
+    letter-spacing: .04em !important;
+  }
+
+  .km-footer__bottom {
+    grid-template-columns: 1fr !important;
+    justify-items: flex-start !important;
+    gap: 12px !important;
+    padding: 18px 0 28px !important;
+  }
+
+  .km-footer__copyright {
+    font-size: 11px !important;
+  }
+
+  .km-footer__pay img {
+    height: 18px !important;
+  }
+
+  /* ---------- PRODUCT PAGE ---------- */
+  .km-product-page {
+    padding: 24px 0 48px !important;
+  }
+
+  .km-pp__crumbs {
+    font-size: 10px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .km-pp__top {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+
+  .km-pp__gallery {
+    position: static !important;
+  }
+
+  .km-pp__hero {
+    aspect-ratio: 1/1;
+  }
+
+  .km-pp__hero-img {
+    object-fit: cover !important;
+    padding: 0 !important;
+  }
+
+  .km-pp__thumbs {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 6px !important;
+  }
+
+  .km-pp__thumb {
+    padding: 4px !important;
+  }
+
+  .km-pp__thumbs-empty {
+    font-size: 11px !important;
+  }
+
+  .km-pp__info {
+    gap: 12px !important;
+    padding-top: 4px !important;
+  }
+
+  .km-pp__title {
+    font-size: 22px !important;
+    line-height: 1.2 !important;
+  }
+
+  .km-pp__sub {
+    font-size: 11px !important;
+  }
+
+  .km-pp__price {
+    font-size: 22px !important;
+  }
+
+  .km-pp__pricerow {
+    padding: 10px 0 !important;
+  }
+
+  .km-pp__short-desc {
+    font-size: 13px !important;
+  }
+
+  .km-pp__qty-row {
+    grid-template-columns: auto 1fr !important;
+    gap: 8px !important;
+  }
+
+  .km-pp__add {
+    padding: 12px 18px !important;
+    font-size: 11px !important;
+  }
+
+  .km-pp__buy-now {
+    padding: 14px 20px !important;
+    font-size: 12px !important;
+  }
+
+  .km-pp__badges {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+    padding-top: 14px !important;
+  }
+
+  .km-pp__badge {
+    flex-direction: row !important;
+    justify-content: flex-start !important;
+    gap: 12px !important;
+    text-align: left !important;
+  }
+
+  .km-pp__accordion {
+    margin-top: 28px !important;
+  }
+
+  .km-pp__acc-item {
+    padding: 0 18px !important;
+  }
+
+  .km-pp__acc-q {
+    padding: 15px 0 !important;
+    font-size: 12px !important;
+    letter-spacing: .06em !important;
+  }
+
+  .km-pp__acc-a {
+    padding: 10px 0 18px !important;
+    font-size: 13px !important;
+  }
+
+  .km-pp-trust {
+    padding: 40px 0 !important;
+  }
+
+  .km-pp-trust__grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+
+  .km-pp-trust__card p {
+    font-size: 13px !important;
+  }
+
+  .km-pp-innov {
+    padding: 40px 0 !important;
+  }
+
+  .km-pp-innov__grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+
+  .km-pp-innov__h2 {
+    font-size: 22px !important;
+  }
+
+  .km-pp-innov__sub {
+    font-size: 16px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .km-pp-innov p {
+    font-size: 13px !important;
+  }
+
+  .km-pp-reviews {
+    padding: 32px 0 !important;
+  }
+
+  .km-pp-reviews__h2 {
+    font-size: 20px !important;
+  }
+
+  .km-pp-reviews__grid {
+    grid-auto-columns: minmax(85%, 1fr) !important;
+    gap: 16px !important;
+  }
+
+  .km-pp-reviews__card {
+    padding: 20px !important;
+  }
+
+  .km-pp-related,
+  .km-pp-trending {
+    padding: 32px 0 !important;
+  }
+
+  .km-pp-related__h2 {
+    font-size: 20px !important;
+    margin-bottom: 18px !important;
+  }
+
+  .km-pp-related__grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  .km-pp-related__info {
+    padding: 10px 12px 14px !important;
+  }
+
+  .km-pp-related__info h3 {
+    font-size: 12px !important;
+  }
+
+  .km-pp-related__price {
+    font-size: 13px !important;
+  }
+
+  /* ---------- COLLECTION PAGE ---------- */
+  .km-coll-page {
+    padding: 32px 0 60px !important;
+  }
+
+  .km-coll__crumbs {
+    font-size: 10px !important;
+    margin-bottom: 18px !important;
+  }
+
+  .km-coll__title {
+    font-size: 36px !important;
+    font-weight: 600 !important;
+    line-height: 1.4 !important;
+  }
+
+  .km-coll__desc {
+    font-size: 13px !important;
+  }
+
+  .km-coll__layout {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+
+  .km-coll__side {
+    position: static !important;
+  }
+
+  .km-coll__side-group {
+    padding: 16px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .km-coll__side-h {
+    font-size: 11px !important;
+    padding-bottom: 8px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .km-coll__toolbar {
+    padding: 10px 14px !important;
+    font-size: 11px !important;
+  }
+
+  .km-coll__grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  .km-coll__info {
+    padding: 10px 12px 14px !important;
+  }
+
+  .km-coll__name {
+    font-size: 12px !important;
+  }
+
+  .km-coll__vendor {
+    font-size: 10px !important;
+  }
+
+  .km-coll__price {
+    font-size: 13px !important;
+  }
+
+  .km-coll__rating svg {
+    width: 10px;
+    height: 10px;
+  }
+
+  /* ---------- CART PAGE ---------- */
+  .km-cart {
+    padding: 32px 0 64px !important;
+  }
+
+  .km-cart__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .km-cart__title {
+    font-size: 26px !important;
+  }
+
+  .km-cart__continue {
+    font-size: 12px !important;
+  }
+
+  .km-cart__item {
+    grid-template-columns: 72px 1fr auto !important;
+    gap: 12px !important;
+    padding: 16px 0 !important;
+  }
+
+  .km-cart__thumb {
+    width: 72px !important;
+    height: 72px !important;
+  }
+
+  .km-cart__name {
+    font-size: 14px !important;
+  }
+
+  .km-cart__variant-list {
+    font-size: 11px !important;
+  }
+
+  .km-cart__qty-input {
+    width: 56px !important;
+  }
+
+  .km-cart__line-price {
+    font-size: 14px !important;
+  }
+
+  .km-cart__actions {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+
+  .km-cart__actions .km-btn {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  /* ---------- FAQ PAGE (Webflow mobile: H1 36px/600, 2-col → 1-col stack) ---------- */
+  .km-faq-page {
+    padding: 32px 0 0 !important;
+  }
+
+  .km-faq-page__h1 {
+    font-size: 36px !important;
+    font-weight: 600 !important;
+    line-height: 1.4 !important;
+  }
+
+  .km-faq-page__header {
+    margin-bottom: 24px !important;
+  }
+
+  .km-faq-page__layout {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+    margin-bottom: 40px !important;
+  }
+
+  .km-faq-page__media {
+    aspect-ratio: 16/10 !important;
+  }
+
+  .km-faq-page__q {
+    padding: 16px 0 !important;
+    font-size: 14px !important;
+  }
+
+  .km-faq-page__a {
+    padding: 0 0 16px !important;
+    font-size: 13px !important;
+  }
+
+  .km-faq-page__support {
+    padding: 24px 0 !important;
+  }
+
+  .km-faq-page__support h3 {
+    font-size: 18px !important;
+  }
+
+  .km-faq-page__cta-wrap {
+    padding: 20px 0 64px !important;
+  }
+
+  .km-faq-page__cta-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .km-faq-page__cta-left {
+    padding: 28px 22px !important;
+  }
+
+  .km-faq-page__cta-left h3 {
+    font-size: 20px !important;
+  }
+
+  .km-faq-page__cta-right {
+    min-height: 200px !important;
+  }
+
+  .km-faq-page__cta-right-inner {
+    padding: 28px 22px !important;
+  }
+
+  .km-faq-page__cta-right-inner h4 {
+    font-size: 16px !important;
+  }
+
+  /* ---------- ABOUT PAGE (Webflow mobile: H1 36px/600) ---------- */
+  .km-about-page {
+    padding: 32px 0 0 !important;
+  }
+
+  .km-about-page__h1 {
+    font-size: 36px !important;
+    font-weight: 600 !important;
+    line-height: 1.4 !important;
+  }
+
+  .km-about-page__cta-wrap {
+    padding: 0 0 64px !important;
+  }
+
+  .km-about-page__cta-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .km-about-page__cta-wrap {
+    padding: 0 0 64px !important;
+  }
+
+  .km-about-page__cta-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .km-about-page__cta-left {
+    padding: 28px 22px !important;
+  }
+
+  .km-about-page__cta-left h3 {
+    font-size: 20px !important;
+  }
+
+  .km-about-page__cta-right {
+    min-height: 200px !important;
+  }
+
+  .km-about-page__cta-right-inner {
+    padding: 28px 22px !important;
+  }
+
+  .km-about-page__cta-right-inner h4 {
+    font-size: 16px !important;
+  }
+
+  /* ---------- REVIEWS PAGE (Webflow mobile: H1 36px/600, 60px bottom pad, 1-col grid) ---------- */
+  .km-reviews-page {
+    padding-bottom: 60px !important;
+  }
+
+  .km-reviews-page__hero {
+    padding: 48px 0 36px !important;
+  }
+
+  .km-reviews-page__h1 {
+    font-size: 36px !important;
+    font-weight: 600 !important;
+    line-height: 1.4 !important;
+  }
+
+  .km-reviews-page__sub {
+    font-size: 14px !important;
+    margin-bottom: 28px !important;
+  }
+
+  .km-reviews-page__stats {
+    gap: 24px !important;
+    padding-top: 24px !important;
+  }
+
+  .km-reviews-page__num {
+    font-size: 26px !important;
+  }
+
+  .km-reviews-page__num-row {
+    min-height: 48px !important;
+  }
+
+  .km-reviews-page__tabs-wrap {
+    margin: 28px -20px 20px;
+    padding: 0 20px;
+  }
+
+  .km-reviews-page__tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: flex-start;
+    max-width: 100%;
+    scrollbar-width: none;
+  }
+
+  .km-reviews-page__tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .km-reviews-page__tab {
+    flex: 0 0 auto;
+    padding: 9px 14px !important;
+    font-size: 10px !important;
+  }
+
+  .km-reviews-page__grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  .km-reviews-page__card {
+    padding: 20px !important;
+  }
+
+  .km-reviews-page__quote {
+    font-size: 14px !important;
+  }
+
+  .km-reviews-page__cta {
+    flex-direction: column !important;
+    text-align: center !important;
+    padding: 28px 22px !important;
+    gap: 20px !important;
+  }
+
+  .km-reviews-page__cta h2 {
+    font-size: 20px !important;
+  }
+
+  /* ---------- BLOG PAGE ---------- */
+  .km-blog-page {
+    padding: 32px 0 80px !important;
+  }
+
+  .km-blog-page__hero {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+    margin-bottom: 28px !important;
+  }
+
+  .km-blog-page__h1 {
+    font-size: 36px !important;
+    font-weight: 600 !important;
+    line-height: 1.4 !important;
+  }
+
+  .km-blog-page__lede {
+    font-size: 14px !important;
+  }
+
+  .km-blog-page__featured-body {
+    padding: 20px !important;
+  }
+
+  .km-blog-page__featured-title {
+    font-size: 18px !important;
+  }
+
+  .km-blog-page__featured-excerpt {
+    font-size: 13px !important;
+  }
+
+  .km-blog-page__cats {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding: 0 20px 8px;
+    margin: 0 -20px 24px;
+    scrollbar-width: none;
+  }
+
+  .km-blog-page__cats::-webkit-scrollbar {
+    display: none;
+  }
+
+  .km-blog-page__cats a {
+    flex: 0 0 auto;
+    padding: 8px 14px !important;
+    font-size: 10px !important;
+  }
+
+  .km-blog-page__grid {
+    grid-template-columns: 1fr !important;
+    gap: 22px !important;
+    margin-bottom: 40px !important;
+  }
+
+  .km-blog-page__card-title {
+    font-size: 16px !important;
+  }
+
+  .km-blog-page__newsletter {
+    grid-template-columns: 1fr !important;
+    padding: 24px 22px !important;
+    gap: 16px !important;
+  }
+
+  .km-blog-page__newsletter h2 {
+    font-size: 20px !important;
+  }
+
+  .km-blog-page__form-btn {
+    padding: 12px 18px !important;
+    font-size: 11px !important;
+  }
+
+  /* ---------- BLOG TEMPLATE ---------- */
+  .km-blog-index {
+    padding: 40px 0 !important;
+  }
+
+  .km-blog-index__hero {
+    margin-bottom: 32px !important;
+  }
+
+  .km-blog-index__h1 {
+    font-size: 28px !important;
+  }
+
+  .km-blog-index__lede {
+    font-size: 14px !important;
+  }
+
+  .km-blog-index__grid {
+    grid-template-columns: 1fr !important;
+    gap: 22px !important;
+  }
+
+  .km-blog-index__t {
+    font-size: 16px !important;
+  }
+
+  /* ---------- ARTICLE PAGE ---------- */
+  .km-article {
+    padding: 32px 0 !important;
+  }
+
+  .km-article__title {
+    font-size: 26px !important;
+  }
+
+  .km-article__body {
+    font-size: 15px !important;
+  }
+
+  .km-article__hero {
+    margin-bottom: 24px !important;
+  }
+
+  /* ---------- GENERIC PAGE ---------- */
+  .km-page {
+    padding: 32px 0 !important;
+  }
+
+  .km-page__title {
+    font-size: 26px !important;
+  }
+
+  /* ---------- 404 ---------- */
+  .km-404__title {
+    font-size: 28px !important;
+  }
+
+  .km-404__subtext {
+    font-size: 14px !important;
+  }
+
+  .km-404__actions .km-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ============================================================
+   MOBILE (≤ 440px)
+   ============================================================ */
+@media (max-width: 440px) {
+  /* Collection & Product Grids */
+  .km-coll__grid,
+  .km-pp-related__grid,
+  .km-pp-trending__grid,
+  .km-grid-4,
+  .km-grid-3,
+  .km-grid-2 {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Carousels */
+  .km-pcarousel__card {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Footer: Single column layout */
+  .km-footer__grid,
+  .km-footer__brands {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+    width: 100% !important;
+  }
+
+  .km-footer__top,
+  .km-footer__brand,
+  .km-footer__grid,
+  .km-footer__col,
+  .km-footer__heading,
+  .km-footer__links,
+  .km-footer__contact,
+  .km-footer__brands,
+  .km-footer__brand-col,
+  .km-footer__brand-label,
+  .km-footer__brand-subs {
+    text-align: left !important;
+    align-items: flex-start !important;
+  }
+
+  .km-footer__social {
+    justify-content: flex-start !important;
+  }
+}
+
+/* ============================================================
+   SMALL PHONES (≤ 480px)
+   ============================================================ */
+@media (max-width: 480px) {
+  .km-container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  /* Hero — keep Webflow's 32px heading + 620px min-height from ≤768 block */
+  .km-hero__cta {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Product page */
+  .km-pp__thumbs {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  .km-pp__qty-row {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  .km-pp__qty {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .km-pp__add {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .km-pp-related__grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .km-footer__logo-img {
+    height: 44px !important;
+  }
+
+  /* Cart */
+  .km-cart__item {
+    grid-template-columns: 64px 1fr !important;
+  }
+
+  .km-cart__line-price {
+    grid-column: 2 !important;
+    text-align: left !important;
+    margin-top: 4px !important;
+  }
+
+  .km-cart__thumb {
+    width: 64px !important;
+    height: 64px !important;
+  }
+
+  /* Reviews page stats stack vertically */
+  .km-reviews-page__stats {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+}
+
+/* Touch: disable hover lifts on mobile */
+@media (hover: none) {
+
+  .km-pcarousel__card:hover,
+  .km-coll__card:hover,
+  .km-pp-related__card:hover,
+  .km-reviews-page__card:hover,
+  .km-blogs__card:hover,
+  .km-blog-page__card:hover,
+  .km-categories__card:hover,
+  .km-about-page__why-card:hover,
+  .km-features__card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+/* iOS safe area */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .km-footer__bottom {
+    padding-bottom: calc(28px + env(safe-area-inset-bottom));
+  }
+}
+
+/* Visually hidden utility */
+.km-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+/* Pagination */
+.km-pagination {
+  margin-top: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.km-pagination a,
+.km-pagination .current {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid var(--km-border);
+  color: #000;
+  text-decoration: none;
+  transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+.km-pagination span {
+  display: inline-flex;
+}
+.km-pagination span:not(.current) {
+  border: none;
+  background: none;
+}
+.km-pagination span:not(.current) a {
+  /* Ensure the link inside the span gets the full styling */
+}
+.km-pagination .current {
+  background: #000 !important;
+  color: #fff !important;
+  border-color: #000 !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.km-pagination a:hover {
+  background: #fff;
+  color: var(--km-accent);
+  border-color: var(--km-accent);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+.km-pagination .deco {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  color: #9ca3af;
+}
+.km-pagination .prev a,
+.km-pagination .next a {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  font-size: 11px;
+}
+
+/* ============================================================
+   JUDGE.ME REVIEW WIDGET — Product Page Override
+   Matches the white-card "Customer Reviews" design
+   ============================================================ */
+
+/* ---- Container & Section Wrapper ---- */
+.judgeme-section .km-pp__review-wrapper {
+  background: #fff;
+  border: 1px solid var(--km-border, #DDDDDD);
+  border-radius: 20px;
+  padding: 60px 48px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.04);
+}
+
+/* ---- Section Heading ---- */
+.judgeme-section .km-section-title {
+  font-family: var(--km-font-heading, 'Georgia', serif);
+  font-size: clamp(28px, 3.2vw, 40px);
+  font-weight: 700;
+  color: #000;
+  text-align: center;
+  margin: 0 0 40px;
+  letter-spacing: -.02em;
+}
+
+/* ---- Widget Root Reset ---- */
+.judgeme-section .jdgm-widget,
+.judgeme-section .jdgm-review-widget,
+.judgeme-section .jdgm-rev-widg,
+.judgeme-section #judgeme_product_reviews {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: 100% !important;
+  font-family: var(--km-font-body, 'Inter', -apple-system, sans-serif) !important;
+}
+
+/* ---- Summary Bar (rating number + count + CTA row) ---- */
+.judgeme-section .jdgm-rev-widg__summary,
+.judgeme-section .jdgm-rev-widg__summary-content {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 0 20px !important;
+  margin: 0 0 24px !important;
+  border-bottom: 1px solid #EBEBEB !important;
+}
+
+.judgeme-section .jdgm-rev-widg__summary-text {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  color: #000 !important;
+}
+
+.judgeme-section .jdgm-rev-widg__summary-average,
+.judgeme-section .jdgm-rev-widg__average {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #000 !important;
+}
+
+.judgeme-section .jdgm-rev-widg__summary-count {
+  font-size: 13px !important;
+  color: #6B7280 !important;
+}
+
+/* ---- "Customer Reviews" inner title (Judge.me adds its own — hide duplicate) ---- */
+.judgeme-section .jdgm-rev-widg__title {
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  color: #000 !important;
+  text-align: left !important;
+  margin: 0 0 4px !important;
+  letter-spacing: 0 !important;
+}
+
+.judgeme-section .jdgm-rev-widg__header,
+.judgeme-section .jdgm-widget-header {
+  margin: 0 0 4px !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  color: #000 !important;
+}
+
+/* ---- Stars (amber/orange) ---- */
+.judgeme-section .jdgm-star,
+.judgeme-section .jdgm-rev__rating .jdgm-star,
+.judgeme-section .jdgm-rev-widg__summary-stars .jdgm-star,
+.judgeme-section .jdgm-star.jdgm--on,
+.judgeme-section .jdgm-rev__rating,
+.judgeme-section .jdgm-prev-badge__stars .jdgm-star {
+  color: #F5A623 !important;
+}
+
+/* ---- "Write a review" Button ---- */
+.judgeme-section .jdgm-write-rev-link,
+.judgeme-section .jdgm-btn--solid,
+.judgeme-section .jdgm-btn-primary,
+.judgeme-section button.jdgm-write-rev-link {
+  background: #F5A623 !important;
+  color: #fff !important;
+  border-radius: 6px !important;
+  padding: 10px 24px !important;
+  font-weight: 600 !important;
+  border: none !important;
+  font-size: 13px !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  cursor: pointer;
+  transition: background .2s ease, transform .15s ease;
+  box-shadow: none !important;
+}
+
+.judgeme-section .jdgm-write-rev-link:hover,
+.judgeme-section .jdgm-btn--solid:hover,
+.judgeme-section .jdgm-btn-primary:hover,
+.judgeme-section button.jdgm-write-rev-link:hover {
+  background: #E6951A !important;
+  color: #fff !important;
+  transform: translateY(-1px);
+}
+
+/* ---- Filter & Sort Icons ---- */
+.judgeme-section .jdgm-sort-btn,
+.judgeme-section .jdgm-filter-btn,
+.judgeme-section .jdgm-sort,
+.judgeme-section .jdgm-sort select {
+  border: 1px solid #DDD !important;
+  border-radius: 6px !important;
+  background: #fff !important;
+  color: #333 !important;
+  font-size: 13px !important;
+  padding: 6px 10px !important;
+}
+
+/* ---- Reviews List ---- */
+.judgeme-section .jdgm-rev-widg__reviews {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+}
+
+/* ---- Individual Review Card ---- */
+.judgeme-section .jdgm-rev {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid #EBEBEB !important;
+  border-radius: 0 !important;
+  padding: 24px 0 !important;
+  margin: 0 !important;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.judgeme-section .jdgm-rev:last-child {
+  border-bottom: none !important;
+}
+
+/* ---- Review Header ---- */
+.judgeme-section .jdgm-rev__header {
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ---- Author Avatar (circle initial) ---- */
+.judgeme-section .jdgm-rev__icon,
+.judgeme-section .jdgm-rev__buyer-badge {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  background: #E5E7EB !important;
+  color: #374151 !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+
+/* ---- Author Name ---- */
+.judgeme-section .jdgm-rev__author {
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  color: #000 !important;
+  line-height: 1.3 !important;
+}
+
+/* ---- Timestamp / Date ---- */
+.judgeme-section .jdgm-rev__timestamp,
+.judgeme-section .jdgm-rev__location {
+  font-size: 12px !important;
+  color: #9CA3AF !important;
+}
+
+/* ---- Review Stars ---- */
+.judgeme-section .jdgm-rev__rating {
+  margin: 0 !important;
+}
+
+/* ---- Review Title ---- */
+.judgeme-section .jdgm-rev__title {
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  color: #000 !important;
+  margin: 0 !important;
+}
+
+/* ---- Review Body Text ---- */
+.judgeme-section .jdgm-rev__body,
+.judgeme-section .jdgm-rev__body p {
+  font-size: 14px !important;
+  line-height: 1.7 !important;
+  color: #4B5563 !important;
+  margin: 0 !important;
+}
+
+/* ---- Product Info in Review ---- */
+.judgeme-section .jdgm-rev__product-info {
+  padding-top: 12px !important;
+  border-top: 1px solid #F3F4F6 !important;
+  margin-top: auto !important;
+  font-size: 12px !important;
+  color: #9CA3AF !important;
+}
+
+/* ---- Verified Badge ---- */
+.judgeme-section .jdgm-rev__verified-badge {
+  font-size: 11px !important;
+  color: #059669 !important;
+}
+
+/* ---- "No Reviews" State ---- */
+.judgeme-section .jdgm-no-reviews-msg,
+.judgeme-section .jdgm-rev-widg__no-reviews {
+  font-size: 14px !important;
+  color: #6B7280 !important;
+  text-align: center !important;
+  padding: 32px 0 !important;
+}
+
+/* ---- Pagination ---- */
+.judgeme-section .jdgm-paginate-bottom {
+  margin-top: 24px !important;
+  padding-top: 20px !important;
+  border-top: 1px solid #EBEBEB !important;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.judgeme-section .jdgm-paginate-bottom .jdgm-paginate__page {
+  background: #fff !important;
+  color: #000 !important;
+  border: 1px solid #DDD !important;
+  border-radius: 6px !important;
+  padding: 6px 12px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+}
+
+.judgeme-section .jdgm-paginate-bottom .jdgm-paginate__page.jdgm-curt {
+  background: #000 !important;
+  color: #fff !important;
+  border-color: #000 !important;
+}
+
+/* ---- Review Form Overlay ---- */
+.judgeme-section .jdgm-form-wrapper,
+.judgeme-section .jdgm-rev-widg__form {
+  background: #fff !important;
+  border: 1px solid #EBEBEB !important;
+  border-radius: 16px !important;
+  padding: 32px !important;
+  margin-top: 24px !important;
+}
+
+.judgeme-section .jdgm-form-wrapper input,
+.judgeme-section .jdgm-form-wrapper textarea,
+.judgeme-section .jdgm-rev-widg__form input,
+.judgeme-section .jdgm-rev-widg__form textarea {
+  border: 1px solid #DDD !important;
+  border-radius: 8px !important;
+  padding: 10px 14px !important;
+  font-size: 14px !important;
+  font-family: inherit !important;
+  background: #fff !important;
+  color: #000 !important;
+}
+
+.judgeme-section .jdgm-form-wrapper input:focus,
+.judgeme-section .jdgm-form-wrapper textarea:focus,
+.judgeme-section .jdgm-rev-widg__form input:focus,
+.judgeme-section .jdgm-rev-widg__form textarea:focus {
+  border-color: #F5A623 !important;
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(245,166,35,.15) !important;
+}
+
+/* ---- Preview Badge (mini star badge on PDP) — matches .km-pp__rating-row ---- */
+
+/* Container: mirror .km-pp__rating-row layout */
+/* High specificity to override Judge.me settings like .jdgm-preview-badge[data-template="product"] { display: none !important } */
+.jdgm-prev-badge,
+.jdgm-preview-badge,
+.km-pp__info .jdgm-prev-badge,
+body .jdgm-prev-badge[data-template="product"],
+body .jdgm-preview-badge[data-template="product"] {
+  display: inline-flex !important; /* Force show if hidden by app settings */
+  visibility: visible !important; /* Force show if hidden by app settings */
+  opacity: 1 !important;
+  align-items: center !important;
+  gap: 10px !important;
+  color: inherit !important;
+  font-family: inherit !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Stars wrapper: mirror .km-pp__stars */
+.jdgm-prev-badge .jdgm-prev-badge__stars,
+.km-pp__info .jdgm-prev-badge .jdgm-prev-badge__stars,
+.jdgm-preview-badge .jdgm-prev-badge__stars {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  gap: 2px !important;
+  color: var(--km-accent, #FBB03D) !important;
+  line-height: 1 !important;
+}
+
+/* Individual stars: mirror .km-pp__stars svg (14px) */
+.jdgm-prev-badge .jdgm-prev-badge__stars .jdgm-star,
+.jdgm-prev-badge .jdgm-prev-badge__stars i,
+.km-pp__info .jdgm-prev-badge .jdgm-star,
+.jdgm-preview-badge .jdgm-star {
+  color: var(--km-accent, #FBB03D) !important;
+  font-size: 14px !important;
+  width: 14px !important;
+  height: 14px !important;
+  line-height: 1 !important;
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Text: mirror .km-pp__review-count */
+.jdgm-prev-badge .jdgm-prev-badge__text,
+.km-pp__info .jdgm-prev-badge .jdgm-prev-badge__text,
+.jdgm-preview-badge .jdgm-prev-badge__text {
+  display: inline-block !important; /* Force show if hidden by app settings */
+  visibility: visible !important; /* Force show if hidden by app settings */
+  opacity: 1 !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: var(--km-text, #4B5563) !important;
+  letter-spacing: .04em !important;
+  text-transform: uppercase !important;
+  line-height: 1 !important;
+  text-decoration: none !important;
+}
+
+/* Remove any default Judge.me spacing/borders */
+.jdgm-prev-badge *,
+.km-pp__info .jdgm-prev-badge * {
+  border: none !important;
+  background: none !important;
+  box-shadow: none !important;
+}
+
+
+/* ---- Hide the App Block Version (keep only our custom section) ---- */
+.shopify-section--apps .jdgm-widget {
+  display: none !important;
+}
+
+/* ---- Mobile Responsive ---- */
+@media (max-width: 768px) {
+  .judgeme-section .km-pp__review-wrapper {
+    padding: 36px 20px;
+    border-radius: 16px;
+  }
+
+  .judgeme-section .km-section-title {
+    font-size: 26px;
+    margin-bottom: 28px;
+  }
+
+  .judgeme-section .jdgm-rev {
+    padding: 18px 0 !important;
+  }
+
+  .judgeme-section .jdgm-write-rev-link,
+  .judgeme-section button.jdgm-write-rev-link {
+    padding: 8px 18px !important;
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .judgeme-section .km-pp__review-wrapper {
+    padding: 28px 16px;
+    border-radius: 14px;
+  }
+
+  .judgeme-section .km-section-title {
+    font-size: 22px;
+    margin-bottom: 24px;
+  }
+}
+

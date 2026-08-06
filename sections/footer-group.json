@@ -1,0 +1,138 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "menu_1": {
+          "type": "menu",
+          "settings": {
+            "title": "Company",
+            "menu": "company"
+          }
+        },
+        "menu_2": {
+          "type": "menu",
+          "settings": {
+            "title": "Support",
+            "menu": "support"
+          }
+        },
+        "contact_1": {
+          "type": "contact",
+          "settings": {
+            "title": "Address",
+            "address": "Kinetic Motorcycles\n7312 Louetta Road\nSuite B118-428\nSpring, Texas 77379",
+            "phone": "",
+            "email": ""
+          }
+        },
+        "contact_2": {
+          "type": "contact",
+          "settings": {
+            "title": "Phone & Email",
+            "address": "",
+            "phone": "713-936-5412",
+            "email": "support@kineticmotorcycles.com"
+          }
+        },
+        "brand_1": {
+          "type": "brand_menu",
+          "settings": {
+            "title": "Sportster",
+            "url": "shopify://collections/harley-davidson-sportster-parts",
+            "menu": "sportster"
+          }
+        },
+        "brand_2": {
+          "type": "brand_menu",
+          "settings": {
+            "title": "Softail",
+            "url": "shopify://collections/harley-davidson-softail-parts",
+            "menu": "softail"
+          }
+        },
+        "brand_3": {
+          "type": "brand_menu",
+          "settings": {
+            "title": "Dyna",
+            "url": "shopify://collections/harley-davidson-dyna-parts",
+            "menu": "dyna"
+          }
+        },
+        "brand_4": {
+          "type": "brand_menu",
+          "settings": {
+            "title": "Indian",
+            "url": "shopify://collections/indian-parts",
+            "menu": "indian"
+          }
+        },
+        "brand_5": {
+          "type": "brand_menu",
+          "settings": {
+            "title": "Honda",
+            "url": "shopify://collections/honda-cb-parts",
+            "menu": "honda"
+          }
+        },
+        "brand_6": {
+          "type": "brand_menu",
+          "settings": {
+            "title": "Triumph",
+            "url": "shopify://collections/triumph-motorcycle-parts-accessories",
+            "menu": "triumph"
+          }
+        },
+        "brand_menu_cCzdRi": {
+          "type": "brand_menu",
+          "settings": {
+            "title": "Gear",
+            "url": "shopify://collections/motorcycle-gear",
+            "menu": "gear"
+          }
+        },
+        "brand_menu_PTC3dL": {
+          "type": "brand_menu",
+          "settings": {
+            "title": "Parts",
+            "url": "shopify://collections/premium-motorcycle-parts",
+            "menu": "parts"
+          }
+        }
+      },
+      "block_order": [
+        "menu_1",
+        "menu_2",
+        "contact_1",
+        "contact_2",
+        "brand_1",
+        "brand_2",
+        "brand_3",
+        "brand_4",
+        "brand_5",
+        "brand_6",
+        "brand_menu_cCzdRi",
+        "brand_menu_PTC3dL"
+      ],
+      "custom_css": [],
+      "settings": {
+        "tagline": "Performance parts for the ride of your life.",
+        "legal_menu": ""
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

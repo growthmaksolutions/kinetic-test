@@ -1,0 +1,89 @@
+{%- comment -%}
+  Product Related — "You May Also Like" (4-column grid of related products)
+{%- endcomment -%}
+
+<section class="km-section km-pcarousel" id="Section-{{ section.id }}">
+  <div class="km-container">
+    <div class="km-section-row">
+      <h2 class="km-section-heading">{{ section.settings.heading | default: 'You May Also Like' }}</h2>
+    </div>
+    
+    <div class="km-pcarousel__viewport">
+      <div class="km-pcarousel__track">
+        {%- if section.settings.show_related -%}
+          {%- assign limit = section.settings.limit | default: 4 -%}
+          {%- if product.collections.first.products.size > 0 -%}
+            {%- assign rel = product.collections.first.products -%}
+            {%- assign count = 0 -%}
+            {%- for p in rel -%}
+              {%- if p.id != product.id -%}
+                {%- assign count = count | plus: 1 -%}
+                {%- render 'product-card', product: p, class: 'km-pcarousel__card' -%}
+                {%- if count >= limit -%}{% break %}{%- endif -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- else -%}
+            <p>No related products found.</p>
+          {%- endif -%}
+        {%- else -%}
+          {%- comment -%} Fallback placeholder or manual block selection {%- endcomment -%}
+          {%- for i in (1..section.settings.limit) -%}
+            <article class="km-pcarousel__card">
+              <div class="km-pcarousel__imgwrap">
+                <div class="km-pp__hero-placeholder" aria-hidden="true" style="width:100%;height:100%;background:#e5e7eb;"></div>
+              </div>
+              <div class="km-pcarousel__meta">
+                <h3 class="km-pcarousel__title">Sample Product Title</h3>
+                <div class="km-pcarousel__pricerow">
+                  <span class="km-pcarousel__price">$99.00 USD</span>
+                </div>
+              </div>
+            </article>
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .km-pcarousel { overflow: hidden; }
+  .km-pcarousel__viewport {
+    overflow: hidden;
+    margin: 0 calc(var(--km-gutter) * -1);
+    padding: 0 var(--km-gutter);
+  }
+  .km-pcarousel__track {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.columns_desktop | default: 4 }}, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  @media (max-width: 1000px) {
+    .km-pcarousel__viewport { overflow-x: auto; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; }
+    .km-pcarousel__track { display: flex; gap: 24px; padding-bottom: 20px; }
+    .km-pcarousel__track::-webkit-scrollbar { display: none; }
+    .km-pcarousel__track { -ms-overflow-style: none; scrollbar-width: none; }
+    
+    .km-pcarousel__card {
+      flex: 0 0 calc(50% - 12px) !important;
+      scroll-snap-align: start;
+    }
+  }
+  @media (max-width: 640px) {
+    .km-pcarousel__card { flex: 0 0 100% !important; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Related Products",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "You May Also Like" },
+    { "type": "checkbox", "id": "show_related", "label": "Show related products from same collection", "default": true },
+    { "type": "range", "id": "limit", "label": "Products to show", "min": 2, "max": 8, "step": 1, "default": 4 },
+    { "type": "range", "id": "columns_desktop", "label": "Columns (Desktop)", "min": 2, "max": 5, "step": 1, "default": 4 }
+  ],
+  "presets": [{ "name": "Related Products" }]
+}
+{% endschema %}

@@ -1,0 +1,84 @@
+{%- comment -%} Reviews — horizontal scroll carousel with functional prev/next. {%- endcomment -%}
+<section class="km-section km-reviews">
+  <div class="km-container">
+    <div class="km-reviews__top">
+      <h2 class="km-reviews__heading">What Our Customers Say</h2>
+      <div class="km-reviews__nav">
+        <button type="button" class="km-reviews__arrow km-reviews__arrow--prev" data-km-rev-prev aria-label="Previous">{%- render 'icon', icon: 'arrow-right' -%}</button>
+        <button type="button" class="km-reviews__arrow" data-km-rev-next aria-label="Next">{%- render 'icon', icon: 'arrow-right' -%}</button>
+      </div>
+    </div>
+    <div class="km-reviews__grid" data-km-rev-track>
+      {%- assign reviews = 'Great quality parts. Fast shipping.|Chad Ramsey|Complete Tank Lift Kit for Harley-Davidson Sportster||Quick and effective. Products perfect as described. Recommended.|Verified Buyer|Slip-On Exhaust — Harley Sportster||Little hiccup in the delivery, but Kinetic made haste to correct it.|Christopher Cook|Composite Wide Grip for Harley Sportster||Very high quality, excellent fit. Look great.|Steven Harrold|Heavy Knurl Shifter Peg for Sportster||Bolt-on fit was flawless. Throttle response is night-and-day better.|Jordan M.|Slip-On Exhaust for Harley Sportster||Shipped fast and packed well. The finish matches the photos exactly.|Priya S.|Moto-style Handlebars for Triumph Street Twin' | split: '||' -%}
+      {%- for entry in reviews -%}
+        {%- assign p = entry | split: '|' -%}
+        <article class="km-reviews__card">
+          <div class="km-reviews__stars" aria-label="5 out of 5 stars">
+            {%- for i in (1..5) -%}<span class="km-reviews__star">{%- render 'icon', icon: 'star' -%}</span>{%- endfor -%}
+          </div>
+          <p class="km-reviews__quote">{{ p[0] }}</p>
+          <div class="km-reviews__meta">
+            <div class="km-reviews__author">{{ p[1] }}</div>
+            <div class="km-reviews__product">{{ p[2] }}</div>
+          </div>
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+<script>
+(() => {
+  const track = document.querySelector('[data-km-rev-track]');
+  const prev = document.querySelector('[data-km-rev-prev]');
+  const next = document.querySelector('[data-km-rev-next]');
+  if (!track || !prev || !next) return;
+  const step = () => track.clientWidth * 0.6;
+  prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+  next.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
+})();
+</script>
+
+<style>
+  .km-reviews { padding: 64px 0; background: var(--km-body-bg, #EDEDED); }
+  .km-reviews__top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 36px; gap: 20px; flex-wrap: wrap; }
+  .km-reviews__heading { font-size: clamp(26px, 3vw, 36px); font-weight: 700; letter-spacing: -.015em; color: #000; margin: 0; }
+  .km-reviews__nav { display: flex; gap: 8px; }
+  .km-reviews__arrow {
+    width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--km-border, #DDDDDD);
+    background: transparent; color: #000; display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: background .2s ease, border-color .2s ease;
+  }
+  .km-reviews__arrow--prev svg { transform: rotate(180deg); }
+  .km-reviews__arrow:hover { background: #000; color: #fff; border-color: #000; }
+  .km-reviews__grid {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(48%, 1fr);
+    gap: 28px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 8px;
+    scrollbar-width: none;
+  }
+  .km-reviews__grid::-webkit-scrollbar { display: none; }
+  .km-reviews__card {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    background: #fff;
+    border: 1px solid var(--km-border, #DDDDDD);
+    border-radius: 16px;
+    padding: 28px;
+    scroll-snap-align: start;
+  }
+  @media (max-width: 760px) {
+    .km-reviews__grid { grid-auto-columns: minmax(85%, 1fr); }
+  }
+  .km-reviews__stars { display: inline-flex; gap: 3px; color: var(--km-accent, #FBB03D); }
+  .km-reviews__quote { font-size: 16px; line-height: 1.6; color: var(--km-text, #4B5563); margin: 0; font-weight: 500; }
+  .km-reviews__meta { margin-top: 4px; }
+  .km-reviews__author { font-weight: 700; color: #000; font-size: 15px; line-height: 1.2; }
+  .km-reviews__product { font-size: 13px; color: var(--km-text, #4B5563); margin-top: 4px; }
+  @media (max-width: 700px) { .km-reviews__grid { grid-template-columns: 1fr; gap: 36px; } }
+</style>

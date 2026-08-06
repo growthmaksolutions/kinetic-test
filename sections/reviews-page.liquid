@@ -1,0 +1,309 @@
+{%- comment -%}
+  Customer Reviews page — hero, stats, FUNCTIONAL filter tabs for Judge.me widget.
+{%- endcomment -%}
+
+<section class="km-reviews-page" id="Section-{{ section.id }}">
+
+  {%- comment -%} HERO STRIP {%- endcomment -%}
+  <div class="km-reviews-page__hero">
+    <div class="km-container km-reviews-page__hero-inner">
+      <span class="km-reviews-page__eyebrow">{{ section.settings.eyebrow }}</span>
+      <h1 class="km-reviews-page__h1">{{ section.settings.title }}</h1>
+      <p class="km-reviews-page__sub">{{ section.settings.subtext }}</p>
+      
+      {%- if section.settings.show_stats -%}
+      <div class="km-reviews-page__stats">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'stat' -%}
+            <div class="km-reviews-page__stat" {{ block.shopify_attributes }}>
+              <div class="km-reviews-page__num-row">
+                <span class="km-reviews-page__num">{{ block.settings.number }}</span>
+                {%- if block.settings.show_stars -%}
+                  <span class="km-reviews-page__num-stars" aria-hidden="true">
+                    {%- for i in (1..5) -%}{%- render 'icon', icon: 'star' -%}{%- endfor -%}
+                  </span>
+                {%- endif -%}
+              </div>
+              <div class="km-reviews-page__label">{{ block.settings.label }}</div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- comment -%} MODEL FILTER TABS {%- endcomment -%}
+  {% assign model_handles = 'best-sellers,harley-davidson-sportster-parts,harley-davidson-dyna-parts,harley-davidson-softail-parts,triumph-motorcycle-parts-accessories,honda-cb-parts' | split: ',' %}
+
+  <div class="km-container km-reviews-page__tabs-wrap">
+    <div class="km-reviews-page__tabs" role="tablist">
+      <button type="button" class="km-reviews-page__tab is-active" data-tab="all">All reviews</button>
+      {% for handle in model_handles %}
+        {% assign collection = collections[handle] %}
+        {% if collection %}
+          {% assign tab_label = collection.title | remove: 'Harley-Davidson ' | remove: ' Parts' | remove: ' Motorcycle Parts & Accessories' | remove: 'Motorcycle Parts' | strip %}
+          {% if tab_label != blank %}
+            <button type="button" class="km-reviews-page__tab" data-tab="{{ handle }}">
+              {{ tab_label }}
+            </button>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+  {%- assign all_product_ids = '' -%}
+  <div class="km-container km-reviews-page__content">
+    {%- comment -%} Panels loop to collect all IDs first {%- endcomment -%}
+    {%- for handle in model_handles -%}
+      {%- assign collection = collections[handle] -%}
+      {%- if collection -%}
+        {%- for product in collection.products limit: 250 -%}
+          {%- if all_product_ids != '' -%}{%- assign all_product_ids = all_product_ids | append: ',' -%}{%- endif -%}
+          {%- assign all_product_ids = all_product_ids | append: product.id -%}
+        {%- endfor -%}
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- comment -%} All Reviews Panel {%- endcomment -%}
+    <div class="km-reviews-panel is-active" id="panel-all" data-product-ids="{{ all_product_ids }}" data-loaded="false">
+      <div class="km-reviews-list">
+        <div class="km-reviews-loading">Loading all builds...</div>
+      </div>
+    </div>
+
+    {%- comment -%} Specific Model Panels {%- endcomment -%}
+    {% for handle in model_handles %}
+      {% assign collection = collections[handle] %}
+      {% if collection %}
+        {%- assign product_ids = '' -%}
+        {%- for product in collection.products limit: 250 -%}
+          {%- if forloop.last -%}
+            {%- assign product_ids = product_ids | append: product.id -%}
+          {%- else -%}
+            {%- assign product_ids = product_ids | append: product.id | append: ',' -%}
+          {%- endif -%}
+        {%- endfor -%}
+
+        <div class="km-reviews-panel" id="panel-{{ handle }}" data-product-ids="{{ product_ids }}" data-filter-tag="{{ collection.title | remove: 'Harley-Davidson ' | remove: ' Parts' | remove: ' Motorcycle Parts & Accessories' | strip }}" data-loaded="false">
+          <div class="km-reviews-list">
+            <div class="km-reviews-loading">Loading {{ collection.title | remove: 'Harley-Davidson ' | remove: ' Parts' | strip }} reviews...</div>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Initialization for the main Judge.me widget (All Reviews tab)
+      const initJdgm = () => {
+        try {
+          if (window.jdgm && typeof window.jdgm.initializeWidgets === 'function') {
+            window.jdgm.initializeWidgets();
+          }
+        } catch (e) {
+          console.warn('Judge.me init failed:', e);
+        }
+      };
+      setTimeout(initJdgm, 2000);
+
+      // 2. Custom API Fetch Logic
+      const SHOP_DOMAIN = 'gpr0c5-md.myshopify.com';
+      const JM_PUBLIC_TOKEN = '22bnd4yheLRqU5VeT28mRiYEqvI';
+
+      const tabButtons = document.querySelectorAll('.km-reviews-page__tab');
+      const tabPanels = document.querySelectorAll('.km-reviews-panel');
+
+      async function fetchReviewsForProducts(productIds) {
+        const BASE_URL = 'https://judge.me/reviews/reviews_for_widget';
+        const params = `shop_domain=${SHOP_DOMAIN}&platform=shopify`;
+        
+        if (!productIds) return [];
+
+        const targetIds = productIds.split(',').filter(Boolean);
+        // We can fetch many products, but let's be reasonable (e.g. top 50) to avoid browser overhead
+        const limitedIds = targetIds.slice(0, 50); 
+        
+        const promises = limitedIds.map(id =>
+          fetch(`${BASE_URL}?${params}&product_id=${id}`)
+            .then(r => r.json())
+            .catch(e => ({ reviews: [] }))
+        );
+        
+        const results = await Promise.all(promises);
+        return results.flatMap(r => r.reviews || []);
+      }
+
+      function renderStars(rating) {
+        let stars = '';
+        const r = Math.round(rating);
+        for(let i=0; i<5; i++) stars += i < r ? '★' : '☆';
+        return stars;
+      }
+
+      function renderReviews(reviews, container) {
+        if (!reviews || !reviews.length) {
+          container.innerHTML = '<p class="km-reviews-empty">No reviews found for this category yet.</p>';
+          return;
+        }
+
+        // Sort by date descending
+        reviews.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+        container.innerHTML = reviews.map(review => `
+          <div class="km-review-card">
+            <div class="km-review-header">
+              <span class="km-review-author">${review.reviewer_name || 'Anonymous'}</span>
+              <span class="km-review-stars">${renderStars(review.rating)}</span>
+              <span class="km-review-date">${new Date(review.created_at).toLocaleDateString()}</span>
+            </div>
+            ${review.title ? `<h4 class="km-review-title">${review.title}</h4>` : ''}
+            <div class="km-review-body">${review.body_html || review.body || ''}</div>
+            ${review.product_title ? `<div class="km-review-product">Part: ${review.product_title}</div>` : ''}
+          </div>
+        `).join('');
+      }
+
+      async function loadTabReviews(panel) {
+        if (panel.dataset.loaded === 'true') return;
+        
+        const productIds = panel.dataset.productIds || null;
+        const container = panel.querySelector('.km-reviews-list');
+        
+        try {
+          const reviews = await fetchReviewsForProducts(productIds);
+          renderReviews(reviews, container);
+          panel.dataset.loaded = 'true';
+        } catch (err) {
+          container.innerHTML = '<p class="km-reviews-error">Error syncing reviews. Please try again later.</p>';
+          console.error(err);
+        }
+      }
+
+      // Initial Load
+      const initialPanel = document.querySelector('.km-reviews-panel.is-active');
+      if (initialPanel) loadTabReviews(initialPanel);
+
+      tabButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const target = btn.dataset.tab;
+
+          tabButtons.forEach(b => b.classList.toggle('is-active', b === btn));
+          tabPanels.forEach(p => p.classList.toggle('is-active', p.id === `panel-${target}`));
+
+          const activePanel = document.getElementById(`panel-${target}`);
+          if (activePanel) {
+             loadTabReviews(activePanel);
+          }
+        });
+      });
+
+      // 3. Periodic UI Styling for Judge.me (All Reviews Tab)
+      const styleInterval = setInterval(() => {
+        const widget = document.querySelector('.jdgm-all-reviews-widget');
+        if (widget) {
+          const title = widget.querySelector('.jdgm-all-reviews-widget__title');
+          if (title) title.style.display = 'none';
+          widget.querySelectorAll('.jdgm-star').forEach(s => s.style.color = '#FBB03D');
+        }
+      }, 1000);
+      setTimeout(() => clearInterval(styleInterval), 15000);
+    });
+  </script>
+</section>
+
+<style>
+  .km-reviews-page { padding-bottom: 96px; background: var(--km-body-bg, #EDEDED); }
+  .km-reviews-page__hero { background: #000; color: #fff; padding: 80px 0 64px; position: relative; overflow: hidden; isolation: isolate; }
+  .km-reviews-page__hero::before { content: ''; position: absolute; inset: 0; z-index: -1; background: radial-gradient(60% 80% at 80% 30%, rgba(251,176,61,.15), transparent 60%); }
+  .km-reviews-page__hero-inner { text-align: center; max-width: 760px; margin: 0 auto; }
+  .km-reviews-page__eyebrow { display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--km-accent, #FBB03D); margin-bottom: 14px; }
+  .km-reviews-page__h1 { font-size: clamp(40px, 5.4vw, 64px); font-weight: 700; letter-spacing: -.02em; color: #fff; margin: 0 0 16px; line-height: 1.05; }
+  .km-reviews-page__sub { font-size: 16px; line-height: 1.65; color: rgba(255,255,255,.8); margin: 0 auto 40px; max-width: 560px; }
+  
+  .km-reviews-page__stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; padding-top: 36px; border-top: 1px solid rgba(255,255,255,.15); max-width: 640px; margin: 0 auto; }
+  .km-reviews-page__stat { text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; }
+  .km-reviews-page__num-row { min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+  .km-reviews-page__num { font-size: 36px; font-weight: 800; color: #fff; line-height: 1; letter-spacing: -.01em; }
+  .km-reviews-page__num-stars { display: inline-flex; gap: 2px; color: var(--km-accent, #FBB03D); }
+  .km-reviews-page__num-stars svg { width: 12px; height: 12px; }
+  .km-reviews-page__label { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.6); margin-top: 10px; }
+
+  .km-reviews-page__tabs-wrap { display: flex; flex-direction: column; align-items: center; gap: 14px; margin: 48px auto 28px; }
+  .km-reviews-page__tabs { display: flex; gap: 4px; padding: 8px; background: #fff; border: 1px solid var(--km-border, #DDDDDD); border-radius: 9999px; overflow-x: auto; max-width: 100%; scrollbar-width: none; }
+  .km-reviews-page__tabs::-webkit-scrollbar { display: none; }
+  .km-reviews-page__tab { padding: 12px 24px; font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--km-text, #4B5563); background: transparent; border: 0; border-radius: 9999px; cursor: pointer; font-family: inherit; transition: background .25s ease, color .25s ease; white-space: nowrap; }
+  .km-reviews-page__tab:hover { color: #000; background: var(--km-body-bg, #EDEDED); }
+  .km-reviews-page__tab.is-active { background: #000; color: #fff; }
+
+  .km-reviews-panel { display: none; margin-bottom: 64px; }
+  .km-reviews-panel.is-active { display: block; }
+  
+  .km-reviews-list { background: #fff; border: 1px solid var(--km-border, #DDDDDD); border-radius: 24px; padding: 48px; min-height: 400px; display: flex; flex-direction: column; gap: 24px; }
+  .km-review-card { border-bottom: 1px solid var(--km-border); padding-bottom: 32px; }
+  .km-review-card:last-child { border-bottom: 0; padding-bottom: 0; }
+  .km-review-header { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; }
+  .km-review-author { font-weight: 800; font-size: 15px; color: var(--km-heading); }
+  .km-review-stars { color: var(--km-accent, #FBB03D); font-size: 18px; letter-spacing: 2px; }
+  .km-review-date { font-size: 13px; color: var(--km-text); margin-left: auto; }
+  .km-review-title { font-size: 18px; font-weight: 700; color: var(--km-heading); margin: 0 0 8px; }
+  .km-review-body { font-size: 15px; line-height: 1.6; color: var(--km-text); margin-bottom: 12px; }
+  .km-review-product { font-size: 12px; font-weight: 700; color: var(--km-accent); text-transform: uppercase; letter-spacing: .05em; }
+  
+  .km-reviews-loading, .km-reviews-empty, .km-reviews-error { text-align: center; padding: 80px 0; color: var(--km-text); font-weight: 600; font-size: 16px; }
+
+  /* Judge.me Custom Styling (All Reviews Tab) */
+  .km-reviews-panel#panel-all { background: #fff; border: 1px solid var(--km-border, #DDDDDD); border-radius: 24px; padding: 48px; }
+  #km-judgeme-all-reviews-wrapper .jdgm-all-reviews-widget { font-family: inherit !important; border: 0 !important; padding: 0 !important; }
+  #km-judgeme-all-reviews-wrapper .jdgm-all-reviews-widget__title { display: none !important; }
+  #km-judgeme-all-reviews-wrapper .jdgm-star { color: var(--km-accent, #FBB03D) !important; }
+  #km-judgeme-all-reviews-wrapper .jdgm-btn { 
+    background: #000 !important; color: #fff !important; border-radius: 9999px !important; 
+    text-transform: uppercase !important; font-weight: 800 !important; letter-spacing: .1em !important; 
+    padding: 12px 24px !important; font-size: 12px !important; border: 0 !important;
+  }
+  #km-judgeme-all-reviews-wrapper .jdgm-btn:hover { background: var(--km-accent, #FBB03D) !important; color: #000 !important; }
+
+  @media (max-width: 700px) { 
+    .km-reviews-page__tabs { border-radius: 20px; padding: 6px; } 
+    .km-reviews-page__tab { padding: 10px 16px; font-size: 10px; } 
+    .km-reviews-list, .km-reviews-panel#panel-all { padding: 24px 16px; border-radius: 0; border-left: 0; border-right: 0; }
+    .km-review-header { flex-wrap: wrap; gap: 8px; }
+    .km-review-date { width: 100%; margin-left: 0; order: 3; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Reviews Page",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Real Rider Feedback" },
+    { "type": "text", "id": "title", "label": "Title", "default": "Customer Reviews" },
+    { "type": "textarea", "id": "subtext", "label": "Subtext", "default": "The stories behind 12,000+ builds." },
+    { "type": "checkbox", "id": "show_stats", "label": "Show Stats", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Hero Stat",
+      "limit": 3,
+      "settings": [
+        { "type": "text", "id": "number", "label": "Number", "default": "4.9" },
+        { "type": "text", "id": "label", "label": "Label", "default": "Average rating" },
+        { "type": "checkbox", "id": "show_stars", "label": "Show star icons", "default": true }
+      ]
+    }
+  ],
+  "default": {
+    "blocks": [
+      { "type": "stat", "settings": { "number": "4.9", "label": "Average rating" } },
+      { "type": "stat", "settings": { "number": "12k+", "label": "Bikes built", "show_stars": false } },
+      { "type": "stat", "settings": { "number": "10 yrs", "label": "Houston-built", "show_stars": false } }
+    ]
+  }
+}
+{% endschema %}
+
+{% comment %} Sync: Wed Apr 22 14:49:52 IST 2026 {% endcomment %}

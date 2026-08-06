@@ -1,0 +1,125 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "about-page",
+      "blocks": {
+        "tab_vision": {
+          "type": "tab",
+          "settings": {
+            "title": "Our Vision",
+            "image": "shopify://shop_images/6979b83211f8cce482dde6b3_image-114_5c1ec486-afdc-440f-b20e-ab5e0d380d7e.webp",
+            "heading": "Our Vision",
+            "content": "<p>We aim to set a higher standard in the motorcycle parts industry — a future where riders can confidently find the right parts for their bikes without confusion, delays, or uncertainty.</p>",
+            "button_label": "View Collection",
+            "button_url": ""
+          }
+        },
+        "tab_mission": {
+          "type": "tab",
+          "settings": {
+            "title": "Our Mission",
+            "image": "shopify://shop_images/696e0efbd09413be82b43d03_image-133.webp",
+            "heading": "Our Mission",
+            "content": "<p>Deliver motorcycle solutions that meet real-world riding needs. By focusing on trust, innovation, and consistent quality, we make sure every product and every interaction adds value to your experience as a rider.</p>",
+            "button_label": "View Collection",
+            "button_url": ""
+          }
+        },
+        "tab_innovation": {
+          "type": "tab",
+          "settings": {
+            "title": "Our Innovation",
+            "image": "shopify://shop_images/6979b1092fa21e2d95d79ebd_image-99.webp",
+            "heading": "Our Innovation",
+            "content": "<p>We are shaping the future of automotive innovation & leading the way towards a more innovative, rider-first approach to motorcycle parts. Every component is engineered from scratch in-house — no templates, no outsourced shortcuts.</p>",
+            "button_label": "View Collection",
+            "button_url": ""
+          }
+        },
+        "stat_years": {
+          "type": "stat",
+          "settings": {
+            "number": "10+",
+            "label": "Years",
+            "sublabel": "Designing & Manufacturing"
+          }
+        },
+        "stat_delivered": {
+          "type": "stat",
+          "settings": {
+            "number": "11,900+",
+            "label": "Parts delivered",
+            "sublabel": ""
+          }
+        },
+        "stat_inventory": {
+          "type": "stat",
+          "settings": {
+            "number": "$2.3M+",
+            "label": "Inventory shipped",
+            "sublabel": ""
+          }
+        },
+        "why_made_in_usa": {
+          "type": "why_card",
+          "settings": {
+            "asset_name": "feature-made-in-usa.webp",
+            "title": "Made in USA",
+            "text": "Every product is designed and manufactured in the USA, ensuring top-notch quality and supporting local craftsmanship. When you choose us, you're choosing reliability and homegrown excellence."
+          }
+        },
+        "why_experience": {
+          "type": "why_card",
+          "settings": {
+            "asset_name": "feature-garage.webp",
+            "title": "Established in 2014",
+            "text": "For over 11 years, we've been delivering unmatched quality and expertise. Our track record reflects a deep commitment to customer satisfaction and industry-leading solutions."
+          }
+        },
+        "why_shipping": {
+          "type": "why_card",
+          "settings": {
+            "asset_name": "feature-shipping.webp",
+            "title": "Free Shipping",
+            "text": "Enjoy the convenience of free delivery anywhere in the US. We prioritize your satisfaction by making your shopping experience seamless and hassle-free."
+          }
+        }
+      },
+      "block_order": [
+        "tab_vision",
+        "tab_mission",
+        "tab_innovation",
+        "stat_years",
+        "stat_delivered",
+        "stat_inventory",
+        "why_made_in_usa",
+        "why_experience",
+        "why_shipping"
+      ],
+      "settings": {
+        "title": "About Kinetic Motorcycles",
+        "card_image": "shopify://shop_images/696e0efc733782f9ae2b395b_image-131_1bd8201e-4c5d-4428-9562-43fe56a1f9e7.webp",
+        "card_heading": "About Kinetic Motorcycles",
+        "card_content": "<p>Kinetic Motorcycles was founded in 2013 by Mike Le with a focus on original design, functional innovation, and in-house manufacturing. From the beginning, the goal has been to create well-engineered motorcycle parts that combine performance, usability, and distinctive design.</p><p>We specialize in products designed by Mike and manufactured in the United States, allowing for consistent quality control and close attention to detail. Our work is rooted in the hand-built motorcycle community, where fitment, function, and individuality matter. We focus on original designs built to support customization, reliability, and long-term use.</p><p>Our goal is simple: <strong>provide the right parts, at the right standard, backed by real support.</strong></p>",
+        "card_link_label": "View Our Collection",
+        "card_link_url": "",
+        "card_meta": "Founded in 2013",
+        "stats_title": "Stop mix-and-matching. Start building.",
+        "stats_text": "As a dedicated manufacturer, we don’t just stock parts — we engineer them.",
+        "why_title": "Why Choose Kinetic Motorcycles"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

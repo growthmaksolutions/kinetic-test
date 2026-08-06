@@ -1,0 +1,178 @@
+{%- comment -%}
+  Choose Your Model — STACKED layout matching kinetic-motorcycles.webflow.io
+  6 motorcycle models, each in its own row with image + description + category pills.
+  No tabs — the original site stacks them vertically.
+{%- endcomment -%}
+<section class="km-section km-models">
+  <div class="km-container">
+    <header class="km-models__header">
+      <h2 class="km-section-heading">Choose Your Model</h2>
+    </header>
+
+    {%- assign models = 'Harley Davidson Sportster|model-sportster-before.png|model-sportster-after.png|The Harley-Davidson Sportster has been a symbol of versatility and style since 1957, beloved by riders for its adaptability and iconic look. Our Harley-Davidson Sportster collections bring together premium exhausts, handlebars, grips, lighting, intake systems, footpegs, shifters, accessories, and services, selected for precise fitment and dependable performance. You save time, avoid compatibility issues, and upgrade with confidence using proven parts that enhance power, comfort, and overall appearance.|Accessories,Footpegs and Shifters,Exhausts,Covers-Decals-Armor,Handlebars,Lighting,Grips,Services,Intake Systems^^Harley Davidson Softail|model-softail-before.png|model-softail-after.webp|The Harley-Davidson Softail blends classic styling with modern ride comfort. Our Softail collections bring together engineered exhausts, handlebars, seats, covers, accessories, and services — chosen for direct fitment and dependable performance. Upgrade the look and feel of your Softail with parts proven to improve power, comfort, and overall appearance.|Accessories,Exhausts,Handlebars,Seats,Covers-Decals-Armor,Lighting^^Harley Davidson Dyna|model-dyna-before.png|model-dyna-after.webp|The Dyna platform is built for riders who push the limits. Our Dyna collections include full exhaust systems, precision shifters, intake kits, handlebars, lighting, and accessories — all selected for direct bolt-on fitment. Unlock real power gains and ride-quality upgrades with proven, performance-tested parts.|Accessories,Footpegs and Shifters,Exhausts,Handlebars,Lighting,Intake Systems^^Triumph ( Bonneville / Thruxton / Scrambler )|model-triumph-before.png|model-triumph-after.webp|From Bonneville to Speed Twin, Triumph is a hallmark of British engineering and classic styling. Our Triumph collections feature high-flow intakes, custom exhausts, CNC-machined cockpit parts, lighting, and accessories — selected for precise fitment and dependable performance. Upgrade with confidence and keep your ride authentic.|Accessories,Faceplates,Exhausts,Grips^^Honda CB Series|model-honda-before.png|model-honda-after.webp|Honda builds some of the most reliable and versatile motorcycles on the road. Our Honda collections include intake kits, exhaust systems, handlebars, grips, lighting, and accessories — engineered for precise fitment across CB, cafe, and bobber platforms. Enhance power, comfort, and style with proven, direct-fit parts.|Accessories,Exhausts,Suspension and Chassis,Handlebars,Grips^^Indian Motorcycle|model-sportster-before.png|model-sportster-after.png|Indian builds American touring and cruiser motorcycles known for power, presence, and craftsmanship. Our Indian collections include premium custom exhaust systems engineered for the Scout platform — selected for direct fitment and dependable performance. Upgrade with confidence using proven, US-built parts.|Exhausts' | split: '^^' -%}
+
+    <div class="km-models__list">
+      {%- for entry in models -%}
+        {%- assign m = entry | split: '|' -%}
+        <article class="km-models__row{% if forloop.index0 == 0 %} is-first{% endif %}">
+          <div class="km-models__compare" data-km-compare>
+            <img src="{{ m[1] | asset_url }}" alt="{{ m[0] }} before" loading="lazy" class="km-models__compare-before-img">
+            <img src="{{ m[2] | asset_url }}" alt="{{ m[0] }} after" loading="lazy" class="km-models__compare-after-img">
+            <span class="km-models__compare-label is-before">Before</span>
+            <span class="km-models__compare-label is-after">After</span>
+            <div class="km-models__compare-handle" aria-hidden="true">
+              <span class="km-models__compare-handle-dot">
+                {%- render 'icon', icon: 'chevron-left' -%}
+                {%- render 'icon', icon: 'chevron-right' -%}
+              </span>
+            </div>
+          </div>
+
+          <div class="km-models__info">
+            <h3 class="km-models__title">{{ m[0] }}</h3>
+            <p class="km-models__desc">{{ m[3] }}</p>
+            <div class="km-models__cats">
+              <span class="km-models__cats-label">Choose category :</span>
+              <div class="km-models__cats-list">
+                {%- assign cats = m[4] | split: ',' -%}
+                {%- for c in cats -%}
+                  <a href="/collections/{{ c | strip | downcase | replace: ' ', '-' }}" class="km-models__cat-pill">
+                    {{ c | strip }}
+                    {%- render 'icon', icon: 'arrow-right' -%}
+                  </a>
+                {%- endfor -%}
+              </div>
+            </div>
+          </div>
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .km-models { background: var(--km-body-bg, #EDEDED); padding: 64px 0; }
+  .km-models__header { text-align: center; max-width: 680px; margin: 0 auto 40px; }
+
+  .km-models__list { display: flex; flex-direction: column; gap: 80px; }
+  .km-models__row {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .km-models__row:nth-child(even) {
+    grid-template-columns: 1fr 1.2fr;
+  }
+  .km-models__row:nth-child(even) .km-models__compare { order: 2; }
+  .km-models__row:nth-child(even) .km-models__info { order: 1; }
+
+  .km-models__compare {
+    position: relative;
+    aspect-ratio: 16/10;
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: ew-resize;
+    user-select: none;
+    background: #fff;
+  }
+  .km-models__compare img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .km-models__compare-after-img { clip-path: inset(0 50% 0 0); will-change: clip-path; }
+  .km-models__compare-label {
+    position: absolute; top: 16px; padding: 6px 14px; border-radius: 9999px;
+    background: rgba(0,0,0,.7); color: #fff; font-size: 11px; font-weight: 700;
+    letter-spacing: .14em; text-transform: uppercase; backdrop-filter: blur(6px);
+    z-index: 3;
+  }
+  .km-models__compare-label.is-before { left: 16px; }
+  .km-models__compare-label.is-after { right: 16px; background: rgba(251,176,61,.95); color: #000; }
+
+  .km-models__compare-handle {
+    position: absolute; top: 0; bottom: 0; left: 50%; width: 3px; background: #fff;
+    transform: translateX(-50%); z-index: 2; pointer-events: none;
+  }
+  .km-models__compare-handle-dot {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 48px; height: 48px; border-radius: 50%; background: #fff; color: #000;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 6px 20px rgba(0,0,0,.25); pointer-events: auto; cursor: ew-resize;
+  }
+  .km-models__compare-handle-dot svg:first-child { margin-right: -4px; }
+  .km-models__compare-handle-dot svg:last-child { margin-left: -4px; }
+
+  .km-models__info { padding: 0 16px; }
+  .km-models__title {
+    font-size: clamp(22px, 2.2vw, 30px);
+    font-weight: 700;
+    margin: 0 0 12px;
+    color: var(--km-heading, #000);
+    letter-spacing: -.01em;
+  }
+  .km-models__desc {
+    color: var(--km-text, #4B5563);
+    line-height: 1.7;
+    font-size: 14px;
+    margin: 0 0 22px;
+  }
+  .km-models__cats-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--km-heading, #000);
+  }
+  .km-models__cats-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .km-models__cat-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    background: #000;
+    color: #fff;
+    border-radius: 9999px;
+    text-decoration: none;
+    transition: background .2s ease;
+  }
+  .km-models__cat-pill:hover { background: var(--km-accent, #FBB03D); color: #000; }
+  .km-models__cat-pill svg { width: 12px; height: 12px; }
+
+  @media (max-width: 900px) {
+    .km-models__row, .km-models__row:nth-child(even) { grid-template-columns: 1fr; gap: 24px; }
+    .km-models__row:nth-child(even) .km-models__compare,
+    .km-models__row:nth-child(even) .km-models__info { order: initial; }
+    .km-models__info { padding: 0; }
+  }
+</style>
+
+<script>
+(() => {
+  document.querySelectorAll('.km-models__compare[data-km-compare]').forEach((root) => {
+    const after = root.querySelector('.km-models__compare-after-img');
+    const handle = root.querySelector('.km-models__compare-handle');
+    if (!after || !handle) return;
+    let dragging = false;
+
+    const setTo = (clientX) => {
+      const rect = root.getBoundingClientRect();
+      let pct = ((clientX - rect.left) / rect.width) * 100;
+      pct = Math.max(0, Math.min(100, pct));
+      after.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
+      handle.style.left = pct + '%';
+    };
+
+    root.addEventListener('pointerdown', (e) => { dragging = true; root.setPointerCapture?.(e.pointerId); setTo(e.clientX); });
+    root.addEventListener('pointermove', (e) => { if (dragging) setTo(e.clientX); });
+    root.addEventListener('pointerup', () => { dragging = false; });
+    root.addEventListener('pointercancel', () => { dragging = false; });
+    root.addEventListener('pointerleave', () => { dragging = false; });
+  });
+})();
+</script>

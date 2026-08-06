@@ -1,0 +1,249 @@
+{%- comment -%}
+  ------------------------------------------------------------
+  CTA — Split 2-panel matching live Kinetic layout:
+    LEFT  : light-gray panel, heading + subtext + "Explore by Collections →"
+    RIGHT : dark panel, bike image bg, email signup (orange Submit btn)
+  ------------------------------------------------------------
+{%- endcomment -%}
+
+<section class="km-cta km-section-flush" id="Section-{{ section.id }}">
+  <div class="km-container">
+    <div class="km-cta__grid">
+
+      {%- comment -%} LEFT — light panel {%- endcomment -%}
+      <div class="km-cta__left"
+           style="background-color: {{ section.settings.left_bg | default: '#EDEDED' }};">
+        <h2 class="km-cta__left-heading">{{ section.settings.left_heading }}</h2>
+        {%- if section.settings.left_subtext != blank -%}
+          <p class="km-cta__left-sub">{{ section.settings.left_subtext }}</p>
+        {%- endif -%}
+        {%- if section.settings.left_link_label != blank -%}
+          <a href="{{ section.settings.left_link_url | default: '/collections' }}" class="km-cta__left-link">
+            {{ section.settings.left_link_label }}
+            {%- render 'icon', icon: 'arrow-right' -%}
+          </a>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} RIGHT — dark panel with bike image + newsletter {%- endcomment -%}
+      <div class="km-cta__right"
+           style="background-color: {{ section.settings.right_bg | default: '#111111' }};">
+        <div class="km-cta__right-bg" aria-hidden="true">
+          {%- if section.settings.right_image != blank -%}
+            {{ section.settings.right_image | image_url: width: 1400 | image_tag:
+              width: 900, height: 560, loading: 'lazy',
+              alt: '', class: 'km-cta__right-img' }}
+          {%- else -%}
+            <img src="{{ 'cta-bike.avif' | asset_url }}" width="900" height="560" loading="lazy" alt="" class="km-cta__right-img">
+          {%- endif -%}
+          <div class="km-cta__right-scrim"></div>
+        </div>
+
+        <div class="km-cta__right-inner">
+          {%- if section.settings.right_eyebrow != blank -%}
+            <span class="km-cta__right-eyebrow">{{ section.settings.right_eyebrow }}</span>
+          {%- endif -%}
+          <h3 class="km-cta__right-heading">{{ section.settings.right_heading }}</h3>
+
+          <div class="w-form">
+            {%- form 'customer', class: 'km-cta__form', data-name: 'newsletter-cta' -%}
+              <input type="hidden" name="contact[tags]" value="newsletter">
+              <label for="CTAEmail" class="km-visually-hidden">Email address</label>
+              <input id="CTAEmail"
+                     type="email"
+                     name="contact[email]"
+                     placeholder="{{ section.settings.email_placeholder | default: 'Email address' }}"
+                     required
+                     class="km-cta__form-input">
+              <button type="submit" class="km-cta__form-submit">
+                {{ section.settings.submit_label | default: 'Submit' }}
+              </button>
+            {%- endform -%}
+            <div class="w-form-done km-cta__form-msg km-cta__form-msg--ok" style="display:none;">
+              <div>Thank you! Your submission has been received!</div>
+            </div>
+            <div class="w-form-fail km-cta__form-msg km-cta__form-msg--err" style="display:none;">
+              <div>Oops! Something went wrong while submitting the form.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .km-cta { background: var(--km-body-bg); padding-top: 64px; padding-bottom: 64px; }
+  .km-cta__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-radius: var(--km-radius-lg);
+    overflow: hidden;
+  }
+
+  /* LEFT panel */
+  .km-cta__left {
+    padding: 56px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 14px;
+    min-height: 300px;
+    color: var(--km-heading);
+  }
+  .km-cta__left-heading {
+    font-size: clamp(26px, 3vw, 36px);
+    font-weight: 700;
+    letter-spacing: -.015em;
+    line-height: 1.15;
+    color: var(--km-heading);
+    margin: 0;
+  }
+  .km-cta__left-sub {
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--km-text);
+    max-width: 460px;
+    margin: 0;
+  }
+  .km-cta__left-link {
+    margin-top: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--km-heading);
+    text-decoration: none;
+    align-self: flex-start;
+  }
+  .km-cta__left-link svg { transition: transform var(--km-transition, .25s ease); }
+  .km-cta__left-link:hover svg { transform: translateX(4px); }
+
+  /* RIGHT panel */
+  .km-cta__right {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    min-height: 300px;
+    color: #fff;
+  }
+  .km-cta__right-bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+  .km-cta__right-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  .km-cta__right-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg,
+      rgba(0,0,0,.78) 0%,
+      rgba(0,0,0,.55) 45%,
+      rgba(0,0,0,.15) 100%);
+  }
+  .km-cta__right-inner {
+    padding: 48px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 14px;
+    height: 100%;
+  }
+  .km-cta__right-eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.8);
+  }
+  .km-cta__right-heading {
+    font-size: clamp(22px, 2.4vw, 28px);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -.01em;
+    color: #fff;
+    margin: 0 0 12px;
+    max-width: 440px;
+  }
+
+  .km-cta__form {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    max-width: 460px;
+    background: #fff;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .km-cta__form-input {
+    flex: 1 1 auto;
+    padding: 14px 18px;
+    border: 0;
+    background: transparent;
+    font-size: 14px;
+    color: #111;
+    outline: none;
+    font-family: inherit;
+  }
+  .km-cta__form-input::placeholder { color: #9ca3af; }
+  .km-cta__form-submit {
+    flex: 0 0 auto;
+    padding: 14px 26px;
+    border: 0;
+    background: var(--km-accent);
+    color: #000;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background var(--km-transition, .2s ease);
+  }
+  .km-cta__form-submit:hover { background: #e69a2b; }
+  .km-cta__form-msg {
+    flex-basis: 100%;
+    margin: 6px 0 0;
+    font-size: 13px;
+    padding: 10px 14px;
+  }
+  .km-cta__form-msg--ok  { color: #065f46; background: #d1fae5; }
+  .km-cta__form-msg--err { color: #991b1b; background: #fee2e2; }
+
+  @media (max-width: 900px) {
+    .km-cta__grid { grid-template-columns: 1fr; border-radius: var(--km-radius); }
+    .km-cta__left { padding: 36px 28px; min-height: 0; }
+    .km-cta__right-inner { padding: 36px 28px; }
+    .km-cta__form { flex-wrap: nowrap; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "CTA",
+  "settings": [
+    { "type": "header",   "content": "Left panel (light)" },
+    { "type": "text",     "id": "left_heading",    "label": "Heading",    "default": "Advancing Motorcycle Design" },
+    { "type": "textarea", "id": "left_subtext",    "label": "Subtext",    "default": "We build original, in-house components focused on fitment, function, and reliability — pushing thoughtful design forward with every product we make." },
+    { "type": "text",     "id": "left_link_label", "label": "Link label", "default": "Explore by Collections" },
+    { "type": "url",      "id": "left_link_url",   "label": "Link URL" },
+    { "type": "color",    "id": "left_bg",         "label": "Background", "default": "#EDEDED" },
+
+    { "type": "header",   "content": "Right panel (dark, newsletter)" },
+    { "type": "text",         "id": "right_eyebrow",      "label": "Eyebrow",           "default": "Join The Kinetic Community" },
+    { "type": "text",         "id": "right_heading",      "label": "Heading",           "default": "Get exclusive offers, new product alerts & expert riding tips" },
+    { "type": "text",         "id": "email_placeholder",  "label": "Email placeholder", "default": "Email address" },
+    { "type": "text",         "id": "submit_label",       "label": "Submit button",     "default": "Submit" },
+    { "type": "image_picker", "id": "right_image",        "label": "Background image" },
+    { "type": "color",        "id": "right_bg",           "label": "Dark base color",   "default": "#111111" }
+  ],
+  "presets": [ { "name": "CTA (split panel)" } ]
+}
+{% endschema %}
+{% comment %} Sync: Wed Apr 22 14:49:52 IST 2026 {% endcomment %}

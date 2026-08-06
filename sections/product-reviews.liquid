@@ -1,0 +1,110 @@
+{%- comment -%}
+  Product Reviews — Customer Reviews Carousel
+{%- endcomment -%}
+
+<section class="km-pp-reviews" id="Section-{{ section.id }}">
+  <div class="km-container">
+    <div class="km-pp-reviews__top">
+      <h2 class="km-pp-reviews__h2">{{ section.settings.heading | default: 'What Our Customers Say' }}</h2>
+      <div class="km-pp-reviews__nav">
+        <button type="button" class="km-pp-reviews__arrow" data-km-pp-prev aria-label="Previous">{%- render 'icon', icon: 'arrow-right' -%}</button>
+        <button type="button" class="km-pp-reviews__arrow" data-km-pp-next aria-label="Next">{%- render 'icon', icon: 'arrow-right' -%}</button>
+      </div>
+    </div>
+    <div class="km-pp-reviews__grid" data-km-pp-rev-track>
+      {%- if section.blocks.size > 0 -%}
+        {%- for block in section.blocks -%}
+          <article class="km-pp-reviews__card" {{ block.shopify_attributes }}>
+            <div class="km-pp-reviews__stars" aria-label="{{ block.settings.rating }} out of 5 stars">
+              {%- assign rating = block.settings.rating | plus: 0 -%}
+              {%- for i in (1..5) -%}
+                <span{% if i > rating %} class="is-empty"{% endif %}>{%- render 'icon', icon: 'star' -%}</span>
+              {%- endfor -%}
+            </div>
+            <p class="km-pp-reviews__quote">{{ block.settings.quote }}</p>
+            <div class="km-pp-reviews__meta">
+              <div class="km-pp-reviews__author">{{ block.settings.author }}</div>
+              {%- if block.settings.product_name != blank -%}
+                <div class="km-pp-reviews__product">{{ block.settings.product_name }}</div>
+              {%- endif -%}
+            </div>
+          </article>
+        {%- endfor -%}
+      {%- else -%}
+        {%- assign pp_reviews = 'Really happy with the product. Took a while to get my order but they were out of the spark plug cables I ordered. I had to email and inquire what the deal was. They were super helpful once I initiated communication. Would have been cool to get some swag or something since they took so long. But the relocator is great. I really love it. And they responded promptly once I reached out to them. Their customer service is truly fantastic.|Brian Hopkins|Ignition Coils Relocator (L.E.) Relocator for Harley-Davidson Sportster|5||I had some questions on some bars, so I DMd them on Instagram. The dude I talked to was super helpful. I purchased the shirt because of his response. I’ll rep the brand due to the customer service.|Chet Michaelsen|Bolt Ikons|5||Precision-machined and bolt-on perfect. Took 30 minutes to install and the difference is night and day.|Samuel P.|Milwaukee-8 Throttle Body Gasket|5||Customer support answered my DMs within an hour. Shipping was on point, packaging was premium.|Alex G.|Composite Grips + Shifter Peg|5' | split: '||' -%}
+        {%- for entry in pp_reviews -%}
+          {%- assign p = entry | split: '|' -%}
+          <article class="km-pp-reviews__card">
+            <div class="km-pp-reviews__stars" aria-label="5 out of 5 stars">
+              {%- for i in (1..5) -%}<span>{%- render 'icon', icon: 'star' -%}</span>{%- endfor -%}
+            </div>
+            <p class="km-pp-reviews__quote">{{ p[0] }}</p>
+            <div class="km-pp-reviews__meta">
+              <div class="km-pp-reviews__author">{{ p[1] }}</div>
+              <div class="km-pp-reviews__product">{{ p[2] }}</div>
+            </div>
+          </article>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .km-pp-reviews { padding: 64px 0; background: var(--km-body-bg, #EDEDED); }
+  .km-pp-reviews__top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; gap: 20px; flex-wrap: wrap; }
+  .km-pp-reviews__h2 { font-size: clamp(24px, 3vw, 34px); font-weight: 700; color: #000; margin: 0; letter-spacing: -.01em; }
+  .km-pp-reviews__nav { display: flex; gap: 8px; }
+  .km-pp-reviews__arrow { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--km-border, #DDDDDD); background: #fff; color: #000; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: background .2s ease, border-color .2s ease; }
+  .km-pp-reviews__arrow:hover { background: #000; color: #fff; }
+  .km-pp-reviews__arrow:first-child svg { transform: rotate(180deg); }
+  .km-pp-reviews__grid {
+    display: grid; grid-auto-flow: column; grid-auto-columns: minmax(48%, 1fr);
+    gap: 24px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 8px;
+    scrollbar-width: none;
+  }
+  .km-pp-reviews__grid::-webkit-scrollbar { display: none; }
+  .km-pp-reviews__card { background: #fff; border: 1px solid var(--km-border, #DDDDDD); border-radius: 16px; padding: 28px; scroll-snap-align: start; display: flex; flex-direction: column; gap: 12px; }
+  .km-pp-reviews__stars { display: inline-flex; gap: 2px; color: var(--km-accent, #FBB03D); }
+  .km-pp-reviews__stars span.is-empty { color: #d1d5db; }
+  .km-pp-reviews__quote { font-size: 14px; line-height: 1.65; color: var(--km-text, #4B5563); margin: 0; }
+  .km-pp-reviews__meta { padding-top: 14px; border-top: 1px solid var(--km-border, #DDDDDD); margin-top: auto; }
+  .km-pp-reviews__author { font-weight: 700; font-size: 14px; color: #000; }
+  .km-pp-reviews__product { font-size: 12px; color: var(--km-text, #4B5563); margin-top: 4px; }
+  @media (max-width: 600px) { .km-pp-reviews__grid { grid-auto-columns: minmax(85%, 1fr); } }
+</style>
+
+<script>
+(() => {
+  const track = document.querySelector('#Section-{{ section.id }} [data-km-pp-rev-track]');
+  const prev = document.querySelector('#Section-{{ section.id }} [data-km-pp-prev]');
+  const next = document.querySelector('#Section-{{ section.id }} [data-km-pp-next]');
+  if (track && prev && next) {
+    const step = () => track.clientWidth * 0.6;
+    prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+    next.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Product Reviews",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "What Our Customers Say" }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        { "type": "range", "id": "rating", "label": "Rating", "min": 1, "max": 5, "step": 1, "default": 5 },
+        { "type": "textarea", "id": "quote", "label": "Review text" },
+        { "type": "text", "id": "author", "label": "Author name" },
+        { "type": "text", "id": "product_name", "label": "Product name (optional)" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Product Reviews" }]
+}
+{% endschema %}

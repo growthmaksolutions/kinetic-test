@@ -1,0 +1,88 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "current": {
+    "favicon": "shopify://shop_images/KM_Logo_1.webp",
+    "color_body_bg": "#EDEDED",
+    "color_surface": "#FFFFFF",
+    "color_text": "#4B5563",
+    "color_heading": "#000000",
+    "color_primary": "#000000",
+    "color_primary_contrast": "#FFFFFF",
+    "color_accent": "#FBB03D",
+    "color_sale": "#FFDEDE",
+    "color_border": "#DDDDDD",
+    "color_header_bar": "#000000",
+    "font_heading": "manrope_n7",
+    "font_body": "manrope_n4",
+    "heading_scale": 100,
+    "body_scale": 100,
+    "page_width": 1440,
+    "section_radius": 12,
+    "social_instagram": "https://instagram.com/kineticmotorcycles",
+    "social_facebook": "https://facebook.com/kineticmotorcycles",
+    "social_youtube": "https://youtube.com/@kineticmotorcycles",
+    "social_twitter": "",
+    "content_for_index": [],
+    "blocks": {
+      "6610233760104865948": {
+        "type": "shopify://apps/brevo-pushowl/blocks/pushowl-app-embed-3d2ff2b5/fa20c3ba-38bf-43e0-ba5c-431f6ae07d95",
+        "disabled": false,
+        "settings": {}
+      },
+      "14060646107696862457": {
+        "type": "shopify://apps/judge-me-reviews/blocks/judgeme_core/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+        "disabled": false,
+        "settings": {}
+      },
+      "14717942367183170102": {
+        "type": "shopify://apps/chizy-ai-chatbot/blocks/chat-bubble/fd61935c-4053-4b60-9385-bcbc00e2b2be",
+        "disabled": false,
+        "settings": {
+          "api_base_url": "https://ai-agent.chizy.io",
+          "app_url": "https://chatbot.chizy.io"
+        }
+      },
+      "2052971791791720078": {
+        "type": "shopify://apps/birse-visual-search/blocks/img-search-float/58f4683c-4614-4dbe-9f86-c0463f4b579c",
+        "disabled": false,
+        "settings": {
+          "icon_size": 20,
+          "icon_color": "#000000",
+          "position": "right",
+          "margin_top_desktop": 150,
+          "margin_top_mobile": 150,
+          "background_color": "#fff",
+          "initially_open_popover": false
+        }
+      }
+    }
+  },
+  "presets": {
+    "Default": {
+      "color_body_bg": "#EDEDED",
+      "color_surface": "#FFFFFF",
+      "color_text": "#4B5563",
+      "color_heading": "#000000",
+      "color_primary": "#000000",
+      "color_primary_contrast": "#FFFFFF",
+      "color_accent": "#FBB03D",
+      "color_sale": "#FFDEDE",
+      "color_border": "#DDDDDD",
+      "color_header_bar": "#000000",
+      "font_heading": "manrope_n7",
+      "font_body": "manrope_n4",
+      "heading_scale": 100,
+      "body_scale": 100,
+      "page_width": 1440,
+      "section_radius": 12
+    }
+  }
+}

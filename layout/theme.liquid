@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#000000">
+    <link rel="canonical" href="{{ canonical_url }}">
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+      <link rel="apple-touch-icon" href="{{ settings.favicon | image_url: width: 180, height: 180 }}">
+    {%- else -%}
+      <link rel="icon" type="image/webp" href="{{ 'favicon.webp' | asset_url }}">
+      <link rel="apple-touch-icon" href="{{ 'favicon.webp' | asset_url }}">
+    {%- endif -%}
+
+    <title>
+      {{ page_title }}
+      {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+      {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+      {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+    </title>
+
+    {%- if page_description -%}
+      <meta name="description" content="{{ page_description | escape }}">
+    {%- endif -%}
+
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+      :root {
+        --km-body-bg: #EDEDED;
+        --km-surface: #FFFFFF;
+        --km-text: #4B5563;
+        --km-heading: #000000;
+        --km-primary: #000000;
+        --km-primary-contrast: #FFFFFF;
+        --km-accent: #FBB03D;
+        --km-sale: #FFDEDE;
+        --km-border: #DDDDDD;
+        --km-header-bar: #000000;
+        --km-radius-sm: 6px;
+        --km-radius: 12px;
+        --km-radius-lg: 20px;
+        --km-radius-pill: 9999px;
+        --km-page-max: 1440px;
+        --km-gutter: 32px;
+        --km-transition: 200ms cubic-bezier(.4,0,.2,1);
+        --km-shadow: 0 8px 24px rgba(0,0,0,.08);
+      }
+      body {
+        margin: 0;
+        background: var(--km-body-bg);
+        color: var(--km-text);
+        font-family: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-size: 16px;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+      }
+      #shopify-section-sections--26587897266481__header,
+      .shopify-section-group-header-group,
+      header-group {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        background: var(--km-surface);
+      }
+    </style>
+
+    {{ 'theme.css' | asset_url | stylesheet_tag }}
+
+    {{ content_for_header }}
+  </head>
+  <body class="template-{{ template | handle }}">
+    <a class="km-visually-hidden" href="#MainContent" style="position:absolute;left:-9999px;">Skip to content</a>
+
+    {% sections 'header-group' %}
+
+    <main id="MainContent" role="main">
+      {{ content_for_layout }}
+    </main>
+
+    {% sections 'footer-group' %}
+
+    <script src="{{ 'theme.js' | asset_url }}" defer></script>
+
+    {%- if settings.brevo_api_key != blank -%}
+    <script>
+      document.addEventListener('submit', async function(e) {
+        const form = e.target;
+        if (form.getAttribute('data-name') !== 'newsletter-cta') return;
+        
+        e.preventDefault();
+
+        const formWrapper = form.closest('.w-form') || form.parentElement;
+        const successMessage = formWrapper.querySelector('.w-form-done');
+        const errorMessage = formWrapper.querySelector('.w-form-fail');
+        const emailInput = form.querySelector('input[name="email"]');
+        
+        if (!emailInput) return;
+        const email = emailInput.value;
+
+        try {
+          const response = await fetch('https://api.brevo.com/v3/contacts', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'api-key': '{{ settings.brevo_api_key }}'
+            },
+            body: JSON.stringify({
+              email: email,
+              listIds: [{{ settings.brevo_list_id | default: 1 }}],
+              updateEnabled: true
+            })
+          });
+
+          if (response.ok || response.status === 204) {
+            if (successMessage) successMessage.style.display = 'block';
+            form.style.display = 'none';
+          } else {
+            if (errorMessage) errorMessage.style.display = 'block';
+          }
+        } catch (err) {
+          console.error('Brevo Error:', err);
+          if (errorMessage) errorMessage.style.display = 'block';
+        }
+      });
+    </script>
+    {%- endif -%}
+  </body>
+</html>

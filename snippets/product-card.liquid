@@ -1,0 +1,64 @@
+{%- comment -%}
+  Accepts:
+  - product {Object} Product object
+  - class {String} Optional custom class for the wrapper
+{%- endcomment -%}
+<article class="{{ class | default: 'km-pcarousel__card' }}">
+  <a href="{{ product.url }}" class="km-pcarousel__imgwrap">
+    {%- if product.compare_at_price > product.price -%}
+      <span class="km-pcarousel__badge">SALE</span>
+    {%- endif -%}
+    {%- if product.featured_image != blank -%}
+      {{ product.featured_image | image_url: width: 1200 | image_tag: 
+         loading: 'lazy', 
+         sizes: '(min-width: 1200px) 300px, (min-width: 768px) 50vw, 100vw',
+         widths: '400, 600, 800, 1200',
+         alt: product.title, 
+         class: 'km-pcarousel__img' 
+      }}
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'km-pcarousel__img' }}
+    {%- endif -%}
+  </a>
+  <div class="km-pcarousel__meta">
+    <h3 class="km-pcarousel__title"><a href="{{ product.url }}">{{ product.title }}</a></h3>
+    
+    {%- assign model_tag = blank -%}
+    {%- for tag in product.tags -%}
+      {%- if tag contains 'model:' -%}
+        {%- assign model_tag = tag | split: ':' | last -%}
+      {%- endif -%}
+    {%- endfor -%}
+    
+    {%- if model_tag != blank or product.vendor != blank -%}
+      <div class="km-pcarousel__model">
+        <img src="{{ 'icon-motor.png' | asset_url }}" width="16" height="16" alt="" class="km-pcarousel__model-icon" loading="lazy">
+        <span>{{ model_tag | default: product.vendor }}</span>
+      </div>
+    {%- endif -%}
+    
+    <div class="km-pcarousel__pricerow">
+      <span class="km-pcarousel__price">{{ product.price | money }}</span>
+      {%- if product.compare_at_price > product.price -%}
+        <span class="km-pcarousel__compare">{{ product.compare_at_price | money }}</span>
+      {%- endif -%}
+    </div>
+    
+    {%- comment -%} Show Judge.me rating if reviews exist, otherwise show 5 star placeholder {%- endcomment -%}
+    {%- assign jm_avg = product.metafields.judgeme.avg_rating | plus: 0 -%}
+    {%- assign jm_count = product.metafields.judgeme.number_of_reviews | plus: 0 -%}
+    
+    {%- if jm_count > 0 -%}
+      {%- assign stars = jm_avg -%}
+    {%- else -%}
+      {%- assign stars = 5 -%}
+    {%- endif -%}
+
+    {%- assign stars_int = stars | round -%}
+    <div class="km-pcarousel__rating" aria-label="{{ stars_int }} out of 5 stars">
+      {%- for i in (1..5) -%}
+        <span class="km-pcarousel__star{% if i > stars_int %} km-pcarousel__star--off{% endif %}">{%- render 'icon', icon: 'star' -%}</span>
+      {%- endfor -%}
+    </div>
+  </div>
+</article>

@@ -1,0 +1,244 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "product-main",
+      "blocks": {
+        "badge_1": {
+          "type": "badge",
+          "settings": {
+            "image": "shopify://shop_images/696f69cd0b7dd971115d6a40_made-in-usa1.png",
+            "label": "USA Designed & Made",
+            "icon": "star"
+          }
+        },
+        "badge_2": {
+          "type": "badge",
+          "settings": {
+            "image": "shopify://shop_images/696f69cce231f45c8743e027_fa-solid--shipping-fast1.png",
+            "label": "Worldwide Shipping",
+            "icon": "star"
+          }
+        },
+        "badge_3": {
+          "type": "badge",
+          "settings": {
+            "image": "shopify://shop_images/696f69cc0b7dd971115d6a2a_commercial1.png",
+            "label": "High Precision Motorcycle Parts",
+            "icon": "star"
+          }
+        }
+      },
+      "block_order": [
+        "badge_1",
+        "badge_2",
+        "badge_3"
+      ],
+      "settings": {
+        "show_breadcrumbs": true,
+        "breadcrumb_home": "Home",
+        "breadcrumb_separator": "›",
+        "breadcrumb_model_label": "{{ product.metafields.custom.model.value }}",
+        "breadcrumb_category_label": "{{ product.metafields.custom.product_category.value }}"
+      }
+    },
+    "accordion": {
+      "type": "product-accordion",
+      "blocks": {
+        "info": {
+          "type": "accordion_item",
+          "settings": {
+            "title": "Product Information",
+            "metafield_key": "product_information",
+            "custom_content": ""
+          }
+        },
+        "specs": {
+          "type": "accordion_item",
+          "settings": {
+            "title": "Specifications",
+            "metafield_key": "specifications",
+            "custom_content": ""
+          }
+        },
+        "features": {
+          "type": "accordion_item",
+          "settings": {
+            "title": "Features",
+            "metafield_key": "features",
+            "custom_content": ""
+          }
+        },
+        "fitment": {
+          "type": "accordion_item",
+          "settings": {
+            "title": "Fitment",
+            "metafield_key": "fitment",
+            "custom_content": ""
+          }
+        },
+        "why_choose": {
+          "type": "accordion_item",
+          "settings": {
+            "title": "Why Choose",
+            "metafield_key": "why_choose_this",
+            "custom_content": ""
+          }
+        },
+        "faqs": {
+          "type": "accordion_item",
+          "settings": {
+            "title": "FAQs",
+            "metafield_key": "faqs",
+            "custom_content": ""
+          }
+        }
+      },
+      "block_order": [
+        "info",
+        "specs",
+        "features",
+        "fitment",
+        "why_choose",
+        "faqs"
+      ],
+      "settings": {}
+    },
+    "trust": {
+      "type": "product-trust",
+      "blocks": {
+        "card_1": {
+          "type": "card",
+          "settings": {
+            "heading": "Designed & Built in the USA",
+            "text": "Every Kinetic product is designed and manufactured in the United States. Keeping our work in-house allows us to control quality, refine fitment, and stand behind every part we make.",
+            "icon": "trust-layers"
+          }
+        },
+        "card_2": {
+          "type": "card",
+          "settings": {
+            "heading": "A Decade of Hands-On Experience",
+            "text": "Founded in 2013. A decade of machining, installing, riding and refining components on real bikes — not just in a lab. That experience shows in the quality of every part we ship.",
+            "icon": "trust-hourglass"
+          }
+        },
+        "card_3": {
+          "type": "card",
+          "settings": {
+            "heading": "Designed by Riders & Builders",
+            "text": "Every product is shaped by hands-on building and riding experience, with practical decisions made where it matters most.",
+            "icon": "trust-wrench"
+          }
+        }
+      },
+      "block_order": [
+        "card_1",
+        "card_2",
+        "card_3"
+      ],
+      "settings": {}
+    },
+    "innovation": {
+      "type": "product-innovation",
+      "settings": {
+        "heading": "Innovation Meets Passion",
+        "subheading": "Made in the USA",
+        "text": "<p>Founded in 2013 by Mike Le, Kinetic Motorcycles was built on a simple belief: motorcycle parts aren't generic hardware — they're personal. Every product begins as an original idea, designed by Mike and developed entirely in-house.</p><p>We don't rely on templates or outsourced shortcuts. Each part is shipped by hands-on fabrication experience and time spent riding, testing, and refining. Whether you're dialing in a daily rider or building something truly your own, our focus is the same — create parts that feel intentional, functional, and worthy of your motorcycle.</p>",
+        "image": "shopify://shop_images/6979b20004a46627ccf3e6a7_image-67.avif"
+      }
+    },
+    "reviews": {
+      "type": "product-reviews",
+      "blocks": {
+        "review_1": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "Really happy with the product. Took a while to get my order but they were out of the spark plug cables I ordered. I had to email and inquire what the deal was. They were super helpful once I initiated communication. Would have been cool to get some swag or something since they took so long. But the relocator is great. I really love it. And they responded promptly once I reached out to them. Their customer service is truly fantastic.",
+            "author": "Brian Hopkins",
+            "product_name": "Ignition Coils Relocator (L.E.) Relocator for Harley-Davidson Sportster"
+          }
+        },
+        "review_2": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "I had some questions on some bars, so I DMd them on Instagram. The dude I talked to was super helpful. I purchased the shirt because of his response. I’ll rep the brand due to the customer service.",
+            "author": "Chet Michaelsen",
+            "product_name": "Tank Lift Kit with Coil and Key Relocation for Harley-Davidson Sportster (1995–2022)"
+          }
+        },
+        "review_3": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "Precision-machined and bolt-on perfect. Took 30 minutes to install and the difference is night and day.",
+            "author": "Samuel P.",
+            "product_name": "Milwaukee-8 Throttle Body Gasket"
+          }
+        },
+        "review_4": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "Customer support answered my DMs within an hour. Shipping was on point, packaging was premium.",
+            "author": "Alex G.",
+            "product_name": "Composite Grips + Shifter Peg"
+          }
+        }
+      },
+      "block_order": [
+        "review_1",
+        "review_2",
+        "review_3",
+        "review_4"
+      ],
+      "settings": {
+        "heading": "What Our Customers Say"
+      }
+    },
+    "judgeme": {
+      "type": "judgeme-widget",
+      "settings": {}
+    },
+    "related": {
+      "type": "product-related",
+      "settings": {
+        "heading": "You May Also Like",
+        "show_related": true,
+        "limit": 4,
+        "columns_desktop": 4
+      }
+    },
+    "trending": {
+      "type": "product-carousel",
+      "settings": {
+        "heading": "Trending Products",
+        "view_all_label": "View All",
+        "view_all_url": "",
+        "collection": "trending-products",
+        "filter_tag": "",
+        "limit": 8
+      }
+    }
+  },
+  "order": [
+    "main",
+    "accordion",
+    "trust",
+    "innovation",
+    "reviews",
+    "judgeme",
+    "related",
+    "trending"
+  ]
+}

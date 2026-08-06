@@ -1,0 +1,325 @@
+{%- comment -%}
+  Contact Info & Map Section — Address/Info on Left, Map on Right.
+{%- endcomment -%}
+
+<section class="km-contact-info" id="Section-{{ section.id }}">
+  <div class="km-container">
+    <div class="km-contact-info__grid">
+      
+      {%- comment -%} LEFT — Info {%- endcomment -%}
+      <div class="km-contact-info__details">
+        <div class="km-contact-info__group">
+          <h3 class="km-contact-info__h">{{ section.settings.info_heading | default: 'Contact Information' }}</h3>
+          <div class="km-contact-info__text">
+            {{ section.settings.address | newline_to_br }}
+          </div>
+        </div>
+
+        <div class="km-contact-info__group">
+          <div class="km-contact-info__text">
+            {{ section.settings.service_info | newline_to_br }}
+          </div>
+          <div class="km-contact-info__meta">
+            {%- if section.settings.phone != blank -%}
+              <p><strong>Phone:</strong> {{ section.settings.phone }}</p>
+            {%- endif -%}
+            {%- if section.settings.text_number != blank -%}
+              <p><strong>Text:</strong> {{ section.settings.text_number }}</p>
+            {%- endif -%}
+            {%- if section.settings.hours != blank -%}
+              <p><em>{{ section.settings.hours }}</em></p>
+            {%- endif -%}
+          </div>
+        </div>
+
+        <div class="km-contact-info__group">
+          <h3 class="km-contact-info__h">{{ section.settings.email_heading | default: 'Email Support' }}</h3>
+          <div class="km-contact-info__text">
+            {{ section.settings.email_info | newline_to_br }}
+          </div>
+          {%- if section.settings.email != blank -%}
+            <a href="mailto:{{ section.settings.email }}" class="km-contact-info__email-link">{{ section.settings.email }}</a>
+          {%- endif -%}
+        </div>
+
+        <div class="km-contact-info__socials">
+          <p class="km-contact-info__social-label">Follow on us</p>
+          <div class="km-contact-info__social-icons">
+            {%- assign social_platforms = 'twitter,facebook,youtube,instagram' | split: ',' -%}
+            {%- for platform in social_platforms -%}
+              {%- assign setting_id = 'social_' | append: platform | append: '_url' -%}
+              {%- if settings[setting_id] != blank or section.settings[setting_id] != blank -%}
+                {%- assign url = section.settings[setting_id] | default: settings[setting_id] -%}
+                <a href="{{ url }}" class="km-contact-info__social-icon" target="_blank" rel="noopener">
+                  {%- render 'icon', icon: platform -%}
+                </a>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        </div>
+      </div>
+
+      {%- comment -%} RIGHT — Map {%- endcomment -%}
+      <div class="km-contact-info__map-wrap">
+        {%- if section.settings.map_image != blank -%}
+          {{ section.settings.map_image | image_url: width: 1400 | image_tag:
+            width: 700, height: 500, loading: 'lazy',
+            alt: 'Location Map', class: 'km-contact-info__map-img' }}
+        {%- else -%}
+          <img src="{{ 'contact_map_location.png' | asset_url }}" width="700" height="500" loading="lazy" alt="Location Map" class="km-contact-info__map-img">
+        {%- endif -%}
+        
+        {%- if section.settings.map_url != blank -%}
+          <a href="{{ section.settings.map_url }}" target="_blank" rel="noopener" class="km-contact-info__map-btn">
+            Open in Maps {%- render 'icon', icon: 'external-link' -%}
+          </a>
+        {%- endif -%}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .km-contact-info {
+    background: #fff;
+    padding-bottom: 80px;
+  }
+  .km-contact-info__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-radius: 24px;
+    overflow: hidden;
+    border: 1px solid #E5E7EB;
+  }
+
+  .km-contact-info__details {
+    padding: 48px 40px;
+    background: #F3F4F6;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .km-contact-info__h {
+    font-size: 14px;
+    font-weight: 700;
+    color: #000;
+    margin: 0 0 12px;
+  }
+  .km-contact-info__text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #4B5563;
+  }
+  .km-contact-info__meta {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .km-contact-info__meta p {
+    font-size: 14px;
+    margin: 0;
+    color: #000;
+  }
+  .km-contact-info__meta strong {
+    font-weight: 700;
+  }
+  .km-contact-info__meta em {
+    font-style: italic;
+    color: #6B7280;
+    font-size: 13px;
+  }
+
+  .km-contact-info__email-link {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #000;
+    text-decoration: none;
+    border-bottom: 2px solid var(--km-accent, #FBB03D);
+  }
+
+  .km-contact-info__socials {
+    margin-top: 8px;
+  }
+  .km-contact-info__social-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #9CA3AF;
+    margin: 0 0 12px;
+  }
+  .km-contact-info__social-icons {
+    display: flex;
+    gap: 12px;
+  }
+  .km-contact-info__social-icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border-radius: 50%;
+    color: #000;
+    transition: transform .2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,.05);
+  }
+  .km-contact-info__social-icon:hover {
+    transform: translateY(-2px);
+  }
+  .km-contact-info__social-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Map Panel */
+  .km-contact-info__map-wrap {
+    position: relative;
+    height: 100%;
+    min-height: 400px;
+  }
+  .km-contact-info__map-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .km-contact-info__map-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: #fff;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #3B82F6;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.1);
+    z-index: 2;
+  }
+  .km-contact-info__map-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  @media (max-width: 900px) {
+    .km-contact-info__grid {
+      grid-template-columns: 1fr;
+    }
+    .km-contact-info__details {
+      padding: 32px 20px;
+    }
+    .km-contact-info__email-link {
+      font-size: 15px;
+      word-break: break-all;
+      overflow-wrap: anywhere;
+    }
+    .km-contact-info__map-wrap {
+      min-height: 300px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Contact Info & Map",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Contact Details"
+    },
+    {
+      "type": "text",
+      "id": "info_heading",
+      "label": "Info Heading",
+      "default": "Contact Information"
+    },
+    {
+      "type": "textarea",
+      "id": "address",
+      "label": "Address",
+      "default": "Kinetic Motorcycles\n7312 Louetta Road\nSuite B118-428\nSpring, Texas 77379\nUnited States"
+    },
+    {
+      "type": "textarea",
+      "id": "service_info",
+      "label": "Service Info",
+      "default": "For quick questions or order related assistance, contact our customer service team. You will be talking to humans, no bots here!"
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "Phone",
+      "default": "713-936-5412"
+    },
+    {
+      "type": "text",
+      "id": "text_number",
+      "label": "Text",
+      "default": "833-455-0591"
+    },
+    {
+      "type": "text",
+      "id": "hours",
+      "label": "Hours Info",
+      "default": "Available during business hours: 10 AM-5 PM M-F Central Standard Time."
+    },
+    {
+      "type": "header",
+      "content": "Email Details"
+    },
+    {
+      "type": "text",
+      "id": "email_heading",
+      "label": "Email Heading",
+      "default": "Email Support"
+    },
+    {
+      "type": "textarea",
+      "id": "email_info",
+      "label": "Email Info",
+      "default": "For detailed inquiries, product questions, or order support, email us directly."
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Email Address",
+      "default": "support@kineticmotorcycles.com"
+    },
+    {
+      "type": "header",
+      "content": "Social Media (Overrides)"
+    },
+    { "type": "url", "id": "social_twitter_url", "label": "Twitter URL" },
+    { "type": "url", "id": "social_facebook_url", "label": "Facebook URL" },
+    { "type": "url", "id": "social_youtube_url", "label": "YouTube URL" },
+    { "type": "url", "id": "social_instagram_url", "label": "Instagram URL" },
+    {
+      "type": "header",
+      "content": "Map Panel"
+    },
+    {
+      "type": "image_picker",
+      "id": "map_image",
+      "label": "Map Image"
+    },
+    {
+      "type": "text",
+      "id": "map_url",
+      "label": "Google Maps Link",
+      "default": "https://www.google.com/maps/place/7312+Louetta+Rd+B118-428,+Spring,+TX+77379"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact Info & Map"
+    }
+  ]
+}
+{% endschema %}

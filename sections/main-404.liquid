@@ -1,0 +1,60 @@
+{%- comment -%}
+  Standard 404 template section.
+{%- endcomment -%}
+
+<section class="km-section km-404" id="Section-{{ section.id }}">
+  <div class="km-container km-container--narrow">
+    <div class="km-404__inner">
+      <span class="km-404__eyebrow">{{ section.settings.eyebrow | default: 'Error 404' }}</span>
+      <h1 class="km-404__title">{{ section.settings.title | default: 'This page took a wrong turn.' }}</h1>
+      <p class="km-404__subtext">
+        {{ section.settings.subtext | default: "The page you're looking for doesn't exist — or maybe it moved. Let's get you back on the road." }}
+      </p>
+      <div class="km-404__actions">
+        <a href="{{ section.settings.primary_url | default: routes.root_url }}" class="km-btn km-btn-primary">
+          {{ section.settings.primary_label | default: 'Back to homepage' }}
+          {%- render 'icon', icon: 'arrow-right' -%}
+        </a>
+        {%- if section.settings.secondary_label != blank -%}
+          <a href="{{ section.settings.secondary_url | default: routes.all_products_collection_url }}" class="km-btn km-btn-ghost">
+            {{ section.settings.secondary_label }}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .km-section.km-404 { background: var(--km-body-bg, #EDEDED); min-height: 60vh; display: flex; align-items: center; padding: 80px 0; }
+  .km-container--narrow { max-width: 720px; }
+  .km-404__inner { text-align: center; padding: 40px 0; }
+  .km-404__eyebrow { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--km-accent, #FBB03D); margin-bottom: 16px; }
+  .km-404__title { font-size: clamp(32px, 4.2vw, 56px); font-weight: 700; letter-spacing: -.02em; line-height: 1.1; color: var(--km-heading, #000); margin: 0 0 16px; }
+  .km-404__subtext { font-size: 16px; color: var(--km-text, #4B5563); line-height: 1.6; margin: 0 auto 32px; max-width: 480px; }
+  .km-404__actions { display: inline-flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+  .km-btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 9999px; text-decoration: none; font-weight: 700; font-size: 14px; }
+  .km-btn-primary { background: #000; color: #fff; }
+  .km-btn-primary:hover { background: var(--km-accent, #FBB03D); color: #000; }
+  .km-btn-ghost { background: transparent; color: #000; border: 1px solid var(--km-border, #DDDDDD); }
+</style>
+
+{% schema %}
+{
+  "name": "404 Page",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow text", "default": "Error 404" },
+    { "type": "text", "id": "title", "label": "Heading", "default": "This page took a wrong turn." },
+    { "type": "textarea", "id": "subtext", "label": "Subtext", "default": "The page you're looking for doesn't exist — or maybe it moved. Let's get you back on the road." },
+    { "type": "text", "id": "primary_label", "label": "Primary button label", "default": "Back to homepage" },
+    { "type": "url", "id": "primary_url", "label": "Primary button link" },
+    { "type": "text", "id": "secondary_label", "label": "Secondary button label", "default": "Browse the shop" },
+    { "type": "url", "id": "secondary_url", "label": "Secondary button link" }
+  ],
+  "presets": [
+    {
+      "name": "404 Page"
+    }
+  ]
+}
+{% endschema %}

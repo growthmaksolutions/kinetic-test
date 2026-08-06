@@ -1,0 +1,198 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Kinetic Motorcycles",
+    "theme_version": "1.0.0",
+    "theme_author": "Clone Website Skill",
+    "theme_documentation_url": "https://kinetic-motorcycles.webflow.io/",
+    "theme_support_url": "https://kinetic-motorcycles.webflow.io/"
+  },
+  {
+    "name": "Logo & Favicon",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon image",
+        "info": "Will be scaled down to 32x32px"
+      }
+    ]
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Brand colors"
+      },
+      {
+        "type": "color",
+        "id": "color_body_bg",
+        "label": "Body background",
+        "default": "#EDEDED"
+      },
+      {
+        "type": "color",
+        "id": "color_surface",
+        "label": "Surface / cards",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "color_text",
+        "label": "Body text",
+        "default": "#4B5563"
+      },
+      {
+        "type": "color",
+        "id": "color_heading",
+        "label": "Headings",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "id": "color_primary",
+        "label": "Primary (buttons / nav)",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "id": "color_primary_contrast",
+        "label": "Primary contrast",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Accent (gold)",
+        "default": "#FBB03D"
+      },
+      {
+        "type": "color",
+        "id": "color_sale",
+        "label": "Sale highlight (pink)",
+        "default": "#FFDEDE"
+      },
+      {
+        "type": "color",
+        "id": "color_border",
+        "label": "Border / divider",
+        "default": "#DDDDDD"
+      },
+      {
+        "type": "color",
+        "id": "color_header_bar",
+        "label": "Header top bar",
+        "default": "#000000"
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "font_picker",
+        "id": "font_heading",
+        "label": "Heading font",
+        "default": "manrope_n7"
+      },
+      {
+        "type": "font_picker",
+        "id": "font_body",
+        "label": "Body font",
+        "default": "manrope_n4"
+      },
+      {
+        "type": "range",
+        "id": "heading_scale",
+        "min": 80,
+        "max": 150,
+        "step": 5,
+        "unit": "%",
+        "label": "Heading size scale",
+        "default": 100
+      },
+      {
+        "type": "range",
+        "id": "body_scale",
+        "min": 80,
+        "max": 130,
+        "step": 5,
+        "unit": "%",
+        "label": "Body size scale",
+        "default": 100
+      }
+    ]
+  },
+  {
+    "name": "Layout",
+    "settings": [
+      {
+        "type": "range",
+        "id": "page_width",
+        "min": 1100,
+        "max": 1600,
+        "step": 20,
+        "unit": "px",
+        "label": "Page width",
+        "default": 1440
+      },
+      {
+        "type": "range",
+        "id": "section_radius",
+        "min": 0,
+        "max": 40,
+        "step": 2,
+        "unit": "px",
+        "label": "Section corner radius",
+        "default": 12
+      }
+    ]
+  },
+  {
+    "name": "Social",
+    "settings": [
+      {
+        "type": "url",
+        "id": "social_instagram",
+        "label": "Instagram URL"
+      },
+      {
+        "type": "url",
+        "id": "social_facebook",
+        "label": "Facebook URL"
+      },
+      {
+        "type": "url",
+        "id": "social_youtube",
+        "label": "YouTube URL"
+      },
+      {
+        "type": "url",
+        "id": "social_twitter",
+        "label": "Twitter / X URL"
+      }
+    ]
+  },
+  {
+    "name": "Integrations",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Brevo (Newsletter)"
+      },
+      {
+        "type": "text",
+        "id": "brevo_api_key",
+        "label": "API Key",
+        "info": "Warning: This key will be visible in the browser source code."
+      },
+      {
+        "type": "number",
+        "id": "brevo_list_id",
+        "label": "List ID",
+        "default": 1
+      }
+    ]
+  }
+]

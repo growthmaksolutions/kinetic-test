@@ -1,0 +1,320 @@
+{%- comment -%}
+  ------------------------------------------------------------
+  Banner Promo — Headline bar + 3 offer tiles
+  Layout: 1 big feature tile on left, 3 stacked offer tiles on right
+  ------------------------------------------------------------
+{%- endcomment -%}
+
+<section class="km-section km-banner-promo" id="Section-{{ section.id }}">
+  <div class="km-container">
+    <header class="km-banner-promo__header">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="km-eyebrow">{{ section.settings.eyebrow }}</span>
+      {%- endif -%}
+      <h2 class="km-section-heading">{{ section.settings.heading }}</h2>
+      {%- if section.settings.subheading != blank -%}
+        <p class="km-muted">{{ section.settings.subheading }}</p>
+      {%- endif -%}
+    </header>
+
+    <div class="km-banner-promo__grid">
+      {%- comment -%} Feature tile (large, left) {%- endcomment -%}
+      <a href="{{ section.settings.feature_url | default: '#' }}" class="km-banner-promo__feature"
+         style="background-color: {{ section.settings.feature_bg | default: '#111111' }};">
+        <div class="km-banner-promo__feature-copy">
+          {%- if section.settings.feature_tag != blank -%}
+            <span class="km-pill km-pill--sale">{{ section.settings.feature_tag }}</span>
+          {%- endif -%}
+          <h3 class="km-banner-promo__feature-heading">{{ section.settings.feature_heading }}</h3>
+          {%- if section.settings.feature_subtext != blank -%}
+            <p class="km-banner-promo__feature-subtext">{{ section.settings.feature_subtext }}</p>
+          {%- endif -%}
+          {%- if section.settings.feature_cta != blank -%}
+            <span class="km-banner-promo__feature-cta">
+              {{ section.settings.feature_cta }}
+              {%- render 'icon', icon: 'arrow-right' -%}
+            </span>
+          {%- endif -%}
+        </div>
+        <div class="km-banner-promo__feature-media">
+          {%- if section.settings.feature_image != blank -%}
+            {{ section.settings.feature_image | image_url: width: 1400 | image_tag:
+              width: 700, height: 560,
+              loading: 'lazy',
+              alt: section.settings.feature_heading,
+              class: 'km-banner-promo__feature-img'
+            }}
+          {%- elsif section.settings.feature_asset != blank -%}
+            <img src="{{ section.settings.feature_asset | asset_url }}" alt="{{ section.settings.feature_heading }}"
+                 width="700" height="560" loading="lazy" class="km-banner-promo__feature-img">
+          {%- endif -%}
+        </div>
+      </a>
+
+      {%- comment -%} Right column: small offer tiles (blocks) {%- endcomment -%}
+      <div class="km-banner-promo__offers">
+        {%- if section.blocks.size > 0 -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'offer' -%}
+              <a href="{{ block.settings.url | default: '#' }}" class="km-banner-promo__offer" style="background-color: {{ block.settings.bg_color | default: '#FFDEDE' }};" {{ block.shopify_attributes }}>
+                <div class="km-banner-promo__offer-copy">
+                  {%- if block.settings.tag != blank -%}<span class="km-banner-promo__offer-tag">{{ block.settings.tag }}</span>{%- endif -%}
+                  <h4 class="km-banner-promo__offer-heading">{{ block.settings.heading }}</h4>
+                  {%- if block.settings.subtext != blank -%}<p class="km-banner-promo__offer-subtext">{{ block.settings.subtext }}</p>{%- endif -%}
+                  <span class="km-banner-promo__offer-link">{{ block.settings.cta_label | default: 'Shop Now' }}{%- render 'icon', icon: 'arrow-right' -%}</span>
+                </div>
+                <div class="km-banner-promo__offer-media">
+                  {%- if block.settings.image != blank -%}
+                    {{ block.settings.image | image_url: width: 800 | image_tag: width: 400, height: 360, loading: 'lazy', alt: block.settings.heading, class: 'km-banner-promo__offer-img' }}
+                  {%- elsif block.settings.asset_name != blank -%}
+                    <img src="{{ block.settings.asset_name | asset_url }}" alt="{{ block.settings.heading }}" width="400" height="360" loading="lazy" class="km-banner-promo__offer-img">
+                  {%- endif -%}
+                </div>
+              </a>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- else -%}
+          {%- assign fallback_offers = 'New Product|Fuel pressure regulator|banner-offer-1.avif|#F2F2F2||New Arrivals|Fuel pressure regulator|banner-offer-2.avif|#E6EEF7' | split: '||' -%}
+          {%- for entry in fallback_offers -%}
+            {%- assign p = entry | split: '|' -%}
+            <a href="#" class="km-banner-promo__offer" style="background-color: {{ p[3] }};">
+              <div class="km-banner-promo__offer-copy">
+                <span class="km-banner-promo__offer-tag">{{ p[0] }}</span>
+                <h4 class="km-banner-promo__offer-heading">{{ p[1] }}</h4>
+                <span class="km-banner-promo__offer-link">Shop Now {%- render 'icon', icon: 'arrow-right' -%}</span>
+              </div>
+              <div class="km-banner-promo__offer-media">
+                <img src="{{ p[2] | asset_url }}" alt="{{ p[1] }}" width="200" height="180" loading="lazy" class="km-banner-promo__offer-img">
+              </div>
+            </a>
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .km-banner-promo { background: var(--km-body-bg); }
+  .km-banner-promo__header { text-align: center; max-width: 680px; margin: 0 auto 44px; }
+  .km-banner-promo__header .km-eyebrow {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--km-accent);
+    margin-bottom: 12px;
+  }
+
+  .km-banner-promo__grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 24px;
+  }
+
+  /* Feature tile (big, left) */
+  .km-banner-promo__feature {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-radius: var(--km-radius-lg);
+    overflow: hidden;
+    color: #fff;
+    text-decoration: none;
+    min-height: 380px;
+    isolation: isolate;
+    transition: transform var(--km-transition, .25s ease);
+  }
+  .km-banner-promo__feature:hover { transform: translateY(-3px); }
+
+  .km-banner-promo__feature-copy {
+    padding: 44px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 14px;
+  }
+  .km-pill--sale {
+    align-self: flex-start;
+    display: inline-block;
+    padding: 6px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    background: var(--km-accent);
+    color: #000;
+    border-radius: var(--km-radius-pill);
+  }
+  .km-banner-promo__feature-heading {
+    font-size: clamp(30px, 3.6vw, 44px);
+    font-weight: 700;
+    letter-spacing: -.02em;
+    line-height: 1.05;
+    color: #fff;
+    margin: 0;
+  }
+  .km-banner-promo__feature-subtext {
+    font-size: 15px;
+    color: rgba(255,255,255,.78);
+    line-height: 1.6;
+    max-width: 360px;
+    margin: 0;
+  }
+  .km-banner-promo__feature-cta {
+    margin-top: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--km-accent);
+  }
+
+  .km-banner-promo__feature-media {
+    position: relative;
+    overflow: hidden;
+  }
+  .km-banner-promo__feature-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  /* Offer tiles (small, right column) */
+  .km-banner-promo__offers {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .km-banner-promo__offer {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.1fr .9fr;
+    gap: 12px;
+    border-radius: var(--km-radius-lg);
+    overflow: hidden;
+    text-decoration: none;
+    color: #111;
+    min-height: 170px;
+    transition: transform var(--km-transition, .25s ease);
+  }
+  .km-banner-promo__offer:hover { transform: translateY(-2px); }
+
+  .km-banner-promo__offer-copy {
+    padding: 22px 22px 22px 26px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+  }
+  .km-banner-promo__offer-tag {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #000;
+    opacity: .7;
+  }
+  .km-banner-promo__offer-heading {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -.01em;
+    line-height: 1.15;
+    color: #000;
+    margin: 0;
+  }
+  .km-banner-promo__offer-subtext {
+    font-size: 13px;
+    line-height: 1.5;
+    color: rgba(0,0,0,.7);
+    margin: 0;
+  }
+  .km-banner-promo__offer-link {
+    margin-top: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #000;
+  }
+  .km-banner-promo__offer-media {
+    position: relative;
+    overflow: hidden;
+  }
+  .km-banner-promo__offer-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  @media (max-width: 900px) {
+    .km-banner-promo__grid { grid-template-columns: 1fr; }
+    .km-banner-promo__feature { grid-template-columns: 1fr; min-height: 0; }
+    .km-banner-promo__feature-media { height: 240px; }
+  }
+  @media (max-width: 520px) {
+    .km-banner-promo__feature-copy { padding: 28px 24px; }
+    .km-banner-promo__offer { grid-template-columns: 1fr; }
+    .km-banner-promo__offer-media { height: 140px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Banner promo",
+  "settings": [
+    { "type": "text",     "id": "eyebrow",         "label": "Eyebrow" },
+    { "type": "text",     "id": "heading",         "label": "Heading" },
+    { "type": "textarea", "id": "subheading",      "label": "Subheading" },
+    { "type": "header",   "content": "Feature tile (left)" },
+    { "type": "text",     "id": "feature_tag",     "label": "Tag",                 "default": "Get 45% Off" },
+    { "type": "text",     "id": "feature_heading", "label": "Heading",             "default": "Instrument cluster" },
+    { "type": "textarea", "id": "feature_subtext", "label": "Subtext" },
+    { "type": "text",     "id": "feature_cta",     "label": "CTA label",           "default": "Shop Now" },
+    { "type": "url",      "id": "feature_url",     "label": "Link" },
+    { "type": "image_picker", "id": "feature_image", "label": "Image" },
+    { "type": "text",     "id": "feature_asset",   "label": "Asset filename (fallback)", "default": "banner-latest.avif" },
+    { "type": "color",    "id": "feature_bg",      "label": "Background color",    "default": "#111111" }
+  ],
+  "blocks": [
+    {
+      "type": "offer",
+      "name": "Offer tile",
+      "settings": [
+        { "type": "text",         "id": "tag",         "label": "Tag",         "default": "NEW ARRIVAL" },
+        { "type": "text",         "id": "heading",     "label": "Heading",     "default": "Exhaust Systems" },
+        { "type": "textarea",     "id": "subtext",     "label": "Subtext",     "default": "Roar louder. Ride harder." },
+        { "type": "text",         "id": "cta_label",   "label": "CTA label",   "default": "Shop Now" },
+        { "type": "url",          "id": "url",         "label": "Link" },
+        { "type": "image_picker", "id": "image",       "label": "Image" },
+        { "type": "text",         "id": "asset_name",  "label": "Asset filename (fallback)", "default": "banner-offer-1.avif" },
+        { "type": "color",        "id": "bg_color",    "label": "Background color", "default": "#FFDEDE" }
+      ]
+    }
+  ],
+  "max_blocks": 2,
+  "presets": [
+    {
+      "name": "Banner promo",
+      "blocks": [
+        { "type": "offer", "settings": { "tag": "New Product",  "heading": "Fuel pressure regulator", "subtext": "",                                                                                                                 "cta_label": "Shop Now", "asset_name": "banner-offer-1.avif", "bg_color": "#F2F2F2" } },
+        { "type": "offer", "settings": { "tag": "New Arrivals", "heading": "Fuel pressure regulator", "subtext": "The regulator ensures proper fuel atomization and distribution, optimizing engine performance. Starting From $89.40 USD", "cta_label": "Shop Now", "asset_name": "banner-offer-2.avif", "bg_color": "#E6EEF7" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
+{% comment %} Sync: Wed Apr 22 14:49:52 IST 2026 {% endcomment %}

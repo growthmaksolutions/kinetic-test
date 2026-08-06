@@ -1,0 +1,320 @@
+{%- comment -%}
+  About Kinetic Motorcycles — matches Webflow layout
+  Migrated from snippet to Section for Theme Editor support.
+{%- endcomment -%}
+
+<section class="km-about-page" id="Section-{{ section.id }}">
+  <div class="km-container">
+
+    <header class="km-about-page__header">
+      <h1 class="km-about-page__h1">{{ section.settings.title | default: page.title }}</h1>
+    </header>
+
+    {%- comment -%} HERO SPLIT: big image + info content {%- endcomment -%}
+    <div class="km-about-page__hero-grid">
+      <div class="km-about-page__hero-left">
+        <div class="km-about-page__hero-img">
+          {%- if section.settings.hero_image != blank -%}
+            {{ section.settings.hero_image | image_url: width: 2000 | image_tag: loading: 'eager', class: 'km-about-page__img' }}
+          {%- else -%}
+            <img src="{{ 'hero-bg.webp' | asset_url }}" alt="Kinetic rider" loading="eager" class="km-about-page__img" width="800" height="1000">
+          {%- endif -%}
+        </div>
+        <a href="{{ section.settings.card_link_url | default: '/collections' }}" class="km-about-page__hero-cta">
+          {{ section.settings.card_link_label | default: 'View Our Collection' }}
+          {%- render 'icon', icon: 'arrow-right' -%}
+        </a>
+      </div>
+
+      <div class="km-about-page__hero-right">
+        <div class="km-about-page__card-media">
+          {%- if section.settings.card_image != blank -%}
+            {{ section.settings.card_image | image_url: width: 1200 | image_tag: loading: 'lazy' }}
+          {%- else -%}
+            <img src="{{ 'cta-bike.avif' | asset_url }}" alt="Kinetic custom build" loading="lazy" width="800" height="450">
+          {%- endif -%}
+        </div>
+        <div class="km-about-page__content-wrap">
+          <h2 class="km-about-page__content-h">{{ section.settings.card_heading }}</h2>
+          <div class="km-about-page__content-body">
+            {{ section.settings.card_content }}
+          </div>
+          <div class="km-about-page__content-footer">{{ section.settings.card_meta }}</div>
+        </div>
+      </div>
+    </div>
+
+    {%- comment -%} WHITE STATS STRIP {%- endcomment -%}
+    <div class="km-about-page__stats-strip">
+      <div class="km-about-page__stats-tagline">
+        <h3>{{ section.settings.stats_title }}</h3>
+        <p>{{ section.settings.stats_text }}</p>
+      </div>
+      <div class="km-about-page__stats-grid">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'stat' -%}
+            <div class="km-about-page__stat" {{ block.shopify_attributes }}>
+              <div class="km-about-page__stat-num">{{ block.settings.number }}</div>
+              <div class="km-about-page__stat-label">{{ block.settings.label }}<br><span>{{ block.settings.sublabel }}</span></div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} VISION / MISSION / INNOVATION TABS {%- endcomment -%}
+  <div class="km-about-page__vmi-wrap">
+    <div class="km-container">
+      <div class="km-about-page__vmi-tabs" role="tablist">
+        {%- assign tab_count = 0 -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'tab' -%}
+            <button type="button" 
+                    class="km-about-page__vmi-tab {% if tab_count == 0 %}is-active{% endif %}" 
+                    role="tab" 
+                    aria-selected="{% if tab_count == 0 %}true{% else %}false{% endif %}" 
+                    data-vmi-tab="{{ block.id }}"
+                    {{ block.shopify_attributes }}>
+              {{ block.settings.title }}
+            </button>
+            {%- assign tab_count = tab_count | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      <div class="km-about-page__vmi-panels">
+        {%- assign panel_count = 0 -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'tab' -%}
+            <div class="km-about-page__vmi-panel {% if panel_count == 0 %}is-active{% endif %}" 
+                 id="Panel-{{ block.id }}"
+                 role="tabpanel"
+                 {{ block.shopify_attributes }}>
+              <div class="km-about-page__vmi-media">
+                {%- if block.settings.image != blank -%}
+                  {{ block.settings.image | image_url: width: 1600 | image_tag: loading: 'lazy' }}
+                {%- else -%}
+                  <img src="{{ 'cta-bike.avif' | asset_url }}" alt="{{ block.settings.title }}" loading="lazy" width="800" height="450">
+                {%- endif -%}
+              </div>
+              <article class="km-about-page__vmi-card">
+                <h3>{{ block.settings.heading }}</h3>
+                <div class="km-about-page__vmi-text">{{ block.settings.content }}</div>
+                {%- if block.settings.button_label != blank -%}
+                  <a href="{{ block.settings.button_url | default: '/collections' }}" class="km-about-page__vmi-btn">
+                    {{ block.settings.button_label }} {%- render 'icon', icon: 'arrow-right' -%}
+                  </a>
+                {%- endif -%}
+              </article>
+            </div>
+            {%- assign panel_count = panel_count | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} WHY CHOOSE {%- endcomment -%}
+  <div class="km-about-page__why">
+    <div class="km-container">
+      <h2 class="km-about-page__why-h">{{ section.settings.why_title }}</h2>
+      <div class="km-about-page__why-grid">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'why_card' -%}
+            <article class="km-about-page__why-card" {{ block.shopify_attributes }}>
+              <div class="km-about-page__why-media">
+                {%- if block.settings.image != blank -%}
+                  {{ block.settings.image | image_url: width: 400 | image_tag: loading: 'lazy' }}
+                {%- else -%}
+                  <img src="{{ block.settings.asset_name | asset_url }}" alt="{{ block.settings.title }}" loading="lazy" width="400" height="400">
+                {%- endif -%}
+              </div>
+              <h3>{{ block.settings.title }}</h3>
+              <p>{{ block.settings.text }}</p>
+            </article>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<style>
+  .km-about-page { padding: 56px 0 0; background: var(--km-body-bg, #EDEDED); }
+  .km-about-page__header { margin-bottom: 48px; }
+  .km-about-page__h1 { font-size: clamp(32px, 4.4vw, 52px); font-weight: 700; letter-spacing: -.02em; color: #000; margin: 0; line-height: 1.1; }
+  
+  .km-about-page__hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-bottom: 64px; align-items: flex-start; }
+  
+  .km-about-page__hero-left { display: flex; flex-direction: column; gap: 16px; }
+  .km-about-page__hero-img { aspect-ratio: 1/1.2; border-radius: 4px; overflow: hidden; background: #000; }
+  .km-about-page__img { width: 100%; height: 100%; object-fit: cover; }
+  .km-about-page__hero-cta { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 800; color: #000; text-decoration: none; text-transform: uppercase; letter-spacing: .12em; transition: color .2s ease; }
+  .km-about-page__hero-cta:hover { color: var(--km-accent, #FBB03D); }
+  .km-about-page__hero-cta svg { width: 14px; height: 14px; transition: transform .2s ease; }
+  .km-about-page__hero-cta:hover svg { transform: translateX(4px); }
+
+  .km-about-page__hero-right { display: flex; flex-direction: column; gap: 32px; }
+  .km-about-page__card-media { aspect-ratio: 16/9; border-radius: 4px; overflow: hidden; background: #f3f4f6; }
+  .km-about-page__card-media img { width: 100%; height: 100%; object-fit: cover; }
+  
+  .km-about-page__content-wrap { display: flex; flex-direction: column; gap: 24px; }
+  .km-about-page__content-h { font-size: 24px; font-weight: 700; color: #000; margin: 0; letter-spacing: -.01em; }
+  .km-about-page__content-body { font-size: 15px; line-height: 1.7; color: var(--km-text, #4B5563); margin: 0; }
+  .km-about-page__content-body p { margin-bottom: 1.2em; }
+  .km-about-page__content-footer { font-size: 14px; font-weight: 700; color: #000; padding-top: 16px; }
+
+  .km-about-page__stats-strip { background: #fff; padding: 48px 40px; border-radius: 4px; display: grid; grid-template-columns: 1.2fr 2fr; gap: 48px; align-items: center; border: 1px solid var(--km-border, #DDDDDD); margin-bottom: 64px; }
+  .km-about-page__stats-tagline h3 { display: none; } /* Hide the stats title per screenshot style */
+  .km-about-page__stats-tagline p { font-size: 14px; line-height: 1.7; color: var(--km-text, #4B5563); margin: 0; }
+  .km-about-page__stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; border-left: 1px solid var(--km-border, #DDDDDD); padding-left: 48px; }
+  .km-about-page__stat { display: flex; flex-direction: column; gap: 8px; }
+  .km-about-page__stat-num { font-size: 44px; font-weight: 800; color: #000; line-height: 1; letter-spacing: -.03em; }
+  .km-about-page__stat-label { font-size: 14px; font-weight: 700; color: #000; line-height: 1.3; text-transform: uppercase; letter-spacing: .02em; }
+  .km-about-page__stat-label span { display: block; font-size: 11px; font-weight: 600; color: var(--km-text, #4B5563); letter-spacing: .04em; margin-top: 4px; text-transform: none; }
+  
+  .km-about-page__vmi-wrap { padding: 40px 0 72px; background: var(--km-body-bg, #EDEDED); }
+  .km-about-page__vmi-tabs { display: flex; gap: 4px; justify-content: center; padding: 6px; background: #fff; border: 1px solid var(--km-border, #DDDDDD); border-radius: 9999px; max-width: max-content; margin: 0 auto 32px; }
+  .km-about-page__vmi-tab { padding: 10px 22px; font-size: 12px; font-weight: 700; letter-spacing: .02em; color: var(--km-text, #4B5563); background: transparent; border: 0; border-radius: 9999px; cursor: pointer; font-family: inherit; transition: background .25s ease, color .25s ease; }
+  .km-about-page__vmi-tab:hover { color: #000; }
+  .km-about-page__vmi-tab.is-active { background: #000 !important; color: #fff !important; }
+  
+  .km-about-page__vmi-panel { position: relative; border-radius: 4px; overflow: hidden; aspect-ratio: 16/6; min-height: 320px; background: #000; display: none; }
+  .km-about-page__vmi-panel.is-active { display: block; }
+  .km-about-page__vmi-media { position: absolute; inset: 0; z-index: 0; }
+  .km-about-page__vmi-media img { width: 100%; height: 100%; object-fit: cover; }
+  .km-about-page__vmi-card { position: absolute; right: 32px; top: 50%; transform: translateY(-50%); background: #fff; border-radius: 4px; padding: 32px; width: 340px; max-width: 42%; z-index: 2; box-shadow: 0 10px 30px rgba(0,0,0,.15); }
+  .km-about-page__vmi-card h3 { font-size: 18px; font-weight: 700; color: #000; margin: 0 0 10px; letter-spacing: -.005em; }
+  .km-about-page__vmi-text { font-size: 13px; line-height: 1.6; color: var(--km-text, #4B5563); margin: 0 0 18px; }
+  .km-about-page__vmi-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: var(--km-accent, #FBB03D); color: #000; border-radius: 9999px; text-decoration: none; font-size: 12px; font-weight: 700; letter-spacing: .04em; transition: background .2s ease; }
+  .km-about-page__vmi-btn:hover { background: #e69a2b; }
+  .km-about-page__vmi-btn svg { width: 12px; height: 12px; }
+  
+  .km-about-page__why { padding: 72px 0; background: var(--km-body-bg, #EDEDED); }
+  .km-about-page__why-h { font-size: clamp(28px, 3.4vw, 42px); font-weight: 700; color: #000; margin: 0 0 64px; letter-spacing: -.015em; line-height: 1.1; text-align: center; }
+  .km-about-page__why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; }
+  .km-about-page__why-card { text-align: center; }
+  .km-about-page__why-media { aspect-ratio: 1/1; max-width: 280px; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; }
+  .km-about-page__why-media img { width: 100%; height: 100%; object-fit: contain; }
+  .km-about-page__why-card h3 { font-size: 20px; font-weight: 800; color: #000; margin: 0 0 16px; letter-spacing: .04em; text-transform: uppercase; }
+  .km-about-page__why-card p { font-size: 15px; line-height: 1.7; color: var(--km-text, #4B5563); margin: 0 auto; max-width: 340px; }
+
+  @media (max-width: 1000px) {
+    .km-about-page__hero-grid { grid-template-columns: 1fr; gap: 32px; }
+    .km-about-page__stats-strip { grid-template-columns: 1fr; padding: 32px 24px; gap: 32px; border-radius: 0; border-left: 0; border-right: 0; }
+    .km-about-page__stats-grid { border-left: 0; padding-left: 0; border-top: 1px solid var(--km-border, #DDDDDD); padding-top: 32px; grid-template-columns: 1fr; gap: 32px; }
+    
+    .km-about-page__vmi-tabs { max-width: 100%; width: 100%; overflow-x: auto; justify-content: flex-start; border-radius: 9999px; padding: 4px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .km-about-page__vmi-tabs::-webkit-scrollbar { display: none; }
+    .km-about-page__vmi-tab { white-space: nowrap; flex: 0 0 auto; padding: 10px 24px; }
+    
+    .km-about-page__vmi-panel { aspect-ratio: auto; min-height: 0; display: none; flex-direction: column; border-radius: 0; }
+    .km-about-page__vmi-panel.is-active { display: flex; }
+    .km-about-page__vmi-media { position: static; aspect-ratio: 16/9; }
+    .km-about-page__vmi-card { position: static; transform: none; width: 100%; max-width: none; border-radius: 0; box-shadow: none; padding: 32px 24px; }
+    
+    .km-about-page__why-grid { grid-template-columns: 1fr; gap: 48px; }
+  }
+</style>
+
+<script>
+(() => {
+  const tabButtons = document.querySelectorAll('[data-vmi-tab]');
+  const panels = document.querySelectorAll('.km-about-page__vmi-panel');
+  if (!tabButtons.length || !panels.length) return;
+
+  tabButtons.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const tabId = btn.getAttribute('data-vmi-tab');
+      const targetPanel = document.getElementById('Panel-' + tabId);
+      if (!targetPanel) return;
+      
+      // Update buttons
+      tabButtons.forEach(b => {
+        b.classList.toggle('is-active', b === btn);
+        b.setAttribute('aria-selected', b === btn ? 'true' : 'false');
+      });
+
+      // Update panels
+      panels.forEach(p => {
+        p.classList.toggle('is-active', p === targetPanel);
+      });
+    });
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "About Page",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Main Title", "default": "About Kinetic Motorcycles" },
+    { "type": "header", "content": "Hero Section" },
+    { "type": "image_picker", "id": "hero_image", "label": "Hero Image" },
+    { "type": "image_picker", "id": "card_image", "label": "Card Image" },
+    { "type": "text", "id": "card_heading", "label": "Card Heading", "default": "About Kinetic Motorcycles" },
+    { "type": "richtext", "id": "card_content", "label": "Card Content", "default": "<p>Kinetic Motorcycles was founded in 2013 by Mike Le with a focus on original design, functional innovation, and in-house manufacturing.</p>" },
+    { "type": "text", "id": "card_link_label", "label": "Card Link Label", "default": "View Our Collection" },
+    { "type": "url", "id": "card_link_url", "label": "Card Link URL" },
+    { "type": "text", "id": "card_meta", "label": "Card Meta Info", "default": "Founded in 2013" },
+    { "type": "header", "content": "Stats Strip" },
+    { "type": "text", "id": "stats_title", "label": "Stats Title", "default": "Stop mix-and-matching. Start building." },
+    { "type": "textarea", "id": "stats_text", "label": "Stats Description", "default": "As a dedicated manufacturer, we don’t just stock parts — we engineer them." },
+    { "type": "header", "content": "Why Choose Section" },
+    { "type": "text", "id": "why_title", "label": "Why Choose Heading", "default": "Why Choose Kinetic Motorcycles" }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "limit": 3,
+      "settings": [
+        { "type": "text", "id": "number", "label": "Number", "default": "10+" },
+        { "type": "text", "id": "label", "label": "Label", "default": "Years" },
+        { "type": "text", "id": "sublabel", "label": "Sub-label", "default": "Designing & Manufacturing" }
+      ]
+    },
+    {
+      "type": "tab",
+      "name": "VMI Tab",
+      "limit": 5,
+      "settings": [
+        { "type": "text", "id": "title", "label": "Tab Title", "default": "Our Vision" },
+        { "type": "image_picker", "id": "image", "label": "Panel Image" },
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Our Vision" },
+        { "type": "richtext", "id": "content", "label": "Content", "default": "<p>We aim to set a higher standard in the motorcycle parts industry.</p>" },
+        { "type": "text", "id": "button_label", "label": "Button Label", "default": "View Collection" },
+        { "type": "url", "id": "button_url", "label": "Button Link" }
+      ]
+    },
+    {
+      "type": "why_card",
+      "name": "Why Choose Card",
+      "limit": 3,
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Icon/Image" },
+        { "type": "text", "id": "asset_name", "label": "Fallback Asset Name" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Crafted with Pride" },
+        { "type": "textarea", "id": "text", "label": "Description", "default": "Every product is designed and manufactured in the United States." }
+      ]
+    }
+  ],
+  "default": {
+    "blocks": [
+      { "type": "tab", "settings": { "title": "Our Vision", "heading": "Our Vision", "content": "<p>We aim to set a higher standard in the motorcycle parts industry — a future where riders can confidently find the right parts for their bikes without confusion, delays, or uncertainty.</p>" } },
+      { "type": "tab", "settings": { "title": "Our Mission", "heading": "Our Mission", "content": "<p>Deliver motorcycle solutions that meet real-world riding needs. By focusing on trust, innovation, and consistent quality, we make sure every product and every interaction adds value to your experience as a rider.</p>" } },
+      { "type": "tab", "settings": { "title": "Our Innovation", "heading": "Our Innovation", "content": "<p>We are shaping the future of automotive innovation & leading the way towards a more innovative, rider-first approach to motorcycle parts. Every component is engineered from scratch in-house — no templates, no outsourced shortcuts.</p>" } },
+      { "type": "stat", "settings": { "number": "10+", "label": "Years", "sublabel": "Designing & Manufacturing" } },
+      { "type": "stat", "settings": { "number": "11,900+", "label": "Parts delivered", "sublabel": "" } },
+      { "type": "stat", "settings": { "number": "$2.3M+", "label": "Inventory shipped", "sublabel": "" } },
+      { "type": "why_card", "settings": { "title": "Crafted with Pride", "asset_name": "feature-made-in-usa.webp" } },
+      { "type": "why_card", "settings": { "title": "Experience You Can Trust", "asset_name": "feature-garage.webp" } },
+      { "type": "why_card", "settings": { "title": "Fast, Free U.S. Shipping", "asset_name": "feature-shipping.webp" } }
+    ]
+  }
+}
+{% endschema %}
+{% comment %} Sync: Wed Apr 22 14:49:52 IST 2026 {% endcomment %}

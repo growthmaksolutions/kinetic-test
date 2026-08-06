@@ -1,0 +1,68 @@
+{%- comment -%} FAQs — accordion with 6 real questions. {%- endcomment -%}
+<section class="km-section km-faq">
+  <div class="km-container">
+    <div class="km-faq__grid">
+      <aside class="km-faq__side">
+        <h2 class="km-section-heading km-faq__heading">FAQs</h2>
+        <a href="#" class="km-btn-view-all">VIEW ALL</a>
+      </aside>
+
+      <div class="km-faq__list">
+        {%- assign faqs = 'How do I place an order?|Browse the catalog, add items to your cart, and head to checkout. Enter your shipping and payment details and your order will be processed right away.||What payment methods do you accept?|We accept major credit and debit cards, PayPal, and other secure online payment options — pick whichever is most convenient at checkout.||How long will it take for my order to arrive?|Delivery times depend on your location and stock. Once your order is processed we’ll email a confirmation and tracking link so you can follow it the whole way.||Do you offer warranties on your products?|Many of our products come with a manufacturer warranty. You’ll find warranty details on the product page or included in the packaging — reach out if anything’s unclear.||How can I contact customer support?|Get in touch by phone, email, or the contact form on our site. Our team is available during normal business hours and we usually reply within 24 hours.||What if I can’t find a specific part on your website?|If a part isn’t listed, drop us a note. We’ll help track it down or recommend a suitable alternative from our catalog.' | split: '||' -%}
+        {%- for entry in faqs -%}
+          {%- assign p = entry | split: '|' -%}
+          <details class="km-faq__item"{% if forloop.first %} open{% endif %}>
+            <summary class="km-faq__q">
+              <span class="km-faq__q-text">{{ p[0] }}</span>
+              <span class="km-faq__toggle">
+                <span class="km-faq__toggle-plus">{%- render 'icon', icon: 'plus' -%}</span>
+                <span class="km-faq__toggle-minus">{%- render 'icon', icon: 'minus' -%}</span>
+              </span>
+            </summary>
+            <div class="km-faq__a"><p>{{ p[1] }}</p></div>
+          </details>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .km-faq { padding: 64px 0; background: var(--km-body-bg, #EDEDED); }
+  .km-faq__grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 60px; align-items: start; }
+  .km-faq__heading { text-align: left; margin-bottom: 16px; }
+  .km-faq__list { display: flex; flex-direction: column; gap: 12px; }
+  .km-faq__item {
+    background: #fff; border: 1px solid var(--km-border, #DDDDDD); border-radius: 20px;
+    padding: 0 28px; transition: box-shadow .25s ease, border-color .25s ease;
+  }
+  .km-faq__item[open] { border-color: #000; box-shadow: 0 6px 22px rgba(0,0,0,.06); }
+  .km-faq__q {
+    list-style: none; cursor: pointer; padding: 22px 0;
+    display: flex; align-items: center; justify-content: space-between; gap: 20px;
+    font-weight: 700; color: #000; font-size: 16px; line-height: 1.4;
+  }
+  .km-faq__q::-webkit-details-marker { display: none; }
+  .km-faq__q-text { flex: 1 1 auto; }
+  .km-faq__toggle {
+    flex: 0 0 auto; width: 32px; height: 32px; border-radius: 50%;
+    background: var(--km-body-bg, #EDEDED);
+    display: inline-flex; align-items: center; justify-content: center;
+    color: #000; transition: background .25s ease, color .25s ease;
+  }
+  .km-faq__item[open] .km-faq__toggle { background: #000; color: #fff; }
+  .km-faq__toggle-plus { display: inline-flex; }
+  .km-faq__toggle-minus { display: none; }
+  .km-faq__item[open] .km-faq__toggle-plus { display: none; }
+  .km-faq__item[open] .km-faq__toggle-minus { display: inline-flex; }
+  .km-faq__a {
+    padding: 0 0 24px; color: var(--km-text, #4B5563); font-size: 15px; line-height: 1.7;
+    border-top: 1px solid var(--km-border, #DDDDDD); padding-top: 18px; margin-top: -4px;
+  }
+  .km-faq__a p:last-child { margin-bottom: 0; }
+  @media (max-width: 900px) {
+    .km-faq__grid { grid-template-columns: 1fr; gap: 36px; }
+    .km-faq__item { padding: 0 20px; }
+    .km-faq__q { padding: 18px 0; font-size: 15px; }
+  }
+</style>

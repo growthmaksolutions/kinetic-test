@@ -1,0 +1,274 @@
+{%- comment -%}
+  Contact Form Split Section — Image on Left, Form on Right.
+{%- endcomment -%}
+
+<section class="km-contact-split" id="Section-{{ section.id }}">
+  <div class="km-container">
+    <div class="km-contact-split__grid">
+      
+      {%- comment -%} LEFT — Image {%- endcomment -%}
+      <div class="km-contact-split__image-wrap">
+        {%- if section.settings.image != blank -%}
+          {{ section.settings.image | image_url: width: 1400 | image_tag:
+            width: 700, height: 700, loading: 'lazy',
+            alt: section.settings.heading, class: 'km-contact-split__img' }}
+        {%- else -%}
+          {%- comment -%} Fallback to generated image if it was uploaded to assets, or a placeholder {%- endcomment -%}
+          <img src="{{ 'contact_team_support.png' | asset_url }}" width="700" height="700" loading="lazy" alt="Support Team" class="km-contact-split__img">
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} RIGHT — Form {%- endcomment -%}
+      <div class="km-contact-split__form-wrap">
+        <h2 class="km-contact-split__heading">{{ section.settings.heading }}</h2>
+        {%- if section.settings.description != blank -%}
+          <p class="km-contact-split__desc">{{ section.settings.description }}</p>
+        {%- endif -%}
+
+        {%- form 'contact', class: 'km-contact-form' -%}
+          {%- if form.posted_successfully? -%}
+            <div class="km-form-status km-form-status--success" tabindex="-1" autofocus>
+              {% render 'icon', icon: 'check' %} {{ 'contact.form.post_success' | t | default: 'Thanks for contacting us. We will get back to you as soon as possible.' }}
+            </div>
+          {%- elsif form.errors -%}
+            <div class="km-form-status km-form-status--error">
+              {{ form.errors | default_errors }}
+            </div>
+          {%- endif -%}
+
+          <div class="km-contact-form__row">
+            <div class="km-contact-form__field">
+              <label class="km-contact-form__label" for="ContactFormName">Full Name</label>
+              <div class="km-contact-form__input-wrap">
+                {%- render 'icon', icon: 'profile' -%}
+                <input type="text"
+                       id="ContactFormName"
+                       name="contact[name]"
+                       placeholder="Full name"
+                       value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
+                       required
+                       class="km-contact-form__input">
+              </div>
+            </div>
+          </div>
+
+          <div class="km-contact-form__row km-contact-form__row--split">
+            <div class="km-contact-form__field">
+              <label class="km-contact-form__label" for="ContactFormEmail">Email</label>
+              <div class="km-contact-form__input-wrap">
+                {%- render 'icon', icon: 'email' -%}
+                <input type="email"
+                       id="ContactFormEmail"
+                       name="contact[email]"
+                       placeholder="Email"
+                       value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+                       spellcheck="false"
+                       autocapitalize="off"
+                       required
+                       class="km-contact-form__input">
+              </div>
+            </div>
+            <div class="km-contact-form__field">
+              <label class="km-contact-form__label" for="ContactFormPhone">Phone number</label>
+              <div class="km-contact-form__input-wrap">
+                {%- render 'icon', icon: 'phone' -%}
+                <input type="tel"
+                       id="ContactFormPhone"
+                       name="contact[phone]"
+                       placeholder="Phone number"
+                       value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}"
+                       class="km-contact-form__input">
+              </div>
+            </div>
+          </div>
+
+          <div class="km-contact-form__row">
+            <div class="km-contact-form__field">
+              <label class="km-contact-form__label" for="ContactFormMessage">Message</label>
+              <div class="km-contact-form__input-wrap km-contact-form__input-wrap--textarea">
+                {%- render 'icon', icon: 'message' -%}
+                <textarea rows="5"
+                          id="ContactFormMessage"
+                          name="contact[body]"
+                          placeholder="Message"
+                          required
+                          class="km-contact-form__textarea">{% if form.body %}{{ form.body }}{% endif %}</textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="km-contact-form__actions">
+            <button type="submit" class="km-btn km-btn-primary km-contact-form__submit">
+              Submit Now {%- render 'icon', icon: 'arrow-right' -%}
+            </button>
+          </div>
+        {%- endform -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .km-contact-split {
+    background: #fff;
+    padding: 64px 0;
+  }
+  .km-contact-split__grid {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 64px;
+    align-items: flex-start;
+  }
+
+  .km-contact-split__image-wrap {
+    border-radius: 20px;
+    overflow: hidden;
+    aspect-ratio: 1;
+    background: #f3f4f6;
+  }
+  .km-contact-split__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .km-contact-split__heading {
+    font-size: clamp(28px, 3.5vw, 42px);
+    font-weight: 700;
+    letter-spacing: -.015em;
+    color: #000;
+    margin: 0 0 16px;
+    line-height: 1.15;
+  }
+  .km-contact-split__desc {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--km-text, #4B5563);
+    margin-bottom: 32px;
+  }
+
+  /* Form Styles */
+  .km-contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .km-contact-form__row--split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .km-contact-form__field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .km-contact-form__label {
+    display: none; /* We use icons + placeholders like in the screenshot */
+  }
+
+  .km-contact-form__input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #D1D5DB;
+    transition: border-color .2s ease;
+  }
+  .km-contact-form__input-wrap:focus-within {
+    border-color: var(--km-accent, #FBB03D);
+  }
+  .km-contact-form__input-wrap svg {
+    position: absolute;
+    left: 0;
+    width: 16px;
+    height: 16px;
+    color: #9CA3AF;
+  }
+  .km-contact-form__input-wrap--textarea svg {
+    top: 14px;
+  }
+
+  .km-contact-form__input,
+  .km-contact-form__textarea {
+    width: 100%;
+    padding: 12px 12px 12px 28px;
+    border: 0;
+    background: transparent;
+    font-size: 14px;
+    font-family: inherit;
+    color: #000;
+    outline: none;
+  }
+  .km-contact-form__input::placeholder,
+  .km-contact-form__textarea::placeholder {
+    color: #9CA3AF;
+  }
+
+  .km-contact-form__submit {
+    margin-top: 12px;
+    width: fit-content;
+    padding: 14px 32px;
+    border-radius: 9999px;
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 700;
+  }
+
+  .km-form-status {
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .km-form-status--success {
+    background: #ECFDF5;
+    color: #065F46;
+  }
+  .km-form-status--error {
+    background: #FEF2F2;
+    color: #991B1B;
+  }
+
+  @media (max-width: 900px) {
+    .km-contact-split__grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    .km-contact-form__row--split {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Contact Form Split",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Side Image"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Get in Touch With Kinetic Motorcycles"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Use the form below to send us a message, and our team will get back to you as soon as possible. We answer emails around the clock, 7 days a week!"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact Form Split"
+    }
+  ]
+}
+{% endschema %}

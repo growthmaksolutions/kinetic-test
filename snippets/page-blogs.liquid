@@ -1,0 +1,123 @@
+{%- comment -%} Blog index — featured post + filters + grid + newsletter. {%- endcomment -%}
+<section class="km-blog-page">
+  {%- comment -%} HERO + featured post {%- endcomment -%}
+  <div class="km-container km-blog-page__hero">
+    <div class="km-blog-page__hero-copy">
+      <span class="km-blog-page__eyebrow">From the garage</span>
+      <h1 class="km-blog-page__h1">Motorcycle Blogs</h1>
+      <p class="km-blog-page__lede">Technical insights, build perspectives, practical guides, and industry news — written to help you ride better, build smarter, and get more from your machine.</p>
+    </div>
+    <article class="km-blog-page__featured">
+      <a href="/blogs" class="km-blog-page__featured-media">
+        <img src="{{ 'blog-1.png' | asset_url }}" loading="eager" width="800" height="500" alt="Forever Bike philosophy" class="km-blog-page__featured-img">
+        <span class="km-blog-page__featured-badge">Featured</span>
+      </a>
+      <div class="km-blog-page__featured-body">
+        <div class="km-blog-page__meta">Feb 27, 2026 · 8 min read</div>
+        <h2 class="km-blog-page__featured-title"><a href="/blogs">The “Forever Bike” Philosophy: Customizing for Longevity</a></h2>
+        <p class="km-blog-page__featured-excerpt">The growing movement of riders who plan every upgrade around durability, serviceability, and the bike they want to still be riding 15 years from now.</p>
+        <a href="/blogs" class="km-blog-page__featured-more">Read the full article {%- render 'icon', icon: 'arrow-right' -%}</a>
+      </div>
+    </article>
+  </div>
+
+  {%- comment -%} CATEGORIES {%- endcomment -%}
+  <div class="km-container km-blog-page__cats">
+    <a href="/blogs" class="is-active">All</a>
+    <a href="/blogs/tagged/guides">Guides</a>
+    <a href="/blogs/tagged/build-stories">Build Stories</a>
+    <a href="/blogs/tagged/tech">Tech</a>
+    <a href="/blogs/tagged/maintenance">Maintenance</a>
+    <a href="/blogs/tagged/industry">Industry</a>
+  </div>
+
+  {%- comment -%} GRID {%- endcomment -%}
+  <div class="km-container km-blog-page__grid">
+    {%- assign posts = 'Unleashing Your Inner Biker: Your One-Stop Shop for Customizing Motorcycles,blog-2.jpeg,Guides,Dec 1 2024|Tips on Motorcycle Customization: A Complete Guide,blog-3.jpeg,Guides,Dec 8 2024|Revving Up Your Ride: A Comprehensive Guide to Motorcycle Exhausts,blog-1.png,Tech,Nov 18 2024|Essential Skills to Build a Custom Motorcycle: From Rusty Frame to Dream Ride,blog-2.jpeg,Build Stories,Oct 5 2024|Is Building a Custom Motorcycle Worth It? A Complete Breakdown,blog-3.jpeg,Build Stories,Sep 22 2024|Handlebar Geometry 101: How Rise, Pullback &amp; Width Change Your Ride,blog-1.png,Tech,Aug 17 2024' | split: '|' -%}
+    {%- for post in posts -%}
+      {%- assign p = post | split: ',' -%}
+      <article class="km-blog-page__card">
+        <a href="/blogs" class="km-blog-page__card-media">
+          <img src="{{ p[1] | asset_url }}" width="400" height="260" loading="lazy" alt="{{ p[0] }}" class="km-blog-page__card-img">
+          <span class="km-blog-page__card-cat">{{ p[2] }}</span>
+        </a>
+        <div class="km-blog-page__card-body">
+          <div class="km-blog-page__meta">{{ p[3] }} · 6 min read</div>
+          <h3 class="km-blog-page__card-title"><a href="/blogs">{{ p[0] }}</a></h3>
+          <a href="/blogs" class="km-blog-page__card-more">Read more {%- render 'icon', icon: 'arrow-right' -%}</a>
+        </div>
+      </article>
+    {%- endfor -%}
+  </div>
+
+  {%- comment -%} NEWSLETTER STRIP {%- endcomment -%}
+  <div class="km-container">
+    <div class="km-blog-page__newsletter">
+      <div>
+        <h2>Get new posts in your inbox</h2>
+        <p>One email per month. Tech breakdowns, build journals, and occasional shop discounts. Unsubscribe any time.</p>
+      </div>
+      <form action="/contact#contact_form" method="post" class="km-blog-page__form">
+        <input type="hidden" name="form_type" value="customer">
+        <input type="hidden" name="utf8" value="✓">
+        <input type="hidden" name="contact[tags]" value="blog-newsletter">
+        <input type="email" name="contact[email]" required placeholder="Your email address" class="km-blog-page__form-input">
+        <button type="submit" class="km-blog-page__form-btn">Subscribe</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<style>
+  .km-blog-page { padding: 56px 0 96px; background: var(--km-body-bg, #EDEDED); }
+  .km-blog-page__hero { display: grid; grid-template-columns: 1fr 1.2fr; gap: 56px; align-items: center; margin-bottom: 48px; }
+  .km-blog-page__eyebrow { display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--km-accent, #FBB03D); margin-bottom: 14px; }
+  .km-blog-page__h1 { font-size: clamp(40px, 5.4vw, 64px); font-weight: 700; letter-spacing: -.02em; color: #000; margin: 0 0 18px; line-height: 1.05; }
+  .km-blog-page__lede { font-size: 16px; line-height: 1.7; color: var(--km-text, #4B5563); margin: 0; }
+
+  .km-blog-page__featured { background: #fff; border: 1px solid var(--km-border, #DDDDDD); border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; }
+  .km-blog-page__featured-media { position: relative; display: block; aspect-ratio: 16/10; overflow: hidden; }
+  .km-blog-page__featured-img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+  .km-blog-page__featured-media:hover .km-blog-page__featured-img { transform: scale(1.04); }
+  .km-blog-page__featured-badge { position: absolute; top: 16px; left: 16px; padding: 6px 14px; font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; background: var(--km-accent, #FBB03D); color: #000; border-radius: 9999px; }
+  .km-blog-page__featured-body { padding: 32px; }
+  .km-blog-page__meta { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--km-text, #4B5563); margin-bottom: 12px; }
+  .km-blog-page__featured-title { font-size: 28px; font-weight: 700; line-height: 1.2; letter-spacing: -.01em; color: #000; margin: 0 0 12px; }
+  .km-blog-page__featured-title a { color: inherit; text-decoration: none; }
+  .km-blog-page__featured-title a:hover { color: var(--km-accent, #FBB03D); }
+  .km-blog-page__featured-excerpt { font-size: 15px; line-height: 1.6; color: var(--km-text, #4B5563); margin: 0 0 20px; }
+  .km-blog-page__featured-more { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #000; text-decoration: none; }
+
+  .km-blog-page__cats { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 40px; }
+  .km-blog-page__cats a { padding: 10px 22px; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--km-text, #4B5563); background: #fff; border: 1px solid var(--km-border, #DDDDDD); border-radius: 9999px; text-decoration: none; transition: background .2s ease, color .2s ease; }
+  .km-blog-page__cats a:hover { border-color: #000; color: #000; }
+  .km-blog-page__cats a.is-active { background: #000; color: #fff; border-color: #000; }
+
+  .km-blog-page__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-bottom: 64px; }
+  .km-blog-page__card { display: flex; flex-direction: column; gap: 16px; }
+  .km-blog-page__card-media { position: relative; display: block; aspect-ratio: 4/3; overflow: hidden; border-radius: 20px; background: #fff; }
+  .km-blog-page__card-img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
+  .km-blog-page__card:hover .km-blog-page__card-img { transform: scale(1.04); }
+  .km-blog-page__card-cat { position: absolute; top: 14px; left: 14px; padding: 5px 12px; font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; background: #fff; color: #000; border-radius: 9999px; }
+  .km-blog-page__card-body { padding: 0 4px; }
+  .km-blog-page__card-body .km-blog-page__meta { margin-bottom: 8px; }
+  .km-blog-page__card-title { font-size: 19px; font-weight: 700; line-height: 1.3; color: #000; margin: 0 0 14px; letter-spacing: -.005em; }
+  .km-blog-page__card-title a { color: inherit; text-decoration: none; }
+  .km-blog-page__card-title a:hover { color: var(--km-accent, #FBB03D); }
+  .km-blog-page__card-more { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #000; text-decoration: none; }
+
+  .km-blog-page__newsletter { background: #000; color: #fff; border-radius: 24px; padding: 48px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: center; position: relative; overflow: hidden; isolation: isolate; }
+  .km-blog-page__newsletter::before { content: ''; position: absolute; inset: 0; z-index: -1; background: radial-gradient(60% 80% at 85% 50%, rgba(251,176,61,.15), transparent 60%); }
+  .km-blog-page__newsletter h2 { font-size: 26px; font-weight: 700; color: #fff; margin: 0 0 10px; letter-spacing: -.01em; }
+  .km-blog-page__newsletter p { font-size: 14px; color: rgba(255,255,255,.8); line-height: 1.6; margin: 0; }
+  .km-blog-page__form { display: flex; background: #fff; border-radius: 8px; overflow: hidden; }
+  .km-blog-page__form-input { flex: 1; padding: 14px 18px; border: 0; background: transparent; font-size: 14px; outline: none; color: #111; font-family: inherit; }
+  .km-blog-page__form-btn { flex: 0 0 auto; padding: 14px 28px; background: var(--km-accent, #FBB03D); color: #000; border: 0; font-weight: 800; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; font-family: inherit; transition: background .2s ease; }
+  .km-blog-page__form-btn:hover { background: #e69a2b; }
+
+  @media (max-width: 900px) {
+    .km-blog-page__hero { grid-template-columns: 1fr; gap: 32px; }
+    .km-blog-page__grid { grid-template-columns: 1fr; }
+    .km-blog-page__newsletter { grid-template-columns: 1fr; padding: 32px; }
+  }
+</style>

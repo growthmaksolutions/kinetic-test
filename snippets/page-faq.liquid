@@ -1,0 +1,308 @@
+{%- comment -%} Full FAQ page — 2-col (image left | accordion right) + Still Have Questions + Advancing Motorcycle Design CTA. {%- endcomment -%}
+<section class="km-faq-page">
+  <div class="km-container">
+
+    <header class="km-faq-page__header">
+      <h1 class="km-faq-page__h1">Frequently Asked Questions</h1>
+    </header>
+
+    <div class="km-faq-page__layout">
+
+      <div class="km-faq-page__media">
+        <img src="{{ 'cta-bike.avif' | asset_url }}" alt="Kinetic Motorcycles custom build" loading="lazy" class="km-faq-page__img">
+      </div>
+
+      <div class="km-faq-page__list" data-km-faq>
+        {%- assign faqs =
+          'How long does it take to receive my order?^^Orders are typically processed and shipped the same day or within 48 hours, depending on when your order is placed. We are closed on U.S. federal holidays, which may affect processing times.||Do I need to purchase a flange kit for an exhaust?^^No. Our exhaust systems are designed to use the factory mounting hardware, so a separate flange kit is not required.||Do you offer international shipping?^^Yes, we ship worldwide. International shipping rates and delivery times will be calculated at checkout.||How much is shipping?^^Shipping costs are calculated automatically at checkout using the shipping calculator. Rates vary based on location, order size, and shipping method.||What is the current wait time for exhaust orders?^^Exhaust systems typically have a 1–2 week lead time. If there are any delays beyond this window, you will be notified directly.||Why isn’t my tracking information updating?^^Shipping carriers pick up packages daily. Tracking updates may take up to 24 hours to appear after your order has shipped. Delays in tracking updates do not indicate an issue with your shipment.||Which items are currently in stock?^^Most items are kept in stock. For specific product availability, please contact us directly before placing your order.||What is your return policy?^^All returns must be approved before being sent back. Approved returns are subject to a 20% restocking fee. Returns are not accepted for items that are used, installed, damaged, or modified in any way.||Do your products come with a warranty?^^Yes. All Kinetic Motorcycles parts include a Limited Lifetime Warranty covering manufacturing defects or faults. To submit a warranty claim, email us with a clear description of the issue and clear photos showing the defect.'
+          | split: '||'
+        -%}
+        {%- for entry in faqs -%}
+          {%- assign p = entry | split: '^^' -%}
+          <div class="km-faq-page__item" data-km-faq-item>
+            <button type="button" class="km-faq-page__q" data-km-faq-toggle aria-expanded="false">
+              <span class="km-faq-page__q-text">{{ p[0] }}</span>
+              <span class="km-faq-page__chev" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 8 L13 8 M9 4 L13 8 L9 12"/>
+                </svg>
+              </span>
+            </button>
+            <div class="km-faq-page__a-wrap" data-km-faq-body>
+              <div class="km-faq-page__a"><p>{{ p[1] }}</p></div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+
+    <div class="km-faq-page__support">
+      <h3>Still Have Questions?</h3>
+      <p>If you need clarification or help before placing an order, our team is happy to assist.</p>
+      <a href="/pages/contact" class="km-faq-page__support-link">
+        Contact Kinetic Motorcycles Support
+        {%- render 'icon', icon: 'arrow-right' -%}
+      </a>
+    </div>
+
+  </div>
+
+  {%- comment -%} Split CTA strip (Advancing Motorcycle Design + Join The Kinetic Community). Mirrors home CTA but standalone. {%- endcomment -%}
+  <div class="km-faq-page__cta-wrap">
+    <div class="km-container">
+      <div class="km-faq-page__cta-grid">
+        <div class="km-faq-page__cta-left">
+          <h3>Advancing Motorcycle Design</h3>
+          <p>We build original, in-house components focused on fitment, function, and reliability — pushing thoughtful design forward with every product we make.</p>
+          <a href="/collections" class="km-faq-page__cta-link">
+            Explore by Collections
+            {%- render 'icon', icon: 'arrow-right' -%}
+          </a>
+        </div>
+        <div class="km-faq-page__cta-right">
+          <div class="km-faq-page__cta-right-bg" aria-hidden="true">
+            <img src="{{ 'cta-bike.avif' | asset_url }}" alt="" loading="lazy">
+          </div>
+          <div class="km-faq-page__cta-right-inner">
+            <span class="km-faq-page__cta-eyebrow">Join The Kinetic Community</span>
+            <h4>Get exclusive offers, new product alerts &amp; expert riding tips</h4>
+            <form action="/contact#contact_form" method="post" class="km-faq-page__form">
+              <input type="hidden" name="form_type" value="customer">
+              <input type="hidden" name="utf8" value="✓">
+              <input type="hidden" name="contact[tags]" value="newsletter">
+              <input type="email" name="contact[email]" placeholder="Email address" required class="km-faq-page__form-input">
+              <button type="submit" class="km-faq-page__form-btn">Submit</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .km-faq-page { padding: 56px 0 0; background: var(--km-body-bg, #EDEDED); }
+  .km-faq-page__header { margin-bottom: 40px; }
+  .km-faq-page__h1 {
+    font-size: clamp(32px, 4.4vw, 52px);
+    font-weight: 700;
+    letter-spacing: -.02em;
+    color: #000;
+    margin: 0;
+    line-height: 1.1;
+  }
+
+  .km-faq-page__layout {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 56px;
+    align-items: flex-start;
+    margin-bottom: 64px;
+  }
+
+  .km-faq-page__media { aspect-ratio: 4/5; border-radius: 18px; overflow: hidden; background: #fff; }
+  .km-faq-page__img { width: 100%; height: 100%; object-fit: cover; }
+
+  .km-faq-page__list { display: flex; flex-direction: column; }
+  .km-faq-page__item {
+    border-bottom: 1px solid #000;
+  }
+  .km-faq-page__q {
+    list-style: none;
+    cursor: pointer;
+    padding: 25px 0;
+    width: 100%;
+    background: transparent;
+    border: 0;
+    text-align: left;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    font-weight: 400;
+    color: #222;
+    font-size: 16px;
+    line-height: 1.4;
+  }
+  .km-faq-page__q-text { flex: 1 1 auto; }
+  .km-faq-page__chev {
+    flex: 0 0 auto;
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #222;
+    transition: transform .35s ease;
+  }
+  .km-faq-page__chev svg { width: 18px; height: 18px; display: block; }
+  .km-faq-page__q[aria-expanded="true"] .km-faq-page__chev {
+    transform: rotate(90deg);
+  }
+  .km-faq-page__a-wrap {
+    overflow: hidden;
+    height: 0;
+    transition: height .35s ease;
+  }
+  .km-faq-page__a {
+    padding: 0 0 25px;
+    color: var(--km-text, #4B5563);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .km-faq-page__a p { margin: 0; }
+
+  .km-faq-page__support {
+    background: #fff;
+    border-radius: 0;
+    padding: 40px 0;
+    border-top: 1px solid var(--km-border, #DDDDDD);
+    margin-bottom: 40px;
+  }
+  .km-faq-page__support h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000;
+    margin: 0 0 8px;
+    letter-spacing: -.01em;
+  }
+  .km-faq-page__support p {
+    font-size: 14px;
+    color: var(--km-text, #4B5563);
+    margin: 0 0 16px;
+    max-width: 560px;
+  }
+  .km-faq-page__support-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #000;
+    text-decoration: none;
+    padding-bottom: 2px;
+    border-bottom: 2px solid transparent;
+    transition: border-color .2s ease;
+  }
+  .km-faq-page__support-link:hover { border-color: var(--km-accent, #FBB03D); }
+
+  /* CTA STRIP */
+  .km-faq-page__cta-wrap { padding: 40px 0 96px; background: var(--km-body-bg, #EDEDED); }
+  .km-faq-page__cta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  .km-faq-page__cta-left {
+    background: #fff;
+    padding: 48px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+  }
+  .km-faq-page__cta-left h3 {
+    font-size: clamp(22px, 2.4vw, 28px);
+    font-weight: 700;
+    color: #000;
+    margin: 0;
+    letter-spacing: -.015em;
+    line-height: 1.2;
+  }
+  .km-faq-page__cta-left p { font-size: 14px; line-height: 1.65; color: var(--km-text, #4B5563); margin: 0 0 10px; max-width: 440px; }
+  .km-faq-page__cta-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #000;
+    text-decoration: none;
+  }
+  .km-faq-page__cta-link:hover { color: var(--km-accent, #FBB03D); }
+
+  .km-faq-page__cta-right {
+    position: relative;
+    background: #111;
+    color: #fff;
+    overflow: hidden;
+    isolation: isolate;
+    min-height: 240px;
+  }
+  .km-faq-page__cta-right-bg { position: absolute; inset: 0; z-index: -1; }
+  .km-faq-page__cta-right-bg img { width: 100%; height: 100%; object-fit: cover; opacity: .55; }
+  .km-faq-page__cta-right-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.75) 0%, rgba(0,0,0,.35) 100%); }
+  .km-faq-page__cta-right-inner { padding: 48px 40px; display: flex; flex-direction: column; justify-content: center; gap: 14px; height: 100%; }
+  .km-faq-page__cta-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.8);
+  }
+  .km-faq-page__cta-right-inner h4 {
+    font-size: clamp(18px, 2vw, 22px);
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 8px;
+    line-height: 1.25;
+    max-width: 400px;
+  }
+  .km-faq-page__form { display: flex; background: #fff; border-radius: 6px; overflow: hidden; max-width: 400px; }
+  .km-faq-page__form-input { flex: 1; padding: 14px 16px; border: 0; font-size: 14px; color: #111; outline: none; font-family: inherit; }
+  .km-faq-page__form-btn {
+    flex: 0 0 auto;
+    padding: 14px 24px;
+    background: var(--km-accent, #FBB03D);
+    color: #000;
+    border: 0;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: .04em;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .2s ease;
+  }
+  .km-faq-page__form-btn:hover { background: #e69a2b; }
+
+  @media (max-width: 900px) {
+    .km-faq-page__layout { grid-template-columns: 1fr; gap: 24px; }
+    .km-faq-page__cta-grid { grid-template-columns: 1fr; }
+    .km-faq-page__cta-left, .km-faq-page__cta-right-inner { padding: 32px 28px; }
+  }
+</style>
+
+<script>
+  (function () {
+    var root = document.querySelector('[data-km-faq]');
+    if (!root) return;
+    var toggles = root.querySelectorAll('[data-km-faq-toggle]');
+    toggles.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var item = btn.closest('[data-km-faq-item]');
+        var body = item.querySelector('[data-km-faq-body]');
+        var isOpen = btn.getAttribute('aria-expanded') === 'true';
+        if (isOpen) {
+          body.style.height = body.scrollHeight + 'px';
+          // force reflow then collapse
+          body.offsetHeight;
+          body.style.height = '0px';
+          btn.setAttribute('aria-expanded', 'false');
+        } else {
+          body.style.height = body.scrollHeight + 'px';
+          btn.setAttribute('aria-expanded', 'true');
+          body.addEventListener('transitionend', function onEnd(e) {
+            if (e.propertyName !== 'height') return;
+            if (btn.getAttribute('aria-expanded') === 'true') {
+              body.style.height = 'auto';
+            }
+            body.removeEventListener('transitionend', onEnd);
+          });
+        }
+      });
+    });
+  })();
+</script>

@@ -1,0 +1,710 @@
+{%- comment -%}
+  ------------------------------------------------------------
+  Product Main — Gallery + Info + Form + Badges
+  This is a proper section so it appears in the theme editor.
+  ------------------------------------------------------------
+{%- endcomment -%}
+
+<section class="km-product-page" id="Section-{{ section.id }}">
+  <div class="km-container">
+
+    {%- comment -%} BREADCRUMB {%- endcomment -%}
+    {%- comment -%} Judge.me Dummy Snippet for Verification: <!-- Start of Judge.me code -->{% assign has_legacy = false %}{% if product.metafields.judgeme.widget.size > 20 %}{% assign has_legacy = true %}{% endif %}<div style='clear:both'></div><div id='judgeme_product_reviews' class='jdgm-widget jdgm-review-widget' data-product-title='{{ product.title | escape }}' data-id='{{ product.id }}' data-product-id='{{ product.id }}' data-widget='review' data-auto-install='false' data-shop-reviews-count='{{ shop.metafields.judgeme.shop_reviews_count | default: 0 | escape }}' data-entry-point='review_widget.js' data-entry-key='review-widget/main.js'>{% if has_legacy %}<div class='jdgm-legacy-widget-content' style='display: none;'>{{ product.metafields.judgeme.widget }}</div>{% endif %}</div>{% if product.metafields.judgeme.review_widget_data %}<script>jdgm.data ||= {}; jdgm.data.reviewWidget ||= {}; jdgm.data.reviewWidget[{{ product.id }}] = {{ product.metafields.judgeme.review_widget_data }}</script>{% endif %}<!-- End of Judge.me code --> {%- endcomment -%}
+    {%- if section.settings.show_breadcrumbs -%}
+    <nav class="km-pp__crumbs" aria-label="Breadcrumb">
+      <a href="{{ routes.root_url }}">{{ section.settings.breadcrumb_home | default: 'Home' }}</a>
+      
+      {%- assign mf_model = product.metafields.custom.model.value | default: product.metafields.custom.model -%}
+      {%- assign mf_category = product.metafields.custom.category.value | default: product.metafields.custom.category -%}
+      
+      {%- assign display_model = section.settings.breadcrumb_model_label | default: mf_model -%}
+      {%- assign display_category = section.settings.breadcrumb_category_label | default: mf_category -%}
+
+      {%- assign current_col = collection | default: product.collections.first -%}
+      
+      {%- if display_model != blank -%}
+        <span aria-hidden="true">{{ section.settings.breadcrumb_separator | default: '›' }}</span>
+        
+        {%- comment -%} 
+          Reverse Engineering: The 'Model' link should go to the broad collection 
+          that matches the 'Model' metafield rule.
+        {%- endcomment -%}
+        {%- comment -%} Rule-Based Model Search (Structural) {%- endcomment -%}
+        {%- assign model_url = '#' -%}
+        {%- assign m_down = display_model | downcase | strip -%}
+        
+        {%- comment -%} 1. Look for Exact Structural Match {%- endcomment -%}
+        {%- for col in product.collections -%}
+          {%- assign ct = col.title | downcase | strip -%}
+          {%- assign m_parts = m_down | append: ' parts' -%}
+          {%- assign hd_m = 'harley-davidson ' | append: m_down -%}
+          {%- if ct == m_down or ct == m_parts or ct == hd_m -%}
+            {%- assign model_url = col.url -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+        
+        {%- if model_url == '#' -%}
+          {%- for col in product.collections -%}
+            {%- assign ct = col.title | downcase -%}
+            {%- if ct contains 'best' or ct contains 'featured' or ct contains 'new' or ct contains 'arrival' -%}{%- continue -%}{%- endif -%}
+            {%- if ct contains m_down -%}
+              {%- assign model_url = col.url -%}
+              {%- break -%}
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+        
+        <a href="{{ model_url }}">{{ display_model }}</a>
+
+        {%- if display_category != blank -%}
+          <span aria-hidden="true">{{ section.settings.breadcrumb_separator | default: '›' }}</span>
+          
+          {%- assign c_down = display_category | downcase | strip -%}
+          {%- assign c_singular = c_down | remove: 's' -%}
+          
+          {%- comment -%} 
+            Structural Priority: Look for a collection that matches the exact "Model Category" naming
+            (e.g. "Honda Suspension and Chassis")
+          {%- endcomment -%}
+          {%- assign cat_url = '#' -%}
+          {%- assign found_specific = false -%}
+          {%- assign target_title = m_down | append: ' ' | append: c_down -%}
+          {%- assign target_title_rev = c_down | append: ' ' | append: m_down -%}
+          
+          {%- for col in product.collections -%}
+            {%- assign ct = col.title | downcase | strip -%}
+            {%- if ct contains 'best' or ct contains 'seller' or ct contains 'featured' or ct contains 'new' -%}{%- continue -%}{%- endif -%}
+            
+            {%- if ct == target_title or ct == target_title_rev or ct contains target_title or ct contains target_title_rev -%}
+               {%- assign cat_url = col.url -%}
+               {%- assign found_specific = true -%}
+               {%- break -%}
+            {%- endif -%}
+          {%- endfor -%}
+          
+          {%- unless found_specific -%}
+            {%- for col in product.collections -%}
+              {%- assign ct = col.title | downcase -%}
+              {%- if ct contains 'best' or ct contains 'seller' or ct contains 'featured' -%}{%- continue -%}{%- endif -%}
+              
+              {%- if ct contains c_singular and ct contains m_down -%}
+                {%- assign cat_url = col.url -%}
+                {%- assign found_specific = true -%}
+                {%- break -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endunless -%}
+          
+          {%- unless found_specific -%}
+            {%- for col in product.collections -%}
+              {%- assign ct = col.title | downcase -%}
+              {%- if ct contains 'best' or ct contains 'seller' -%}{%- continue -%}{%- endif -%}
+              {%- if ct contains c_singular -%}
+                {%- assign cat_url = col.url -%}
+                {%- assign found_specific = true -%}
+                {%- break -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endunless -%}
+          
+          {%- if cat_url == '#' or cat_url == blank -%}
+            {%- assign cat_url = current_col.url -%}
+          {%- endif -%}
+          
+          <a href="{{ cat_url }}">{{ display_category }}</a>
+        {%- endif -%}
+      {%- else -%}
+        {%- comment -%} FALLBACK TO COLLECTION LOGIC {%- endcomment -%}
+        {%- if current_col -%}
+          {%- assign handle_parts = current_col.handle | split: '-' -%}
+          {%- assign model_part = '' -%}
+          {%- if current_col.handle contains 'harley-davidson' -%}
+            {%- assign model_part = handle_parts[2] -%}
+          {%- elsif current_col.handle contains 'indian' or current_col.handle contains 'triumph' or current_col.handle contains 'honda' -%}
+            {%- assign model_part = handle_parts[1] -%}
+          {%- else -%}
+            {%- assign model_part = handle_parts | first -%}
+          {%- endif -%}
+          
+          {%- assign parent_col = collections[model_part] -%}
+          {%- if parent_col -%}
+            <span aria-hidden="true">{{ section.settings.breadcrumb_separator | default: '›' }}</span>
+            <a href="{{ parent_col.url }}">{{ parent_col.title | remove: ' Parts' | remove: ' parts' | remove: 'Harley-Davidson ' }}</a>
+          {%- elsif model_part != blank -%}
+            <span aria-hidden="true">{{ section.settings.breadcrumb_separator | default: '›' }}</span>
+            <a href="/collections/{{ model_part }}">{{ model_part | capitalize }}</a>
+          {%- endif -%}
+          
+          <span aria-hidden="true">{{ section.settings.breadcrumb_separator | default: '›' }}</span>
+          <a href="{{ current_col.url }}">{{ current_col.title | remove: 'Harley-Davidson ' | remove: 'Harley-Davidson' | remove: 'Sportster ' | remove: 'Sportster' | remove: 'Softail ' | remove: 'Softail' | remove: 'Dyna ' | remove: 'Dyna' | remove: 'Indian ' | remove: 'Indian' | remove: 'Triumph ' | remove: 'Triumph' | remove: 'Honda ' | remove: 'Honda' | strip }}</a>
+        {%- else -%}
+          <span aria-hidden="true">{{ section.settings.breadcrumb_separator | default: '›' }}</span>
+          <a href="{{ routes.all_products_collection_url }}">Products</a>
+        {%- endif -%}
+      {%- endif -%}
+      
+      <span aria-hidden="true">{{ section.settings.breadcrumb_separator | default: '›' }}</span>
+      <span class="km-pp__crumb-current">{{ product.title | upcase }}</span>
+    </nav>
+    {%- endif -%}
+
+    {%- comment -%} TOP GRID — gallery | info {%- endcomment -%}
+    <div class="km-pp__top">
+
+      {%- comment -%} LEFT: gallery {%- endcomment -%}
+      <div class="km-pp__gallery">
+        <div class="km-pp__hero">
+          {%- if product.featured_image != blank -%}
+            <img
+              src="{{ product.featured_image | image_url: width: 1200 }}"
+              alt="{{ product.featured_image.alt | default: product.title | escape }}"
+              width="800"
+              height="800"
+              loading="eager"
+              fetchpriority="high"
+              class="km-pp__hero-img"
+              id="km-product-hero-img"
+            >
+          {%- else -%}
+            <div class="km-pp__hero-placeholder" aria-hidden="true"></div>
+          {%- endif -%}
+        </div>
+        {%- if product.images.size > 1 -%}
+          <div class="km-pp__thumbs">
+            {%- for img in product.images -%}
+              <button type="button" class="km-pp__thumb{% if forloop.first %} is-active{% endif %}" data-km-thumb="{{ img | image_url: width: 1200 }}" aria-label="View image {{ forloop.index }}">
+                <img src="{{ img | image_url: width: 240 }}" width="120" height="120" loading="lazy" alt="{{ product.title | escape }}">
+              </button>
+            {%- endfor -%}
+          </div>
+        {%- else -%}
+          <div class="km-pp__thumbs-empty">No items found</div>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} RIGHT: info {%- endcomment -%}
+      <div class="km-pp__info">
+        <!-- Start of Judge.me code --> 
+        <div style='{{ jm_style }}' class='jdgm-widget jdgm-preview-badge' data-id='{{ product.id }}' data-auto-install='false'> 
+          {{ product.metafields.judgeme.badge }} 
+        </div> 
+        <!-- End of Judge.me code -->
+
+        <h1 class="km-pp__title">{{ product.title | default: 'Product Title' }}</h1>
+
+
+        {%- if product.tags.size > 0 -%}
+          <div class="km-pp__sub">{{ product.tags | first | upcase }}</div>
+        {%- endif -%}
+
+        <div class="km-pp__pricerow">
+          <span class="km-pp__price">{{ product.price | money }}</span>
+          {%- if product.compare_at_price > product.price -%}
+            <span class="km-pp__compare">{{ product.compare_at_price | money }}</span>
+          {%- endif -%}
+        </div>
+
+        {%- if product.description != blank -%}
+          <div class="km-pp__short-desc">{{ product.description | strip_html | truncate: 1000 }}</div>
+        {%- else -%}
+          <div class="km-pp__short-desc">A precision-machined upgrade engineered for exact factory fitment, durable sealing, and long-term reliability. Designed in-house and manufactured in the United States.</div>
+        {%- endif -%}
+
+        <div class="km-pp__meta">
+          {%- if product.vendor != blank -%}
+            <span class="km-pp__meta-tag">
+              <img src="{{ 'icon-motor.png' | asset_url }}" width="14" height="14" alt="" loading="lazy">
+              {{ product.vendor }}
+            </span>
+          {%- endif -%}
+        </div>
+
+        <form method="post" action="/cart/add" class="km-pp__form" data-km-product-form enctype="multipart/form-data">
+          <input type="hidden" name="id" value="">
+          <script type="application/json" data-km-variants>{{ product.variants | json }}</script>
+
+          {%- if product.has_only_default_variant == false and product.variants.size > 1 -%}
+            {%- for option in product.options_with_values -%}
+              <div class="km-pp__option" data-km-option-row="{{ forloop.index0 }}">
+                <label class="km-pp__option-label">{{ option.name }}</label>
+                <div class="km-pp__option-values">
+                  {%- assign values_to_render = option.values -%}
+                  {%- if option.values contains 'Yes' and option.values contains 'No' -%}
+                    {%- assign values_to_render = "Yes,No" | split: ',' -%}
+                  {%- elsif option.values contains 'yes' and option.values contains 'no' -%}
+                    {%- assign values_to_render = "yes,no" | split: ',' -%}
+                  {%- endif -%}
+
+                  {%- for value in values_to_render -%}
+                    <button type="button" class="km-pp__option-value" 
+                      data-option-index="{{ forloop.parentloop.index0 }}" 
+                      data-option-value="{{ value | escape }}">
+                      {{ value }}
+                    </button>
+                  {%- endfor -%}
+                </div>
+              </div>
+            {%- endfor -%}
+          {%- endif -%}
+
+          <div class="km-pp__error-msg" id="km-variant-error" style="display: none;">
+            Please select all options before adding to cart.
+          </div>
+
+          {%- comment -%} CUSTOM DYNAMIC FORM (Metaobject Reference) {%- endcomment -%}
+          {%- assign product_form = product.metafields.custom.form_type.value -%}
+          {%- if product_form != blank -%}
+            <div class="km-pp__custom-form" data-km-custom-form>
+              {%- if product_form.form_name != blank -%}
+                <h3 class="km-pp__custom-form-title">{{ product_form.form_name }}</h3>
+              {%- endif -%}
+              
+              {%- assign fields = product_form.cart_form.value | default: product_form.cart_form -%}
+              {%- for field in fields -%}
+                <div class="km-pp__custom-field" data-km-field-row>
+                  <label class="km-pp__option-label" for="custom-field-{{ forloop.index }}">
+                    {{ field.label }}
+                    {%- if field.required -%}<span class="km-pp__required-star" style="color: #b91c1c; margin-left: 4px;">*</span>{%- endif -%}
+                  </label>
+                  
+                  {%- if field.description != blank -%}
+                    <p class="km-pp__field-desc">{{ field.description }}</p>
+                  {%- endif -%}
+
+                  {%- case field.type -%}
+                    {%- when 'text' -%}
+                      <input type="text" 
+                        id="custom-field-{{ forloop.index }}"
+                        name="properties[{{ field.label }}]" 
+                        class="km-pp__custom-input"
+                        placeholder="{{ field.placeholder }}"
+                        data-km-custom-input
+                        {% if field.required %}data-required="true"{% endif %}>
+                    
+                    {%- when 'textarea' -%}
+                      <textarea 
+                        id="custom-field-{{ forloop.index }}"
+                        name="properties[{{ field.label }}]" 
+                        class="km-pp__custom-textarea"
+                        placeholder="{{ field.placeholder }}"
+                        data-km-custom-input
+                        {% if field.required %}data-required="true"{% endif %}></textarea>
+
+                    {%- when 'select' -%}
+                      <div class="km-pp__custom-select-wrapper">
+                        <select 
+                          id="custom-field-{{ forloop.index }}"
+                          name="properties[{{ field.label }}]" 
+                          class="km-pp__custom-select"
+                          data-km-custom-input
+                          {% if field.required %}data-required="true"{% endif %}>
+                          <option value="">{{ field.placeholder | default: 'Select an option' }}</option>
+                          {%- for opt in field.options -%}
+                            <option value="{{ opt }}">{{ opt }}</option>
+                          {%- endfor -%}
+                        </select>
+                      </div>
+                  {%- endcase -%}
+                </div>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+
+          <div class="km-pp__qty-row">
+            <div class="km-pp__qty">
+              <button type="button" class="km-pp__qty-btn" data-km-qty-dec aria-label="Decrease quantity">−</button>
+              <input type="number" name="quantity" value="1" min="1" class="km-pp__qty-input" data-km-qty-input>
+              <button type="button" class="km-pp__qty-btn" data-km-qty-inc aria-label="Increase quantity">+</button>
+            </div>
+            <button type="submit" name="add" class="km-pp__add">
+              Add to Cart
+              {%- render 'icon', icon: 'arrow-right' -%}
+            </button>
+          </div>
+
+          {%- if product.selected_or_first_available_variant.available -%}
+            <button type="submit" name="checkout" formaction="/checkout" class="km-pp__buy-now">Buy Now</button>
+          {%- endif -%}
+        </form>
+
+        <div class="km-pp__badges">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'badge' -%}
+              <div class="km-pp__badge" {{ block.shopify_attributes }}>
+                <span class="km-pp__badge-icon" aria-hidden="true">
+                  {%- if block.settings.image != blank -%}
+                    {{ block.settings.image | image_url: width: 80 | image_tag: width: 36, height: 36, loading: 'lazy' }}
+                  {%- else -%}
+                    {%- render 'icon', icon: block.settings.icon | default: 'globe' -%}
+                  {%- endif -%}
+                </span>
+                {{ block.settings.label }}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+          {%- if section.blocks.size == 0 -%}
+            <div class="km-pp__badge">
+              <span class="km-pp__badge-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              </span>
+              USA Designed &amp; Made
+            </div>
+            <div class="km-pp__badge">
+              <span class="km-pp__badge-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>
+              </span>
+              Worldwide Shipping
+            </div>
+            <div class="km-pp__badge">
+              <span class="km-pp__badge-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6M4.22 4.22l4.24 4.24m7.08 7.08l4.24 4.24M1 12h6m10 0h6M4.22 19.78l4.24-4.24m7.08-7.08l4.24-4.24"/></svg>
+              </span>
+              High Precision Motorcycle Parts
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .km-pp__badge-icon img { width: 100%; height: 100%; object-fit: contain; }
+  .km-product-page { padding: 36px 0 72px; background: var(--km-body-bg, #EDEDED); }
+  .km-pp__crumbs { display: flex; flex-flow: wrap; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--km-text, #4B5563); margin-bottom: 32px; overflow-wrap: break-word; }
+  .km-pp__crumbs a { color: inherit; text-decoration: none; flex-shrink: 0; }
+  .km-pp__crumbs a:hover { color: var(--km-accent, #FBB03D); }
+  .km-pp__crumb-current { color: #000; font-weight: 700; overflow-wrap: break-word; }
+
+  .km-pp__top { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 48px; align-items: flex-start; }
+
+  .km-pp__gallery { display: flex; flex-direction: column; gap: 14px; position: sticky; top: 24px; }
+  .km-pp__hero { aspect-ratio: 1/1; background: #fff; border: 1px solid var(--km-border, #DDDDDD); border-radius: 20px; overflow: hidden; }
+  .km-pp__hero-img { width: 100%; height: 100%; object-fit: cover; transition: opacity .2s ease; }
+  .km-pp__hero-placeholder { width: 100%; height: 100%; background: linear-gradient(135deg, #f3f4f6, #e5e7eb); }
+  .km-pp__thumbs { 
+    display: flex; 
+    gap: 12px; 
+    overflow-x: auto; 
+    max-width: 100%;
+    padding-bottom: 8px;
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  .km-pp__thumbs::-webkit-scrollbar { display: none; }
+  
+  .km-pp__thumb { 
+    flex: 0 0 80px;
+    aspect-ratio: 1/1; 
+    background: #fff; 
+    border: 1px solid var(--km-border, #DDDDDD); 
+    border-radius: 10px; 
+    overflow: hidden; 
+    cursor: pointer; 
+    padding: 0; 
+    transition: all .2s ease; 
+  }
+  .km-pp__thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .km-pp__thumb:hover { border-color: #000; transform: translateY(-2px); }
+  .km-pp__thumb.is-active { border-color: var(--km-accent, #FBB03D); border-width: 2px; }
+  .km-pp__thumbs-empty { font-size: 12px; color: #9ca3af; font-style: italic; text-align: center; padding: 16px 0 0; }
+
+  .km-pp__info { display: flex; flex-direction: column; gap: 16px; padding-top: 8px; }
+  .km-pp__rating-row { display: flex; align-items: center; gap: 10px; }
+  .km-pp__stars { display: inline-flex; gap: 2px; color: var(--km-accent, #FBB03D); }
+  .km-pp__stars svg { width: 14px; height: 14px; }
+  .km-pp__review-count { font-size: 12px; font-weight: 700; color: var(--km-text, #4B5563); letter-spacing: .04em; text-transform: uppercase; }
+
+  .km-pp__title { font-size: clamp(28px, 3.4vw, 40px); font-weight: 700; letter-spacing: -.015em; line-height: 1.15; color: #000; margin: 0; text-transform: uppercase; }
+  .km-pp__sub { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--km-text, #4B5563); margin-top: -4px; }
+
+  .km-pp__pricerow { display: flex; align-items: baseline; gap: 12px; padding: 14px 0; border-top: 1px solid var(--km-border, #DDDDDD); border-bottom: 1px solid var(--km-border, #DDDDDD); margin: 6px 0; }
+  .km-pp__price { font-size: 26px; font-weight: 800; color: #000; letter-spacing: -.01em; }
+  .km-pp__compare { font-size: 16px; color: #9ca3af; text-decoration: line-through; }
+
+  .km-pp__short-desc { font-size: 14px; line-height: 1.65; color: var(--km-text, #4B5563); }
+
+  .km-pp__meta { display: flex; gap: 10px; flex-wrap: wrap; }
+  .km-pp__meta-tag { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: #fff; border: 1px solid var(--km-border, #DDDDDD); border-radius: 9999px; font-size: 12px; font-weight: 600; color: var(--km-text, #4B5563); }
+  .km-pp__meta-tag svg { width: 12px; height: 12px; }
+
+  .km-pp__form { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
+  .km-pp__option-label { display: block; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #000; margin-bottom: 8px; }
+  .km-pp__option-values { display: flex; gap: 8px; flex-wrap: wrap; }
+  .km-pp__option-value { padding: 8px 14px; background: #fff; border: 1px solid var(--km-border, #DDDDDD); border-radius: 9999px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; }
+  .km-pp__option-value.is-active { background: #000; color: #fff; border-color: #000; }
+
+  .km-pp__qty-row { display: grid; grid-template-columns: auto 1fr; gap: 10px; }
+  .km-pp__qty { display: inline-flex; align-items: center; border: 1px solid var(--km-border, #DDDDDD); border-radius: 9999px; background: #fff; padding: 4px; }
+  .km-pp__qty-btn { width: 36px; height: 36px; border-radius: 50%; border: 0; background: transparent; font-size: 18px; font-weight: 700; color: #000; cursor: pointer; font-family: inherit; transition: background .2s ease; }
+  .km-pp__qty-btn:hover { background: var(--km-body-bg, #EDEDED); }
+  .km-pp__qty-input { width: 48px; text-align: center; border: 0; background: transparent; font-size: 15px; font-weight: 700; color: #000; font-family: inherit; -moz-appearance: textfield; }
+  .km-pp__qty-input::-webkit-outer-spin-button, .km-pp__qty-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+  .km-pp__add { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 24px; background: #000; color: #fff; border: 0; border-radius: 9999px; font-weight: 800; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; cursor: pointer; font-family: inherit; transition: background .2s ease; }
+  .km-pp__add:hover { background: var(--km-accent, #FBB03D); color: #000; }
+
+  .km-pp__buy-now { width: 100%; padding: 16px 24px; background: var(--km-accent, #FBB03D); color: #000; border: 0; border-radius: 9999px; font-weight: 800; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; cursor: pointer; font-family: inherit; transition: background .2s ease; }
+  .km-pp__buy-now:hover { background: #e69a2b; }
+  .km-pp__buy-now:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .km-pp__error-msg {
+    color: #b91c1c;
+    background: #fef2f2;
+    border: 1px solid #fee2e2;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .km-pp__badges { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; padding-top: 18px; border-top: 1px solid var(--km-border, #DDDDDD); }
+  .km-pp__badge { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--km-text, #4B5563); line-height: 1.3; }
+  .km-pp__badge-icon { width: 36px; height: 36px; border-radius: 50%; background: var(--km-body-bg, #EDEDED); display: inline-flex; align-items: center; justify-content: center; color: #000; }
+
+  /* Custom Form Styling */
+  .km-pp__custom-form {
+    margin: 12px 0;
+    padding: 24px;
+    background: #fff;
+    border: 1px solid var(--km-border, #DDDDDD);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .km-pp__custom-form-title {
+    font-size: 16px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 4px;
+    color: #000;
+  }
+  .km-pp__field-desc {
+    font-size: 12px;
+    color: var(--km-text, #4B5563);
+    margin: -4px 0 8px;
+    line-height: 1.4;
+  }
+  .km-pp__custom-input, 
+  .km-pp__custom-textarea,
+  .km-pp__custom-select {
+    width: 100%;
+    padding: 12px 16px;
+    background: var(--km-body-bg, #EDEDED);
+    border: 1px solid transparent;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    color: #000;
+    transition: all 0.2s ease;
+  }
+  .km-pp__custom-input:focus, 
+  .km-pp__custom-textarea:focus,
+  .km-pp__custom-select:focus {
+    outline: none;
+    background: #fff;
+    border-color: var(--km-accent, #FBB03D);
+    box-shadow: 0 0 0 3px rgba(251, 176, 61, 0.1);
+  }
+  .km-pp__custom-textarea {
+    min-height: 80px;
+    resize: vertical;
+  }
+  .km-pp__custom-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 40px;
+  }
+  .km-pp__custom-field.has-error .km-pp__custom-input,
+  .km-pp__custom-field.has-error .km-pp__custom-textarea,
+  .km-pp__custom-field.has-error .km-pp__custom-select {
+    border-color: #b91c1c;
+    background: #fff;
+  }
+
+  @media (max-width: 1000px) {
+    .km-pp__top { grid-template-columns: minmax(0, 1fr); }
+    .km-pp__gallery { position: static; min-width: 0; }
+  }
+  @media (max-width: 600px) {
+    .km-pp__badges { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+
+<script>
+  // Variant Selection
+  const form = document.querySelector('[data-km-product-form]');
+  const variantsJson = document.querySelector('[data-km-variants]');
+  const idInput = form ? form.querySelector('input[name="id"]') : null;
+  const errorMsg = document.getElementById('km-variant-error');
+  const optionButtons = document.querySelectorAll('.km-pp__option-value');
+  const priceDisplay = document.querySelector('.km-pp__price');
+  const compareDisplay = document.querySelector('.km-pp__compare');
+
+  if (form && variantsJson && idInput) {
+    const variants = JSON.parse(variantsJson.textContent);
+    const optionsCount = document.querySelectorAll('.km-pp__option').length;
+    let selectedOptions = Array(optionsCount).fill(null);
+
+    const formatMoney = (cents) => {
+      const amount = (cents / 100).toFixed(2);
+      // Use liquid to get the correct currency symbol and format
+      const moneyFormat = "{{ 0 | money }}";
+      if (moneyFormat.includes('0.00')) return moneyFormat.replace('0.00', amount);
+      if (moneyFormat.includes('0,00')) return moneyFormat.replace('0,00', amount);
+      return moneyFormat.replace('0', amount);
+    };
+
+    // Pre-select lowest price variant
+    const lowestVariant = variants.reduce((min, curr) => (curr.price < min.price) ? curr : min, variants[0]);
+    if (lowestVariant) {
+      selectedOptions = [...lowestVariant.options];
+      selectedOptions.forEach((val, idx) => {
+        const btn = document.querySelector(`.km-pp__option[data-km-option-row="${idx}"] .km-pp__option-value[data-option-value="${val}"]`);
+        if (btn) btn.classList.add('is-active');
+      });
+    }
+
+    const updateVariant = () => {
+      const allSelected = selectedOptions.every(val => val !== null);
+      if (!allSelected) {
+        idInput.value = "";
+        return;
+      }
+
+      const match = variants.find(v => {
+        return v.options.every((opt, i) => opt === selectedOptions[i]);
+      });
+
+      if (match) {
+        idInput.value = match.id;
+        if (priceDisplay) priceDisplay.textContent = formatMoney(match.price);
+        if (compareDisplay) {
+          if (match.compare_at_price > match.price) {
+            compareDisplay.textContent = formatMoney(match.compare_at_price);
+            compareDisplay.style.display = 'inline';
+          } else {
+            compareDisplay.style.display = 'none';
+          }
+        }
+        if (errorMsg) errorMsg.style.display = 'none';
+      }
+    };
+
+    updateVariant();
+
+
+    optionButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.getAttribute('data-option-index'), 10);
+        const val = btn.getAttribute('data-option-value');
+        
+        selectedOptions[idx] = val;
+        
+        // UI Update
+        btn.closest('.km-pp__option-values').querySelectorAll('.km-pp__option-value').forEach(el => el.classList.remove('is-active'));
+        btn.classList.add('is-active');
+        
+        updateVariant();
+      });
+    });
+
+    form.addEventListener('submit', (e) => {
+      let hasError = false;
+      
+      // 1. Variant selection validation
+      if (!idInput.value) {
+        hasError = true;
+        if (errorMsg) {
+          errorMsg.textContent = "Please select all options before adding to cart.";
+          errorMsg.style.display = 'block';
+        }
+      }
+
+      // 2. Custom form validation
+      const customInputs = form.querySelectorAll('[data-km-custom-input]');
+      customInputs.forEach(input => {
+        const isRequired = input.getAttribute('data-required') === 'true';
+        const fieldRow = input.closest('[data-km-field-row]');
+        
+        if (isRequired && !input.value.trim()) {
+          hasError = true;
+          if (fieldRow) fieldRow.classList.add('has-error');
+        } else {
+          if (fieldRow) fieldRow.classList.remove('has-error');
+        }
+      });
+
+      if (hasError) {
+        e.preventDefault();
+        if (errorMsg) {
+          if (!idInput.value) {
+            errorMsg.textContent = "Please select all options before adding to cart.";
+          } else {
+            errorMsg.textContent = "Please fill in all required fields.";
+          }
+          errorMsg.style.display = 'block';
+          errorMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+    });
+  }
+
+  // Thumbnail swap
+  const hero = document.getElementById('km-product-hero-img');
+  if (hero) {
+    document.querySelectorAll('[data-km-thumb]').forEach((t) => {
+      t.addEventListener('click', () => {
+        const src = t.getAttribute('data-km-thumb');
+        if (src) {
+          hero.style.opacity = '0.5';
+          hero.src = src;
+          hero.onload = () => { hero.style.opacity = '1'; };
+        }
+        document.querySelectorAll('[data-km-thumb]').forEach((x) => x.classList.toggle('is-active', x === t));
+      });
+    });
+  }
+
+  // Quantity stepper
+  const qty = document.querySelector('[data-km-qty-input]');
+  const dec = document.querySelector('[data-km-qty-dec]');
+  const inc = document.querySelector('[data-km-qty-inc]');
+  if (qty && dec && inc) {
+    dec.addEventListener('click', () => { qty.value = Math.max(1, parseInt(qty.value || '1', 10) - 1); });
+    inc.addEventListener('click', () => { qty.value = Math.max(1, parseInt(qty.value || '1', 10) + 1); });
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Product Main",
+  "settings": [
+    { "type": "header", "content": "Breadcrumbs" },
+    { "type": "checkbox", "id": "show_breadcrumbs", "label": "Show breadcrumbs", "default": true },
+    { "type": "text", "id": "breadcrumb_home", "label": "Home label", "default": "Home" },
+    { "type": "text", "id": "breadcrumb_separator", "label": "Separator", "default": "›" },
+    { "type": "text", "id": "breadcrumb_model_label", "label": "Global Model Override", "info": "Leave blank to use metafields/collections" },
+    { "type": "text", "id": "breadcrumb_category_label", "label": "Global Category Override", "info": "Leave blank to use metafields/collections" }
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Trust badge",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Custom icon (image)" },
+        { "type": "text", "id": "label", "label": "Label", "default": "USA Designed & Made" },
+        { "type": "text", "id": "icon", "label": "Icon name", "default": "globe", "info": "Icon from icon.liquid snippet (e.g. globe, truck, star) - used if no image is uploaded" }
+      ]
+    }
+  ]
+}
+{% endschema %}

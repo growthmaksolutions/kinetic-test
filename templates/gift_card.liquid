@@ -1,0 +1,64 @@
+{%- comment -%} Gift card template — displays a physical-looking card with code + balance. {%- endcomment -%}
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ shop.name }} Gift Card</title>
+    <meta name="robots" content="noindex,nofollow">
+
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    {{ 'theme.css' | asset_url | stylesheet_tag }}
+
+    <style>
+      body { background: var(--km-body-bg); min-height: 100vh; padding: 48px 16px; }
+      .km-gc { max-width: 560px; margin: 0 auto; }
+      .km-gc__card {
+        background: #111; color: #fff; border-radius: var(--km-radius-lg);
+        padding: 32px; position: relative; overflow: hidden; isolation: isolate;
+      }
+      .km-gc__card::before {
+        content: ""; position: absolute; inset: 0; z-index: -1;
+        background: radial-gradient(60% 80% at 85% 50%, rgba(251,176,61,.18), transparent 60%);
+      }
+      .km-gc__shop { font-size: 12px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--km-accent); margin-bottom: 20px; }
+      .km-gc__balance { font-size: 48px; font-weight: 800; line-height: 1; letter-spacing: -.02em; margin: 0 0 6px; }
+      .km-gc__label { font-size: 13px; color: rgba(255,255,255,.65); margin: 0 0 28px; }
+      .km-gc__qr { background: #fff; padding: 16px; border-radius: var(--km-radius); display: inline-block; }
+      .km-gc__code {
+        display: inline-block; font-family: ui-monospace, "SF Mono", Menlo, monospace;
+        font-size: 15px; padding: 10px 18px; letter-spacing: .04em;
+        background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.2);
+        border-radius: var(--km-radius-pill); margin-top: 18px;
+      }
+      .km-gc__cta { display: inline-block; margin-top: 24px; padding: 14px 26px; background: #fff; color: #000; border-radius: var(--km-radius-pill); font-weight: 800; text-decoration: none; }
+      .km-gc__note { margin-top: 20px; text-align: center; color: var(--km-text); font-size: 13px; }
+      .km-gc__expired { color: #b91c1c; font-weight: 700; }
+    </style>
+  </head>
+  <body>
+    <div class="km-gc">
+      <div class="km-gc__card">
+        <div class="km-gc__shop">{{ shop.name }} Gift Card</div>
+        <div class="km-gc__balance">{{ gift_card.balance | money }}</div>
+        <p class="km-gc__label">Balance as of {{ 'now' | date: '%b %d, %Y' }}</p>
+
+        <div class="km-gc__qr">{{ gift_card.qr_identifier }}</div>
+
+        <div>
+          <code class="km-gc__code">{{ gift_card.code | format_code }}</code>
+        </div>
+
+        {%- if gift_card.expired -%}
+          <p class="km-gc__expired">This gift card has expired.</p>
+        {%- else -%}
+          <a href="{{ shop.url }}" class="km-gc__cta">Shop now →</a>
+        {%- endif -%}
+      </div>
+
+      <p class="km-gc__note">
+        Save this page or the code above to redeem at checkout.
+      </p>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,80 @@
+{%- comment -%}
+  Mega menu — renders TWO versions from one data source:
+    1. Desktop: `.km-mega` full-width hover dropdown
+    2. Mobile: `.km-mega-mobile` accordion-style
+  
+  Logic: 
+  - Iterates through sub-links of the main menu's "Collections" item.
+  - For each item (e.g., "Sportster"), it tries to find a separate Shopify Menu with the same handle.
+  - If a separate menu exists, it uses those links. Otherwise, it uses nested sub-links.
+{%- endcomment -%}
+
+{%- if mega_link.links.size > 0 -%}
+  {%- comment -%} ================== DESKTOP MEGA MENU ================== {%- endcomment -%}
+  <div class="km-mega" role="menu" aria-label="{{ mega_link.title }} menu">
+    <div class="km-container km-mega__inner">
+      <div class="km-mega__grid">
+        {%- for column in mega_link.links -%}
+          {%- comment -%} Try to find a menu named after the column title (e.g., "Sportster" menu) {%- endcomment -%}
+          {%- assign menu_handle = column.title | handleize -%}
+          {%- assign sub_menu = linklists[menu_handle] -%}
+          
+          <div class="km-mega__col">
+            <a href="{{ column.url }}" class="km-mega__brand">{{ column.title }}</a>
+            
+            {%- comment -%} Use the separate menu links if they exist, otherwise use standard nested links {%- endcomment -%}
+            {%- if sub_menu.links.size > 0 -%}
+              <ul class="km-mega__list">
+                {%- for sub_link in sub_menu.links -%}
+                  <li><a href="{{ sub_link.url }}">{{ sub_link.title }}</a></li>
+                {%- endfor -%}
+              </ul>
+            {%- elsif column.links.size > 0 -%}
+              <ul class="km-mega__list">
+                {%- for sub_link in column.links -%}
+                  <li><a href="{{ sub_link.url }}">{{ sub_link.title }}</a></li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+      <div class="km-mega__footer">
+        <a href="{{ mega_link.url }}" class="km-mega__view-all">View all {{ mega_link.title | lowercase }} {%- render 'icon', icon: 'arrow-right' -%}</a>
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} ================== MOBILE MEGA MENU (accordion) ================== {%- endcomment -%}
+  <div class="km-mega-mobile" data-km-mobile-mega>
+    {%- for column in mega_link.links -%}
+      {%- assign menu_handle = column.title | handleize -%}
+      {%- assign sub_menu = linklists[menu_handle] -%}
+
+      <details class="km-mega-mobile__item">
+        <summary class="km-mega-mobile__summary">
+          <span class="km-mega-mobile__brand-name">{{ column.title }}</span>
+          <span class="km-mega-mobile__chev" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 6l4 4 4-4"/>
+            </svg>
+          </span>
+        </summary>
+        
+        {%- if sub_menu.links.size > 0 -%}
+          <ul class="km-mega-mobile__list">
+            {%- for sub_link in sub_menu.links -%}
+              <li><a href="{{ sub_link.url }}">{{ sub_link.title }}</a></li>
+            {%- endfor -%}
+          </ul>
+        {%- elsif column.links.size > 0 -%}
+          <ul class="km-mega-mobile__list">
+            {%- for sub_link in column.links -%}
+              <li><a href="{{ sub_link.url }}">{{ sub_link.title }}</a></li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </details>
+    {%- endfor -%}
+  </div>
+{%- endif -%}

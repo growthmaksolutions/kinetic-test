@@ -1,0 +1,68 @@
+{%- comment -%}
+  Judge.me Review Widget
+  This section displays the review widget for the current product.
+{%- endcomment -%}
+
+<div class="km-container judgeme-section" style="margin-top: 64px; margin-bottom: 64px;">
+  <div class="km-pp__review-wrapper">
+    <h2 class="km-section-title" style="margin-bottom: 40px; text-align: center;">Customer Reviews</h2>
+    
+    <!-- Start of Judge.me code -->
+    {% assign has_legacy = false %}
+    {% if product.metafields.judgeme.widget.size > 20 %}{% assign has_legacy = true %}{% endif %}
+    <div style='clear:both'></div>
+    <div id='judgeme_product_reviews' class='jdgm-widget jdgm-review-widget' data-product-title='{{ product.title | escape }}' data-id='{{ product.id }}' data-product-id='{{ product.id }}' data-widget='review' data-auto-install='false' data-shop-reviews-count='{{ shop.metafields.judgeme.shop_reviews_count | default: 0 | escape }}' data-entry-point='review_widget.js' data-entry-key='review-widget/main.js'>
+      {% if has_legacy %}<div class='jdgm-legacy-widget-content' style='display: none;'>{{ product.metafields.judgeme.widget }}</div>{% endif %}
+    </div>
+    {% if product.metafields.judgeme.review_widget_data %}<script>jdgm.data ||= {}; jdgm.data.reviewWidget ||= {}; jdgm.data.reviewWidget[{{ product.id }}] = {{ product.metafields.judgeme.review_widget_data }}</script>{% endif %}
+    <!-- End of Judge.me code -->
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const initJdgm = () => {
+      try {
+        if (window.jdgm && typeof window.jdgm.initializeWidgets === 'function') {
+          window.jdgm.initializeWidgets();
+        }
+      } catch (e) {
+        console.warn('Judge.me init failed:', e);
+      }
+    };
+    setTimeout(initJdgm, 2000);
+  });
+</script>
+
+<style>
+  /* Minimal fallback — full styles live in theme.css under .judgeme-section scope */
+  .km-pp__review-wrapper {
+    background: #fff;
+    border: 1px solid var(--km-border, #DDD);
+    border-radius: 20px;
+    padding: 60px 48px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.04);
+  }
+  .judgeme-section .km-section-title {
+    font-family: var(--km-font-heading);
+    font-size: clamp(28px, 3.2vw, 40px);
+    font-weight: 700;
+    color: #000;
+    margin: 0 0 40px;
+    letter-spacing: -.02em;
+    text-align: center;
+  }
+</style>
+
+
+{% schema %}
+{
+  "name": "Judge.me Review Widget",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Judge.me Review Widget"
+    }
+  ]
+}
+{% endschema %}

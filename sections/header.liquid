@@ -1,0 +1,509 @@
+{%- comment -%}
+  ------------------------------------------------------------
+  Header / Navigation
+  Two-row layout cloned from kinetic-motorcycles.webflow.io
+    • Top row (black): Logo + Search + Cart
+    • Bottom row (white): Main nav links
+  ------------------------------------------------------------
+{%- endcomment -%}
+
+<header class="km-header" data-km-header>
+  {{ 'search.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'search.js' | asset_url }}" defer="defer"></script>
+  {%- comment -%} Top row — dark bar with logo, search, icons {%- endcomment -%}
+  <div class="km-header__top">
+    <div class="km-container km-header__top-inner">
+      <a href="{{ routes.root_url }}" class="km-header__logo" aria-label="{{ shop.name }}">
+        {%- if section.settings.logo != blank -%}
+          {{ section.settings.logo | image_url: width: 400 | image_tag:
+            loading: 'eager',
+            width: 200,
+            height: 74,
+            alt: shop.name,
+            class: 'km-header__logo-img'
+          }}
+        {%- else -%}
+          <img src="{{ 'logo.webp' | asset_url }}" alt="{{ shop.name }}" width="200" height="74" class="km-header__logo-img">
+        {%- endif -%}
+      </a>
+
+      <div class="km-header__search-wrap km-header__search-wrap--desktop" data-km-search>
+        <form action="{{ routes.search_url }}" method="get" role="search" class="km-header__search">
+          {%- render 'icon', icon: 'search' -%}
+          <input
+            type="search"
+            name="q"
+            value="{{ search.terms | escape }}"
+            placeholder="{{ section.settings.search_placeholder | default: 'Search performance hardware...' }}"
+            aria-label="{{ 'general.accessibility.search' | t }}"
+            class="km-header__search-input"
+            autocomplete="off"
+            data-km-search-input
+          >
+          <input type="hidden" name="type" value="product">
+          <input type="hidden" name="options[prefix]" value="last">
+        </form>
+        <div class="km-header__search-results" data-km-search-results hidden>
+          <div class="km-header__search-inner" data-km-search-inner></div>
+        </div>
+      </div>
+
+      <div class="km-header__actions">
+        {%- if section.settings.show_account -%}
+          <a href="{{ routes.account_url }}" aria-label="Account" class="km-header__icon-btn">
+            {%- render 'icon', icon: 'user' -%}
+          </a>
+        {%- endif -%}
+        <a href="{{ routes.cart_url }}" aria-label="Cart" class="km-header__icon-btn km-header__cart">
+          {%- render 'icon', icon: 'cart' -%}
+          {%- if cart.item_count > 0 -%}
+            <span class="km-header__cart-count" data-km-cart-count>{{ cart.item_count }}</span>
+          {%- endif -%}
+        </a>
+        <button type="button" class="km-header__menu-toggle" data-km-menu-toggle aria-expanded="false" aria-label="{{ 'general.accessibility.menu' | t }}">
+          {%- render 'icon', icon: 'menu' -%}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} Bottom row — white bar with nav links + COLLECTIONS mega menu {%- endcomment -%}
+  <div class="km-header__bottom">
+    <div class="km-container">
+      <nav class="km-header__nav" role="navigation" aria-label="Primary" data-km-menu>
+        <button type="button" class="km-header__nav-close" data-km-menu-close aria-label="Close menu">
+          {%- render 'icon', icon: 'close' -%}
+        </button>
+
+        <div class="km-header__search-wrap km-header__search-wrap--mobile" data-km-search>
+          <form action="{{ routes.search_url }}" method="get" role="search" class="km-header__search">
+            {%- render 'icon', icon: 'search' -%}
+            <input
+              type="search"
+              name="q"
+              value="{{ search.terms | escape }}"
+              placeholder="{{ section.settings.search_placeholder | default: 'Search hardware...' }}"
+              aria-label="{{ 'general.accessibility.search' | t }}"
+              class="km-header__search-input"
+              autocomplete="off"
+              data-km-search-input
+            >
+            <input type="hidden" name="type" value="product">
+            <input type="hidden" name="options[prefix]" value="last">
+          </form>
+          <div class="km-header__search-results" data-km-search-results hidden>
+            <div class="km-header__search-inner" data-km-search-inner></div>
+          </div>
+        </div>
+        <ul class="km-header__menu">
+          {%- assign main_menu = section.settings.menu -%}
+          {%- if main_menu != blank -%}
+            {%- for link in main_menu.links -%}
+            {%- assign is_mega = false -%}
+            {%- if link.title == 'COLLECTIONS' or link.title == 'Collections' or link.title == 'Shop' -%}
+              {%- if link.links.size > 0 -%}
+                {%- assign is_mega = true -%}
+              {%- endif -%}
+            {%- endif -%}
+
+            <li class="km-header__menu-item {% if is_mega %}km-header__menu-item--mega{% endif %}">
+              <a href="{{ link.url | default: '#' }}" class="km-header__menu-link">
+                <span>{{ link.title }}</span>
+              </a>
+              {%- if is_mega -%}
+                <span class="km-header__desktop-chevron">{%- render 'icon', icon: 'chevron-down' -%}</span>
+                <button type="button" class="km-header__mobile-expand" data-km-mega-toggle aria-expanded="false" aria-label="Toggle collections menu">
+                  {%- render 'icon', icon: 'chevron-down' -%}
+                </button>
+                {% render 'header-megamenu', mega_link: link %}
+              {%- elsif link.links.size > 0 -%}
+                {%- comment -%} Standard dropdown if not designated as mega {%- endcomment -%}
+                <span class="km-header__desktop-chevron">{%- render 'icon', icon: 'chevron-down' -%}</span>
+                <ul class="km-header__dropdown">
+                  {%- for child in link.links -%}
+                    <li><a href="{{ child.url }}">{{ child.title }}</a></li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+          {%- endif -%}
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<style>
+  .km-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: var(--km-body-bg);
+    transition: box-shadow var(--km-transition);
+  }
+  .km-header.is-scrolled {
+    box-shadow: 0 2px 12px rgba(0,0,0,.08);
+  }
+
+  .km-header__top {
+    background: var(--km-header-bar);
+    color: #fff;
+    border-bottom: 2px solid var(--km-accent);
+  }
+  .km-header__top-inner {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding-top: 18px;
+    padding-bottom: 18px;
+  }
+
+  .km-header__logo { display: block; flex-shrink: 0; }
+  .km-header__logo-img { width: auto; height: 72px; object-fit: contain; display: block; }
+
+
+  .km-header__actions { display: flex; align-items: center; gap: 14px; }
+  .km-header__icon-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    color: #fff;
+    transition: background var(--km-transition);
+  }
+  .km-header__icon-btn:hover { background: rgba(255,255,255,.1); }
+  .km-header__cart-count {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 9px;
+    background: var(--km-accent);
+    color: #000;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .km-header__menu-toggle {
+    display: none;
+    width: 44px; height: 44px;
+    border: 0;
+    background: transparent;
+    color: #fff;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .km-header__bottom {
+    background: var(--km-surface);
+    border-bottom: 2px solid var(--km-accent);
+    position: relative;
+  }
+  .km-header__nav { display: flex; justify-content: center; }
+  .km-header__menu {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 44px;
+  }
+  .km-header__menu-link {
+    display: block;
+    padding: 12px 0;
+    font-size: 13px;
+    letter-spacing: .12em;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--km-heading);
+    position: relative;
+  }
+  .km-header__menu-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 100%;
+    bottom: 4px;
+    height: 2px;
+    background: var(--km-primary);
+    transition: right var(--km-transition);
+  }
+  .km-header__menu-link:hover::after { right: 0; }
+  .km-header__desktop-chevron {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--km-heading);
+    margin-left: 4px;
+    padding: 12px 0;
+  }
+  .km-header__desktop-chevron svg {
+    width: 12px; height: 12px;
+    transition: transform .25s ease;
+  }
+  .km-header__menu-item--mega:hover .km-header__desktop-chevron svg {
+    transform: rotate(180deg);
+  }
+  .km-header__mobile-expand { display: none; }
+  .km-header__nav-close { display: none; }
+
+  /* STANDARD DROPDOWN */
+  .km-header__menu-item { position: relative; }
+  .km-header__dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #fff;
+    min-width: 200px;
+    border-top: 2px solid var(--km-accent);
+    box-shadow: 0 4px 12px rgba(0,0,0,.1);
+    list-style: none;
+    padding: 10px 0;
+    margin: 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all .2s ease;
+    z-index: 1000;
+  }
+  .km-header__menu-item:hover .km-header__dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  .km-header__dropdown a {
+    display: block;
+    padding: 8px 20px;
+    font-size: 13px;
+    color: var(--km-text);
+    text-decoration: none;
+    transition: background .2s ease;
+  }
+  .km-header__dropdown a:hover {
+    background: var(--km-body-bg);
+    color: var(--km-heading);
+  }
+
+  /* MEGA MENU */
+  .km-header__menu-item--mega { position: static; display: inline-flex; align-items: center; }
+  .km-mega {
+    position: absolute;
+    top: 100%;
+    left: 0; right: 0;
+    background: #fff;
+    border-top: 1px solid var(--km-border);
+    border-bottom: 4px solid var(--km-accent);
+    box-shadow: 0 12px 32px rgba(0,0,0,.08);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity .2s ease, visibility .2s ease, transform .2s ease;
+    z-index: 999;
+  }
+  .km-header__menu-item--mega:hover .km-mega,
+  .km-header__menu-item--mega:focus-within .km-mega {
+    opacity: 1; visibility: visible; transform: translateY(0);
+  }
+  .km-header__menu-item--mega:hover .km-header__desktop-chevron svg {
+    transform: rotate(180deg);
+  }
+  .km-mega__inner { padding: 36px 32px 28px; }
+  .km-mega__grid {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 28px 24px;
+  }
+  .km-mega__col { min-width: 0; }
+  .km-mega__brand {
+    display: block;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--km-heading);
+    text-decoration: none;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--km-accent);
+  }
+  .km-mega__brand:hover { color: var(--km-accent); }
+  .km-mega__list {
+    list-style: none;
+    padding: 0; margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .km-mega__list a {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--km-text);
+    text-decoration: none;
+    line-height: 1.4;
+    transition: color .15s ease;
+  }
+  .km-mega__list a:hover { color: var(--km-heading); text-decoration: underline; }
+  .km-mega__footer {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid var(--km-border);
+    display: flex;
+    justify-content: flex-end;
+  }
+  .km-mega__view-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--km-heading);
+    text-decoration: none;
+  }
+  .km-mega__view-all:hover { color: var(--km-accent); }
+  .km-mega__view-all svg { width: 14px; height: 14px; }
+
+  @media (max-width: 1100px) {
+    .km-mega__grid { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  @media (max-width: 900px) {
+    .km-header__top-inner { gap: 12px; padding-top: 12px; padding-bottom: 12px; }
+    .km-header__logo-img { height: 44px; }
+    .km-header__search-wrap { max-width: none; }
+    .km-header__search { padding: 8px 14px; }
+    .km-header__menu-toggle { display: inline-flex; }
+    .km-header__bottom { background: none; border: 0; position: static; display: block; }
+    .km-header__nav {
+      position: fixed;
+      inset: 0;
+      background: #fff;
+      z-index: 10000;
+      padding: 80px 24px 24px;
+      overflow-y: auto;
+      transform: translateX(100%);
+      transition: transform 0.3s ease-in-out;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .km-header__nav.is-open {
+      transform: translateX(0);
+      visibility: visible;
+      pointer-events: auto;
+    }
+    .km-header__nav-close {
+      display: block;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      color: var(--km-heading);
+    }
+    .km-header__menu { flex-direction: column; gap: 0; }
+    .km-header__menu-item {
+      position: relative;
+      border-bottom: 1px solid var(--km-border);
+    }
+    .km-header__menu-item--mega {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .km-header__menu-link {
+      padding: 16px 0;
+      display: inline-flex;
+      align-items: center;
+      flex: 1;
+      min-width: 0;
+    }
+    .km-header__menu-link svg { display: none; }
+    .km-header__desktop-chevron { display: none; }
+    .km-header__mobile-expand {
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      width: 56px;
+      height: 56px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--km-heading);
+      flex-shrink: 0;
+    }
+    .km-header__mobile-expand svg {
+      width: 16px;
+      height: 16px;
+      transition: transform .25s ease;
+    }
+    .km-header__menu-item--mega.is-mega-open .km-header__mobile-expand svg {
+      transform: rotate(180deg);
+      color: var(--km-accent);
+    }
+
+    /* Mobile Mega Menu Accordion */
+    .km-mega {
+      position: static;
+      display: none;
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      box-shadow: none;
+      border: none;
+      background: transparent;
+    }
+    .km-header__menu-item--mega.is-mega-open .km-mega { display: none !important; }
+    .km-header__menu-item--mega.is-mega-open .km-mega-mobile { display: block !important; width: 100%; }
+    .km-mega__inner { padding: 16px 0 24px; }
+    .km-mega__grid { grid-template-columns: 1fr; gap: 24px; }
+  }
+
+  @media (max-width: 520px) {
+    .km-header__search svg { display: none; }
+  }
+</style>
+
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "Search placeholder",
+      "default": "Search performance hardware..."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_account",
+      "label": "Show account icon",
+      "default": false
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    }
+  ]
+}
+{% endschema %}
+{% comment %} Sync: Wed Apr 22 14:49:52 IST 2026 {% endcomment %}

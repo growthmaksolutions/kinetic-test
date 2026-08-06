@@ -1,0 +1,411 @@
+{%- comment -%}
+  ------------------------------------------------------------
+  Model Chooser — "Choose Your Model"
+  STACKED layout: each model in its own row with before/after
+  slider + description + category pills. Rows alternate
+  image left/right.
+  ------------------------------------------------------------
+{%- endcomment -%}
+
+<section class="km-section km-models" id="Section-{{ section.id }}">
+  <div class="km-container">
+    <header class="km-models__header">
+      <h2 class="km-section-heading">{{ section.settings.heading | default: 'Choose Your Model' }}</h2>
+      {%- if section.settings.subheading != blank -%}
+        <p class="km-muted">{{ section.settings.subheading }}</p>
+      {%- endif -%}
+    </header>
+
+    <div class="km-models__list">
+      {%- if section.blocks.size > 0 -%}
+        {%- for block in section.blocks -%}
+          <article class="km-models__row{% assign _idx_mod = forloop.index | modulo: 2 %}{% if _idx_mod == 0 %} is-reverse{% endif %}" {{ block.shopify_attributes }}>
+            <div class="km-models__compare" data-km-compare>
+              <div class="km-models__compare-before">
+                {%- if block.settings.before_image != blank -%}
+                  <img src="{{ block.settings.before_image | image_url: width: 1800 }}" alt="{{ block.settings.name }} before" loading="lazy" width="900" height="563">
+                {%- else -%}
+                  <img src="{{ block.settings.before_asset | default: 'model-sportster-before.png' | asset_url }}" alt="{{ block.settings.name }} before" loading="lazy" width="900" height="563">
+                {%- endif -%}
+                <span class="km-models__compare-label is-before">Before</span>
+              </div>
+              <div class="km-models__compare-after" data-km-compare-after>
+                {%- if block.settings.after_image != blank -%}
+                  <img src="{{ block.settings.after_image | image_url: width: 1800 }}" alt="{{ block.settings.name }} after" loading="lazy" width="900" height="563">
+                {%- else -%}
+                  <img src="{{ block.settings.after_asset | default: 'model-sportster-after.png' | asset_url }}" alt="{{ block.settings.name }} after" loading="lazy" width="900" height="563">
+                {%- endif -%}
+                <span class="km-models__compare-label is-after">After</span>
+              </div>
+              <div class="km-models__compare-handle" data-km-compare-handle aria-label="Drag to compare" role="slider" aria-valuemin="0" aria-valuemax="100">
+                <span class="km-models__compare-handle-dot">
+                  {%- render 'icon', icon: 'chevron-left' -%}{%- render 'icon', icon: 'chevron-right' -%}
+                </span>
+              </div>
+            </div>
+
+            <div class="km-models__info">
+              <h3 class="km-models__title">{{ block.settings.name }}</h3>
+              {%- if block.settings.description != blank -%}
+                <p class="km-models__desc">{{ block.settings.description }}</p>
+              {%- endif -%}
+              {%- if block.settings.categories != blank -%}
+                <div class="km-models__cats">
+                  <span class="km-models__cats-label">Choose category :</span>
+                  <div class="km-models__cats-list">
+                    {%- assign cat_lines = block.settings.categories | newline_to_br | split: '<br />' -%}
+                    {%- for raw in cat_lines -%}
+                      {%- assign line = raw | strip -%}{%- if line == blank -%}{%- continue -%}{%- endif -%}
+                      {%- assign parts = line | split: '|' -%}
+                      <a href="{{ parts[1] | default: '#' | strip }}" class="km-models__cat-pill">{{ parts[0] | strip }}{%- render 'icon', icon: 'arrow-right' -%}</a>
+                    {%- endfor -%}
+                  </div>
+                </div>
+              {%- endif -%}
+              {%- if block.settings.cta_label != blank -%}
+                <a href="{{ block.settings.cta_url | default: '#' }}" class="km-btn km-btn-primary">{{ block.settings.cta_label }}{%- render 'icon', icon: 'arrow-right' -%}</a>
+              {%- endif -%}
+            </div>
+          </article>
+        {%- endfor -%}
+      {%- else -%}
+        {%- comment -%} Fallback when no blocks configured {%- endcomment -%}
+        {%- assign fallback_models = 'Harley Davidson Sportster|sportster|model-sportster-before.png|model-sportster-after.png|The Harley-Davidson Sportster has been a symbol of versatility and style since 1957, beloved by riders for its adaptability and iconic look. Our Harley-Davidson Sportster collections bring together premium exhausts, handlebars, grips, lighting, intake systems, footpegs, shifters, accessories, and services, selected for precise fitment and dependable performance.|Accessories,Footpegs and Shifters,Exhausts,Covers-Decals-Armor,Handlebars,Lighting,Grips,Services,Intake Systems^^Harley Davidson Softail|softail|model-softail-before.png|model-softail-after.webp|The Softail blends classic styling with modern ride comfort. Our Softail collections bring together engineered exhausts, handlebars, seats, covers, accessories, and services — chosen for direct fitment and dependable performance.|Accessories,Exhausts,Handlebars,Seats,Covers-Decals-Armor,Lighting^^Harley Davidson Dyna|dyna|model-dyna-before.png|model-dyna-after.webp|The Dyna platform is built for riders who push the limits. Our Dyna collections include full exhaust systems, precision shifters, intake kits, handlebars, lighting, and accessories — all selected for direct bolt-on fitment.|Accessories,Footpegs and Shifters,Exhausts,Handlebars,Lighting,Intake Systems^^Triumph|triumph|model-triumph-before.png|model-triumph-after.webp|From Bonneville to Speed Twin, Triumph is a hallmark of British engineering and classic styling. Our Triumph collections feature high-flow intakes, custom exhausts, CNC-machined cockpit parts, lighting, and accessories.|Accessories,Faceplates,Exhausts,Grips^^Honda CB Series|honda|model-honda-before.png|model-honda-after.webp|Honda builds some of the most reliable and versatile motorcycles on the road. Our Honda collections include intake kits, exhaust systems, handlebars, grips, lighting, and accessories.|Accessories,Exhausts,Suspension and Chassis,Handlebars,Grips^^Indian Motorcycle|indian|model-sportster-before.png|model-sportster-after.png|Indian builds American touring and cruiser motorcycles known for power, presence, and craftsmanship. Our Indian collections include premium custom exhaust systems engineered for the Scout platform.|Exhausts' | split: '^^' -%}
+
+        {%- for entry in fallback_models -%}
+          {%- assign m = entry | split: '|' -%}
+          {%- assign model_name = m[0] -%}
+          {%- assign model_handle = m[1] -%}
+          {%- assign before_img = m[2] -%}
+          {%- assign after_img = m[3] -%}
+          {%- assign model_desc = m[4] -%}
+          {%- assign model_cats = m[5] | split: ',' -%}
+
+          <article class="km-models__row{% assign _idx_mod = forloop.index | modulo: 2 %}{% if _idx_mod == 0 %} is-reverse{% endif %}">
+            <div class="km-models__compare" data-km-compare>
+              <div class="km-models__compare-before">
+                <img src="{{ before_img | asset_url }}" alt="{{ model_name }} before" loading="lazy" width="900" height="563">
+                <span class="km-models__compare-label is-before">Before</span>
+              </div>
+              <div class="km-models__compare-after" data-km-compare-after>
+                <img src="{{ after_img | asset_url }}" alt="{{ model_name }} after" loading="lazy" width="900" height="563">
+                <span class="km-models__compare-label is-after">After</span>
+              </div>
+              <div class="km-models__compare-handle" data-km-compare-handle role="slider" aria-valuemin="0" aria-valuemax="100">
+                <span class="km-models__compare-handle-dot">{%- render 'icon', icon: 'chevron-left' -%}{%- render 'icon', icon: 'chevron-right' -%}</span>
+              </div>
+            </div>
+            <div class="km-models__info">
+              <h3 class="km-models__title">{{ model_name }}</h3>
+              <p class="km-models__desc">{{ model_desc }}</p>
+              <div class="km-models__cats">
+                <span class="km-models__cats-label">Choose category :</span>
+                <div class="km-models__cats-list">
+                  {%- for c in model_cats -%}
+                    {%- assign c_label = c | strip -%}
+                    {%- assign c_slug = c_label | downcase | replace: ' ', '-' -%}
+                    {%- comment -%} Try to construct a likely handle based on model handle {%- endcomment -%}
+                    {%- assign possible_handle = 'harley-davidson-' | append: model_handle | append: '-' | append: c_slug -%}
+                    {%- if model_handle == 'triumph' or model_handle == 'indian' or model_handle == 'honda' -%}
+                       {%- assign possible_handle = model_handle | append: '-' | append: c_slug -%}
+                    {%- endif -%}
+                    
+                    {%- comment -%} 
+                      Special cases for existing known handles if possible, 
+                      otherwise just link to the main model collection as a safe bet if the specific one might 404.
+                    {%- endcomment -%}
+                    <a href="/collections/{{ model_handle }}" class="km-models__cat-pill">{{ c_label }}{%- render 'icon', icon: 'arrow-right' -%}</a>
+                  {%- endfor -%}
+                </div>
+              </div>
+            </div>
+          </article>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .km-models { background: var(--km-body-bg, #EDEDED); padding: 64px 0; }
+  .km-models__header { text-align: center; max-width: 680px; margin: 0 auto 48px; }
+  .km-models__header h2 { margin-bottom: 8px; }
+
+  /* ---------- Stacked rows ---------- */
+  .km-models__list { display: flex; flex-direction: column; gap: 80px; }
+  .km-models__row {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+  /* Alternate: image on right */
+  .km-models__row.is-reverse {
+    grid-template-columns: 1fr 1.2fr;
+  }
+  .km-models__row.is-reverse .km-models__compare { order: 2; }
+  .km-models__row.is-reverse .km-models__info { order: 1; }
+
+  /* ---------- Before / After slider ---------- */
+  .km-models__compare {
+    position: relative;
+    aspect-ratio: 16/10;
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: ew-resize;
+    user-select: none;
+    background: #000;
+  }
+  .km-models__compare-before,
+  .km-models__compare-after {
+    position: absolute;
+    inset: 0;
+  }
+  .km-models__compare img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  .km-models__compare-after {
+    clip-path: inset(0 0 0 50%);
+    will-change: clip-path;
+  }
+  .km-models__compare-label {
+    position: absolute;
+    top: 16px;
+    padding: 6px 14px;
+    border-radius: 9999px;
+    background: rgba(0,0,0,.7);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    backdrop-filter: blur(6px);
+    z-index: 3;
+  }
+  .km-models__compare-label.is-before { left: 16px; }
+  .km-models__compare-label.is-after { right: 16px; background: rgba(251,176,61,.95); color: #000; }
+
+  .km-models__compare-handle {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 50%;
+    width: 3px;
+    background: #fff;
+    transform: translateX(-50%);
+    z-index: 2;
+    pointer-events: none;
+  }
+  .km-models__compare-handle-dot {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #fff;
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 20px rgba(0,0,0,.25);
+    pointer-events: auto;
+    cursor: ew-resize;
+  }
+  .km-models__compare-handle-dot svg:first-child { margin-right: -4px; }
+  .km-models__compare-handle-dot svg:last-child { margin-left: -4px; }
+
+  /* ---------- Info panel ---------- */
+  .km-models__info { padding: 0 16px; }
+  .km-models__title {
+    font-size: clamp(22px, 2.2vw, 30px);
+    font-weight: 700;
+    margin: 0 0 12px;
+    color: var(--km-heading, #000);
+    letter-spacing: -.01em;
+  }
+  .km-models__desc {
+    color: var(--km-text, #4B5563);
+    line-height: 1.7;
+    font-size: 14px;
+    margin: 0 0 22px;
+  }
+
+  .km-models__cats { margin-bottom: 20px; }
+  .km-models__cats-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--km-heading, #000);
+  }
+  .km-models__cats-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .km-models__cat-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    background: #000;
+    color: #fff;
+    border-radius: 9999px;
+    text-decoration: none;
+    transition: background .2s ease;
+    max-width: 100%;
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.2;
+    text-align: center;
+    justify-content: center;
+  }
+  .km-models__cat-pill:hover { background: var(--km-accent, #FBB03D); color: #000; }
+  .km-models__cat-pill svg { width: 12px; height: 12px; }
+
+  @media (max-width: 900px) {
+    .km-models__row,
+    .km-models__row.is-reverse {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    .km-models__row.is-reverse .km-models__compare,
+    .km-models__row.is-reverse .km-models__info { order: initial; }
+    .km-models__info { padding: 0; }
+  }
+</style>
+
+<script>
+(() => {
+  document.querySelectorAll('#Section-{{ section.id }} .km-models__compare[data-km-compare]').forEach((root) => {
+    const afterEl = root.querySelector('[data-km-compare-after]');
+    const handle  = root.querySelector('[data-km-compare-handle]');
+    if (!afterEl || !handle) return;
+    let dragging = false;
+
+    const setTo = (clientX) => {
+      const rect = root.getBoundingClientRect();
+      let pct = ((clientX - rect.left) / rect.width) * 100;
+      pct = Math.max(0, Math.min(100, pct));
+      afterEl.style.clipPath = `inset(0 0 0 ${pct}%)`;
+      handle.style.left = pct + '%';
+    };
+
+    root.addEventListener('pointerdown', (e) => { dragging = true; root.setPointerCapture?.(e.pointerId); setTo(e.clientX); });
+    root.addEventListener('pointermove', (e) => { if (dragging) setTo(e.clientX); });
+    root.addEventListener('pointerup', () => { dragging = false; });
+    root.addEventListener('pointercancel', () => { dragging = false; });
+    root.addEventListener('pointerleave', () => { dragging = false; });
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Model Chooser",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Choose Your Model"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Slide to see the transformation. Performance-engineered parts for every ride."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "model",
+      "name": "Motorcycle model",
+      "settings": [
+        { "type": "text", "id": "name", "label": "Model name", "default": "Harley Davidson Sportster" },
+        { "type": "image_picker", "id": "before_image", "label": "Before image" },
+        { "type": "text", "id": "before_asset", "label": "Before asset filename (fallback)", "default": "model-sportster-before.png" },
+        { "type": "image_picker", "id": "after_image", "label": "After image" },
+        { "type": "text", "id": "after_asset", "label": "After asset filename (fallback)", "default": "model-sportster-after.png" },
+        { "type": "textarea", "id": "description", "label": "Description", "default": "The Harley-Davidson Sportster has been a symbol of versatility and style since 1957, beloved by riders for its adaptability and iconic look. Our Harley-Davidson Sportster collections bring together premium exhausts, handlebars, grips, lighting, intake systems, footpegs, shifters, accessories, and services, selected for precise fitment and dependable performance. You save time, avoid compatibility issues, and upgrade with confidence using proven parts that enhance power, comfort, and overall appearance." },
+        { "type": "textarea", "id": "categories", "label": "Category pills (one per line: Label|URL)", "default": "Accessories|#\nFootpegs and Shifters|#\nExhausts|#\nCovers-Decals-Armor|#\nHandlebars|#\nLighting|#\nGrips|#\nServices|#\nIntake Systems|#" },
+        { "type": "text", "id": "cta_label", "label": "CTA label" },
+        { "type": "url", "id": "cta_url", "label": "CTA URL" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Model Chooser",
+      "blocks": [
+        {
+          "type": "model",
+          "settings": {
+            "name": "Harley Davidson Sportster",
+            "before_asset": "model-sportster-before.png",
+            "after_asset": "model-sportster-after.png",
+            "description": "The Harley-Davidson Sportster has been a symbol of versatility and style since 1957, beloved by riders for its adaptability and iconic look. Our Harley-Davidson Sportster collections bring together premium exhausts, handlebars, grips, lighting, intake systems, footpegs, shifters, accessories, and services, selected for precise fitment and dependable performance. You save time, avoid compatibility issues, and upgrade with confidence using proven parts that enhance power, comfort, and overall appearance.",
+            "categories": "Accessories|/collections/harley-davidson-sportster-accessories\nFootpegs and Shifters|/collections/harley-davidson-sportster-footpegs-shifters\nExhausts|/collections/harley-davidson-sportster-exhaust-systems\nCovers-Decals-Armor|/collections/harley-davidson-sportster-covers-decals-armor\nHandlebars|/collections/harley-davidson-sportster-handlebars\nLighting|/collections/harley-davidson-sportster-lighting\nGrips|/collections/harley-davidson-sportster-grips\nServices|/collections/harley-davidson-sportster-services\nIntake Systems|/collections/harley-davidson-sportster-intake-systems"
+          }
+        },
+        {
+          "type": "model",
+          "settings": {
+            "name": "Harley Davidson Softail",
+            "before_asset": "model-softail-before.png",
+            "after_asset": "model-softail-after.webp",
+            "description": "The Softail blends classic styling with modern ride comfort. Our Softail collections bring together engineered exhausts, handlebars, seats, covers, accessories, and services — chosen for direct fitment and dependable performance. Upgrade the look and feel of your Softail with parts proven to improve power, comfort, and overall appearance.",
+            "categories": "Accessories|/collections/harley-davidson-softail-accessories\nExhausts|/collections/harley-davidson-softail-exhaust-systems\nHandlebars|/collections/harley-davidson-softail-handlebars\nSeats|/collections/harley-davidson-softail-seats\nCovers-Decals-Armor|/collections/harley-davidson-softail-covers-decals-armor\nLighting|/collections/harley-davidson-softail-lighting\nFootpegs and Shifters|/collections/harley-davidson-softail-footpegs-shifters\nGrips|/collections/harley-davidson-softail-grips\nServices|/collections/harley-davidson-softail-services"
+          }
+        },
+        {
+          "type": "model",
+          "settings": {
+            "name": "Harley Davidson Dyna",
+            "before_asset": "model-dyna-before.png",
+            "after_asset": "model-dyna-after.webp",
+            "description": "The Dyna platform is built for riders who push the limits. Our Dyna collections include full exhaust systems, precision shifters, intake kits, handlebars, lighting, and accessories — all selected for direct bolt-on fitment. Unlock real power gains and ride-quality upgrades with proven, performance-tested parts.",
+            "categories": "Accessories|/collections/harley-davidson-dyna-accessories\nFootpegs and Shifters|/collections/harley-davidson-dyna-footpegs-shifters\nExhausts|/collections/harley-davidson-dyna-exhaust-systems\nCovers-Decals-Armor|/collections/harley-davidson-dyna-covers-decals-armor\nHandlebars|/collections/harley-davidson-dyna-handlebars\nLighting|/collections/harley-davidson-dyna-lighting\nGrips|/collections/harley-davidson-dyna-grips\nServices|/collections/harley-davidson-dyna-services\nIntake Systems|/collections/harley-davidson-dyna-intake-systems"
+          }
+        },
+        {
+          "type": "model",
+          "settings": {
+            "name": "Triumph",
+            "before_asset": "model-triumph-before.png",
+            "after_asset": "model-triumph-after.webp",
+            "description": "From Bonneville to Speed Twin, Triumph is a hallmark of British engineering and classic styling. Our Triumph collections feature high-flow intakes, custom exhausts, CNC-machined cockpit parts, lighting, and accessories — selected for precise fitment and dependable performance. Upgrade with confidence and keep your ride authentic.",
+            "categories": "Accessories|/collections/triumph-motorcycle-accessories\nFootpegs and Shifters|/collections/triumph-footpegs-shifters\nExhausts|/collections/triumph-exhaust-systems\nHandlebars|/collections/triumph-handlebars\nLighting|/collections/triumph-lighting\nGrips|/collections/triumph-motorcycle-grips\nIntake Systems|/collections/triumph-intake-systems\nServices|/collections/triumph-services"
+          }
+        },
+        {
+          "type": "model",
+          "settings": {
+            "name": "Honda",
+            "before_asset": "model-honda-before.png",
+            "after_asset": "model-honda-after.webp",
+            "description": "Honda builds some of the most reliable and versatile motorcycles on the road. Our Honda collections include intake kits, exhaust systems, handlebars, grips, lighting, and accessories — engineered for precise fitment across CB, cafe, and bobber platforms. Enhance power, comfort, and style with proven, direct-fit parts.",
+            "categories": "Accessories|/collections/honda-cb-accessories\nExhausts|/collections/honda-cb-exhaust-systems\nHandlebars|/collections/honda-cb-handlebars\nGrips|/collections/honda-cb-grips\nLighting|/collections/honda-cb-lighting\nIntake Systems|/collections/honda-cb-intake-systems\nFootpegs and Shifters|/collections/honda-cb-footpegs-shifters\nServices|/collections/honda-cb-services"
+          }
+        },
+        {
+          "type": "model",
+          "settings": {
+            "name": "Indian Motorcycle",
+            "before_asset": "model-indian-before.png",
+            "after_asset": "model-indian-after.png",
+            "description": "Indian builds American touring and cruiser motorcycles known for power, presence, and craftsmanship. Our Indian collections include premium custom exhaust systems engineered for the Scout platform.",
+            "categories": "Exhausts|/collections/indian-exhausts"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

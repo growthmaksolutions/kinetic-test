@@ -1,0 +1,317 @@
+{%- comment -%}
+  ------------------------------------------------------------
+  Main List Collections — Editable models list
+  ------------------------------------------------------------
+{%- endcomment -%}
+
+<section class="km-shop-models">
+  <div class="km-container">
+    <header class="km-shop-models__header">
+      <h1 class="km-shop-models__h1">{{ section.settings.heading | default: 'Shop Motorcycle Parts by Model' }}</h1>
+    </header>
+
+    <div class="km-shop-models__list">
+      {%- if section.blocks.size > 0 -%}
+        {%- assign model_count = 0 -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'model' -%}
+            {%- if model_count > 0 -%}</div></article>{%- endif -%}
+            {%- assign model_count = model_count | plus: 1 -%}
+            {%- assign is_reverse = false -%}
+            {%- assign mod_check = model_count | modulo: 2 -%}
+            {%- if section.settings.alternate_rows and mod_check == 0 -%}
+              {%- assign is_reverse = true -%}
+            {%- endif -%}
+
+            <article class="km-shop-models__row {% if is_reverse %}is-reverse{% endif %}" {{ block.shopify_attributes }}>
+              <div class="km-shop-models__compare" data-km-compare>
+                {%- if block.settings.image_before != blank -%}
+                  {{ block.settings.image_before | image_url: width: 1200 | image_tag: class: 'km-shop-models__img km-shop-models__img--before', loading: 'lazy' }}
+                {%- else -%}
+                  <img src="{{ 'model-sportster-before.png' | asset_url }}" alt="Before" class="km-shop-models__img km-shop-models__img--before" loading="lazy">
+                {%- endif -%}
+
+                {%- if block.settings.image_after != blank -%}
+                  {{ block.settings.image_after | image_url: width: 1200 | image_tag: class: 'km-shop-models__img km-shop-models__img--after', loading: 'lazy' }}
+                {%- else -%}
+                  <img src="{{ 'model-sportster-after.png' | asset_url }}" alt="After" class="km-shop-models__img km-shop-models__img--after" loading="lazy">
+                {%- endif -%}
+
+                <span class="km-shop-models__label km-shop-models__label--before">{{ block.settings.label_before | default: 'Before' }}</span>
+                <span class="km-shop-models__label km-shop-models__label--after">{{ block.settings.label_after | default: 'After' }}</span>
+                <div class="km-shop-models__handle" aria-hidden="true">
+                  <span class="km-shop-models__knob">
+                    {%- render 'icon', icon: 'chevron-left' -%}
+                    {%- render 'icon', icon: 'chevron-right' -%}
+                  </span>
+                </div>
+              </div>
+              <div class="km-shop-models__info">
+                <h2 class="km-shop-models__name">
+                  <a href="{{ block.settings.url | default: '#' }}">{{ block.settings.title }}</a>
+                </h2>
+                <div class="km-shop-models__desc">{{ block.settings.description }}</div>
+                <div class="km-shop-models__cats">
+                  <span class="km-shop-models__cats-label">{{ section.settings.cats_label | default: 'Choose category :' }}</span>
+                  <div class="km-shop-models__cats-list">
+          {%- elsif block.type == 'category' -%}
+            <a href="{{ block.settings.url | default: '#' }}" class="km-shop-models__pill" {{ block.shopify_attributes }}>
+              {{ block.settings.title }} {%- render 'icon', icon: 'arrow-right' -%}
+            </a>
+          {%- endif -%}
+          {%- if forloop.last and model_count > 0 -%}</div></div></article>{%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .km-shop-models { padding: 56px 0 96px; background: var(--km-body-bg, #EDEDED); }
+  .km-shop-models__header { margin-bottom: 56px; }
+  .km-shop-models__h1 {
+    font-size: clamp(32px, 4.4vw, 52px);
+    font-weight: 700;
+    letter-spacing: -.02em;
+    color: #000;
+    margin: 0;
+    line-height: 1.1;
+  }
+
+  .km-shop-models__list {
+    display: flex;
+    flex-direction: column;
+    gap: 96px;
+  }
+  .km-shop-models__row {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 56px;
+    align-items: center;
+  }
+  .km-shop-models__row.is-reverse {
+    grid-template-columns: 1fr 1.1fr;
+  }
+  .km-shop-models__row.is-reverse .km-shop-models__compare { order: 2; }
+  .km-shop-models__row.is-reverse .km-shop-models__info { order: 1; }
+
+  .km-shop-models__compare {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    border-radius: 20px;
+    overflow: hidden;
+    user-select: none;
+    background: #fff;
+    cursor: ew-resize;
+    touch-action: none;
+  }
+  .km-shop-models__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+  }
+  .km-shop-models__img--after {
+    clip-path: inset(0 50% 0 0);
+    will-change: clip-path;
+  }
+  .km-shop-models__label {
+    position: absolute;
+    top: 16px;
+    padding: 6px 14px;
+    border-radius: 9999px;
+    background: rgba(0,0,0,.7);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    backdrop-filter: blur(6px);
+    z-index: 3;
+    pointer-events: none;
+  }
+  .km-shop-models__label--before { left: 16px; }
+  .km-shop-models__label--after {
+    right: 16px;
+    background: rgba(251,176,61,.95);
+    color: #000;
+  }
+  .km-shop-models__handle {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 50%;
+    width: 3px;
+    background: #fff;
+    transform: translateX(-50%);
+    z-index: 2;
+    pointer-events: none;
+    will-change: left;
+  }
+  .km-shop-models__knob {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #fff;
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 20px rgba(0,0,0,.25);
+    pointer-events: auto;
+  }
+  .km-shop-models__knob svg:first-child { margin-right: -4px; }
+  .km-shop-models__knob svg:last-child { margin-left: -4px; }
+
+  .km-shop-models__name {
+    font-size: clamp(26px, 3vw, 38px);
+    font-weight: 700;
+    letter-spacing: -.01em;
+    color: #000;
+    margin: 0 0 18px;
+    line-height: 1.15;
+  }
+  .km-shop-models__name a { color: inherit; text-decoration: none; }
+  .km-shop-models__desc {
+    color: var(--km-text, #4B5563);
+    line-height: 1.7;
+    font-size: 15px;
+    margin: 0 0 28px;
+  }
+  .km-shop-models__desc strong { color: var(--km-heading, #000); font-weight: 700; }
+
+  .km-shop-models__cats-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    color: #000;
+    margin-bottom: 14px;
+  }
+  .km-shop-models__cats-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .km-shop-models__pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    background: #000;
+    color: #fff;
+    border-radius: 9999px;
+    text-decoration: none;
+    transition: background .2s ease, color .2s ease, transform .2s ease;
+  }
+  .km-shop-models__pill:hover {
+    background: var(--km-accent, #FBB03D);
+    color: #000;
+    transform: translateY(-1px);
+  }
+  .km-shop-models__pill svg { width: 12px; height: 12px; }
+
+  @media (max-width: 900px) {
+    .km-shop-models__list { gap: 56px; }
+    .km-shop-models__row,
+    .km-shop-models__row.is-reverse {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    .km-shop-models__row.is-reverse .km-shop-models__compare,
+    .km-shop-models__row.is-reverse .km-shop-models__info {
+      order: initial;
+    }
+  }
+</style>
+
+<script>
+(() => {
+  document.querySelectorAll('[data-km-compare]').forEach((root) => {
+    const after = root.querySelector('.km-shop-models__img--after');
+    const handle = root.querySelector('.km-shop-models__handle');
+    if (!after || !handle) return;
+    let dragging = false;
+
+    const setTo = (clientX) => {
+      const rect = root.getBoundingClientRect();
+      let pct = ((clientX - rect.left) / rect.width) * 100;
+      pct = Math.max(0, Math.min(100, pct));
+      after.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
+      handle.style.left = pct + '%';
+    };
+
+    const onDown = (e) => {
+      dragging = true;
+      root.setPointerCapture?.(e.pointerId);
+      setTo(e.clientX);
+    };
+    const onMove = (e) => {
+      if (!dragging) return;
+      setTo(e.clientX);
+    };
+    const onUp = (e) => {
+      dragging = false;
+      try { root.releasePointerCapture?.(e.pointerId); } catch (_) {}
+    };
+
+    root.addEventListener('pointerdown', onDown);
+    root.addEventListener('pointermove', onMove);
+    root.addEventListener('pointerup', onUp);
+    root.addEventListener('pointercancel', onUp);
+    root.addEventListener('pointerleave', onUp);
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Models List",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Shop Motorcycle Parts by Model" },
+    { "type": "text", "id": "cats_label", "label": "Categories label", "default": "Choose category :" },
+    { "type": "checkbox", "id": "alternate_rows", "label": "Alternate row layout", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "model",
+      "name": "Model Row",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Model Name", "default": "Harley Davidson Sportster" },
+        { "type": "richtext", "id": "description", "label": "Description" },
+        { "type": "url", "id": "url", "label": "Model Link" },
+        { "type": "image_picker", "id": "image_before", "label": "Image (Before)" },
+        { "type": "image_picker", "id": "image_after", "label": "Image (After)" },
+        { "type": "text", "id": "label_before", "label": "Label Before", "default": "Before" },
+        { "type": "text", "id": "label_after", "label": "Label After", "default": "After" }
+      ]
+    },
+    {
+      "type": "category",
+      "name": "Category Link",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Label", "default": "Accessories" },
+        { "type": "url", "id": "url", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Models List",
+      "blocks": [
+        { "type": "model", "settings": { "title": "Harley Davidson Sportster" } },
+        { "type": "category", "settings": { "title": "Accessories" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

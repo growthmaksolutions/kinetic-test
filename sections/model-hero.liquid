@@ -1,0 +1,241 @@
+{%- comment -%}
+  Model Hero Section — Specific to model collection pages.
+  Features a comparison slider and model description.
+  Supports metafields: custom.before_image, custom.after_image
+{%- endcomment -%}
+
+{%- assign meta_before = collection.metafields.custom.before_image.value -%}
+{%- assign meta_after  = collection.metafields.custom.after_image.value -%}
+
+<section class="km-model-hero" id="Section-{{ section.id }}">
+  <div class="km-container">
+    <header class="km-model-hero__header">
+      <h1 class="km-model-hero__title">{{ section.settings.heading | default: collection.title }}</h1>
+    </header>
+
+    <div class="km-model-hero__grid">
+      {%- comment -%} LEFT — Slider {%- endcomment -%}
+      <div class="km-model-hero__slider-wrap">
+        <div class="km-model-hero__compare" data-km-compare>
+          <div class="km-model-hero__compare-before">
+            {%- if section.settings.before_image != blank -%}
+              <img src="{{ section.settings.before_image | image_url: width: 1800 }}" alt="Before transformation" loading="lazy" width="900" height="563">
+            {%- elsif meta_before != blank -%}
+              <img src="{{ meta_before | image_url: width: 1800 }}" alt="Before transformation" loading="lazy" width="900" height="563">
+            {%- else -%}
+              <img src="{{ 'model-softail-before.png' | asset_url }}" alt="Before transformation" loading="lazy" width="900" height="563">
+            {%- endif -%}
+          </div>
+          <div class="km-model-hero__compare-after" data-km-compare-after>
+            {%- if section.settings.after_image != blank -%}
+              <img src="{{ section.settings.after_image | image_url: width: 1800 }}" alt="After transformation" loading="lazy" width="900" height="563">
+            {%- elsif meta_after != blank -%}
+              <img src="{{ meta_after | image_url: width: 1800 }}" alt="After transformation" loading="lazy" width="900" height="563">
+            {%- else -%}
+              <img src="{{ 'model-softail-after.webp' | asset_url }}" alt="After transformation" loading="lazy" width="900" height="563">
+            {%- endif -%}
+          </div>
+          
+          {%- comment -%} Labels moved outside to avoid clipping {%- endcomment -%}
+          <span class="km-model-hero__compare-label is-before">Before</span>
+          <span class="km-model-hero__compare-label is-after">After</span>
+
+          <div class="km-model-hero__compare-handle" data-km-compare-handle role="slider" aria-valuemin="0" aria-valuemax="100">
+            <span class="km-model-hero__compare-handle-dot">
+              {%- render 'icon', icon: 'chevron-left' -%}{%- render 'icon', icon: 'chevron-right' -%}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {%- comment -%} RIGHT — Description {%- endcomment -%}
+      <div class="km-model-hero__info">
+        <div class="km-model-hero__desc km-rte">
+          {{ section.settings.description | default: collection.description }}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .km-model-hero {
+    background: #fff;
+    padding: 64px 0;
+  }
+  .km-model-hero__header {
+    margin-bottom: 48px;
+  }
+  .km-model-hero__title {
+    font-size: clamp(32px, 4.5vw, 48px);
+    font-weight: 700;
+    letter-spacing: -.02em;
+    color: #000;
+    margin: 0;
+    line-height: 1.1;
+  }
+
+  .km-model-hero__grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+
+  /* Slider Logic (reused from model-chooser) */
+  .km-model-hero__compare {
+    position: relative;
+    aspect-ratio: 16/10;
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: ew-resize;
+    user-select: none;
+    background: #f3f4f6;
+  }
+  .km-model-hero__compare-before,
+  .km-model-hero__compare-after {
+    position: absolute;
+    inset: 0;
+  }
+  .km-model-hero__compare img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: contain;
+  }
+  .km-model-hero__compare-after {
+    clip-path: inset(0 0 0 50%);
+    will-change: clip-path;
+  }
+  .km-model-hero__compare-label {
+    position: absolute;
+    top: 16px;
+    padding: 6px 14px;
+    border-radius: 9999px;
+    background: rgba(0,0,0,.7);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    backdrop-filter: blur(6px);
+    z-index: 3;
+  }
+  .km-model-hero__compare-label.is-before { left: 16px; }
+  .km-model-hero__compare-label.is-after { right: 16px; background: var(--km-accent, #FBB03D); color: #000; }
+
+  .km-model-hero__compare-handle {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 50%;
+    width: 3px;
+    background: #fff;
+    transform: translateX(-50%);
+    z-index: 2;
+    pointer-events: none;
+  }
+  .km-model-hero__compare-handle-dot {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #fff;
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 20px rgba(0,0,0,.25);
+    pointer-events: auto;
+    cursor: ew-resize;
+  }
+  .km-model-hero__compare-handle-dot svg { width: 14px; height: 14px; }
+  .km-model-hero__compare-handle-dot svg:first-child { margin-right: -4px; }
+  .km-model-hero__compare-handle-dot svg:last-child { margin-left: -4px; }
+
+  .km-model-hero__info {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--km-text, #4B5563);
+  }
+
+  @media (max-width: 900px) {
+    .km-model-hero { padding: 40px 0; }
+    .km-model-hero__header { margin-bottom: 32px; }
+    .km-model-hero__grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    .km-model-hero__title {
+      font-size: 32px;
+      word-break: break-word;
+    }
+    .km-model-hero__compare {
+      max-width: 100%;
+    }
+  }
+</style>
+
+<script>
+(() => {
+  const initSlider = () => {
+    document.querySelectorAll('#Section-{{ section.id }} .km-model-hero__compare[data-km-compare]').forEach((root) => {
+      const afterEl = root.querySelector('[data-km-compare-after]');
+      const handle  = root.querySelector('[data-km-compare-handle]');
+      if (!afterEl || !handle) return;
+      let dragging = false;
+
+      const setTo = (clientX) => {
+        const rect = root.getBoundingClientRect();
+        let pct = ((clientX - rect.left) / rect.width) * 100;
+        pct = Math.max(0, Math.min(100, pct));
+        afterEl.style.clipPath = `inset(0 0 0 ${pct}%)`;
+        handle.style.left = pct + '%';
+      };
+
+      root.addEventListener('pointerdown', (e) => { dragging = true; root.setPointerCapture?.(e.pointerId); setTo(e.clientX); });
+      root.addEventListener('pointermove', (e) => { if (dragging) setTo(e.clientX); });
+      root.addEventListener('pointerup', () => { dragging = false; });
+      root.addEventListener('pointercancel', () => { dragging = false; });
+      root.addEventListener('pointerleave', () => { dragging = false; });
+    });
+  };
+  initSlider();
+  document.addEventListener('shopify:section:load', initSlider);
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Model Hero",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Leave blank to use collection title."
+    },
+    {
+      "type": "image_picker",
+      "id": "before_image",
+      "label": "Before Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "after_image",
+      "label": "After Image"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "info": "Leave blank to use collection description."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Model Hero"
+    }
+  ]
+}
+{% endschema %}

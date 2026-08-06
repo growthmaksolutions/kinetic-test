@@ -1,0 +1,65 @@
+{%- comment -%}
+  Reusable product row. Accepts:
+    heading  — section title (e.g. "Best Sellers")
+    products — delimited string (entry = title|model|price|asset|rating, rows separated by ||)
+    view_all_url — optional, adds VIEW ALL link on the right
+{%- endcomment -%}
+
+<section class="km-section km-pcarousel">
+  <div class="km-container">
+    <div class="km-section-row">
+      <h2 class="km-section-heading">{{ heading | default: 'Featured products' }}</h2>
+      <div class="km-pcarousel__actions">
+        {%- if view_all_url != blank -%}
+          <a href="{{ view_all_url }}" class="km-pcarousel__viewall">View All {%- render 'icon', icon: 'arrow-right' -%}</a>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <div class="km-pcarousel__viewport">
+      <div class="km-pcarousel__track">
+        {%- assign items = products | split: '||' -%}
+        {%- for entry in items -%}
+          {%- assign p = entry | split: '|' -%}
+          {%- assign card_url = '/collections/' | append: p[1] | downcase | replace: ' ', '-' -%}
+          <article class="km-pcarousel__card">
+            <a href="{{ card_url }}" class="km-pcarousel__imgwrap">
+              <img src="{{ p[3] | asset_url }}" width="400" height="400" loading="lazy" alt="{{ p[0] }}" class="km-pcarousel__img">
+            </a>
+            <div class="km-pcarousel__meta">
+              <h3 class="km-pcarousel__title"><a href="{{ card_url }}">{{ p[0] }}</a></h3>
+              <div class="km-pcarousel__model">
+                <img src="{{ 'icon-motor.png' | asset_url }}" width="16" height="16" alt="" class="km-pcarousel__model-icon" loading="lazy">
+                <span>{{ p[1] }}</span>
+              </div>
+              <div class="km-pcarousel__pricerow">
+                <span class="km-pcarousel__price">{{ p[2] }}</span>
+              </div>
+              {%- assign stars = p[4] | plus: 0 -%}
+              <div class="km-pcarousel__rating" aria-label="{{ stars }} out of 5 stars">
+                {%- for i in (1..5) -%}<span class="km-pcarousel__star{% if i > stars %} km-pcarousel__star--off{% endif %}">{%- render 'icon', icon: 'star' -%}</span>{%- endfor -%}
+              </div>
+            </div>
+          </article>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .km-pcarousel__viewall {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--km-text, #4B5563);
+    text-decoration: none;
+    transition: color .2s ease;
+  }
+  .km-pcarousel__viewall:hover { color: #000; }
+  .km-pcarousel__viewall svg { width: 14px; height: 14px; }
+</style>

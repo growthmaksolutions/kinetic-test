@@ -1,0 +1,54 @@
+{%- comment -%} Our Blogs — 3 article cards. {%- endcomment -%}
+<section class="km-section km-blogs">
+  <div class="km-container">
+    <header class="km-blogs__header">
+      <h2 class="km-section-heading">Our Blogs</h2>
+      <a href="/blogs" class="km-btn-view-all">View All</a>
+    </header>
+    <div class="km-blogs__grid">
+      {%- assign posts = 'The “Forever Bike” Philosophy: Customizing for Longevity,blog-1.png,the-forever-bike-philosophy|Unleashing Your Inner Biker: Your One-Stop Shop for Customizing Motorcycles,blog-2.jpeg,unleashing-your-inner-biker|Tips on Motorcycle Customization: A Complete Guide,blog-3.jpeg,tips-on-motorcycle-customization' | split: '|' -%}
+      {%- for post in posts -%}
+        {%- assign p = post | split: ',' -%}
+        <article class="km-blogs__card">
+          <a href="/blogs/news/{{ p[2] }}" class="km-blogs__media">
+            <img src="{{ p[1] | asset_url }}" width="400" height="260" loading="lazy" alt="{{ p[0] }}" class="km-blogs__img">
+          </a>
+          <div class="km-blogs__body">
+            <h3 class="km-blogs__title"><a href="/blogs/news/{{ p[2] }}">{{ p[0] }}</a></h3>
+            <a href="/blogs/news/{{ p[2] }}" class="km-blogs__readmore">Read Articles {%- render 'icon', icon: 'arrow-right' -%}</a>
+          </div>
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .km-blogs { padding: 64px 0; background: #fff; }
+  .km-blogs__header {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 24px; margin-bottom: 40px; flex-wrap: wrap;
+  }
+  .km-btn-view-all { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #000; text-decoration: none; }
+  .km-blogs__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+  .km-blogs__card { display: flex; flex-direction: column; gap: 18px; transition: transform .25s ease; }
+  .km-blogs__card:hover { transform: translateY(-3px); }
+  .km-blogs__media {
+    position: relative; display: block; aspect-ratio: 4 / 3; overflow: hidden;
+    border-radius: 20px; background: var(--km-body-bg, #EDEDED);
+  }
+  .km-blogs__img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
+  .km-blogs__card:hover .km-blogs__img { transform: scale(1.04); }
+  .km-blogs__body { padding: 0 4px; display: flex; flex-direction: column; gap: 14px; }
+  .km-blogs__title { font-size: 20px; font-weight: 700; line-height: 1.25; letter-spacing: -.01em; color: #000; margin: 0; }
+  .km-blogs__title a { color: inherit; text-decoration: none; }
+  .km-blogs__title a:hover { color: var(--km-accent, #FBB03D); }
+  .km-blogs__readmore {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 13px;
+    font-weight: 500; color: var(--km-text, #4B5563); text-decoration: none;
+  }
+  @media (max-width: 900px) {
+    .km-blogs__grid { grid-template-columns: 1fr; }
+    .km-blogs__header { flex-direction: column; align-items: flex-start; }
+  }
+</style>

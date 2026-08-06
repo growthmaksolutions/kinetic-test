@@ -46,8 +46,8 @@
         "show_breadcrumbs": true,
         "breadcrumb_home": "Home",
         "breadcrumb_separator": "›",
-        "breadcrumb_model_label": "{{ product.metafields.custom.model.value }}",
-        "breadcrumb_category_label": "{{ product.metafields.custom.product_category.value }}"
+        "breadcrumb_model_label": "",
+        "breadcrumb_category_label": ""
       }
     },
     "fitment": {

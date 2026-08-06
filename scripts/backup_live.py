@@ -11,7 +11,7 @@ Phase 0 item) is a separate, explicit step.
 
   python3 scripts/backup_live.py --env .env.live --out backups
 """
-import argparse, base64, json, os, ssl, sys, time, urllib.error, urllib.request
+import argparse, base64, json, os, ssl, time, urllib.error, urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -81,9 +81,10 @@ query($c:String){ products(first:100, after:$c){ nodes{
   descriptionHtml
   seo{ title description }
   featuredMedia{ preview{ image{ url } } }
-  media(first:25){ nodes{ ... on MediaImage { id image{ url altText } } } }
+  mediaCount{ count }
+  media(first:250){ nodes{ ... on MediaImage { id image{ url altText } } } }
   options{ name position optionValues{ name } }
-  variants(first:100){ nodes{ id title sku barcode price compareAtPrice position
+  variants(first:250){ nodes{ id title sku barcode price compareAtPrice position
      inventoryPolicy inventoryQuantity
      inventoryItem{ id tracked requiresShipping measurement{ weight{ value unit } } } } }
   metafields(first:50){ nodes{ namespace key type value definition{ id } } }

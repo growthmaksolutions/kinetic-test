@@ -207,7 +207,7 @@ mutation CreateKineticProduct($product: ProductCreateInput!) {
 MUT_VARIANT = """
 mutation SetVariant($productId: ID!, $variants: [ProductVariantsBulkInput!]!) {
   productVariantsBulkUpdate(productId: $productId, variants: $variants) {
-    productVariants { id sku price }
+    productVariants { id sku price inventoryItem { id } }
     userErrors { field message }
   }
 }
@@ -221,11 +221,26 @@ query FindByHandle($q: String!) {
 
 QUERY_SHOP = "query { shop { name myshopifyDomain currencyCode } }"
 
-QUERY_PUBS = "query { publications(first: 20) { nodes { id catalog { title } } } }"
+# Publication.name is deprecated in favour of catalog.title, but catalog comes
+# back null for channel publications, so name is the field that actually
+# resolves "Online Store". Read both and prefer whichever is populated.
+QUERY_PUBS = "query { publications(first: 20) { nodes { id name catalog { title } } } }"
 
 MUT_PUBLISH = """
 mutation Publish($id: ID!, $input: [PublicationInput!]!) {
   publishablePublish(id: $id, input: $input) {
+    userErrors { field message }
+  }
+}
+"""
+
+QUERY_LOCATION = "query { locations(first: 5) { nodes { id name isActive } } }"
+
+# Without this, a tracked variant sits at 0 with policy DENY and the storefront
+# renders it sold out with Add to Cart disabled.
+MUT_STOCK = """
+mutation SetStock($input: InventorySetQuantitiesInput!) {
+  inventorySetQuantities(input: $input) {
     userErrors { field message }
   }
 }
@@ -297,6 +312,9 @@ def main():
     ap.add_argument('--status', choices=['draft', 'active'], default='draft')
     ap.add_argument('--publish', action='store_true',
                     help='publish to the Online Store channel (needs --status active to be visible)')
+    ap.add_argument('--stock', type=int, default=25,
+                    help='units to stock at the primary location (0 to skip). Tracked '
+                         'variants left at 0 render as sold out. Default 25.')
     ap.add_argument('--env', default=os.path.join(ROOT, '.env'))
     args = ap.parse_args()
 
@@ -328,19 +346,40 @@ def main():
     print(f"mode     : {'APPLY' if args.apply else 'DRY RUN (nothing will be written)'}")
     print(f"status   : {args.status.upper()}\n")
 
+    location_id = None
+    if args.apply and args.stock > 0:
+        active = [l for l in shop.call(QUERY_LOCATION)['locations']['nodes'] if l['isActive']]
+        if active:
+            location_id = active[0]['id']
+            print(f"stock    : {args.stock} units at {active[0]['name']}")
+        else:
+            print("stock    : no active location — variants will stay at 0 (sold out)")
+
     pub_id = None
     if args.publish and args.apply:
         for node in shop.call(QUERY_PUBS)['publications']['nodes']:
-            title = (node.get('catalog') or {}).get('title') or ''
-            if 'online store' in title.lower():
+            label = node.get('name') or (node.get('catalog') or {}).get('title') or ''
+            if 'online store' in label.lower():
                 pub_id = node['id']
-        print(f"publication: {pub_id or 'Online Store not found — skipping publish'}\n")
+        if pub_id:
+            print(f"publication: Online Store -> {pub_id}\n")
+        else:
+            print("publication: Online Store not found — products will be created "
+                  "but stay unpublished\n")
 
     created = skipped = 0
     for p in PRODUCTS:
         existing = shop.call(QUERY_LOOKUP, {"q": f"handle:{p['handle']}"})['products']['nodes']
         if existing:
-            print(f"  skip   {p['handle']}  (already exists)")
+            # Already created, but it may still be unpublished — publishing is
+            # idempotent, so bring it up to date rather than skipping outright.
+            if pub_id:
+                perr = shop.call(MUT_PUBLISH, {"id": existing[0]['id'],
+                                               "input": [{"publicationId": pub_id}]})['publishablePublish']['userErrors']
+                print(f"  exists {p['handle']:42s} "
+                      f"{'publish failed: ' + str(perr) if perr else 'published to Online Store'}")
+            else:
+                print(f"  skip   {p['handle']}  (already exists)")
             skipped += 1
             continue
 
@@ -375,10 +414,20 @@ def main():
         if p["compare_at"]:
             variant["compareAtPrice"] = p["compare_at"]
 
-        verr = shop.call(MUT_VARIANT, {"productId": prod['id'],
-                                       "variants": [variant]})['productVariantsBulkUpdate']['userErrors']
-        if verr:
-            print(f"  warn   {p['handle']}: variant update -> {verr}")
+        vres = shop.call(MUT_VARIANT, {"productId": prod['id'],
+                                       "variants": [variant]})['productVariantsBulkUpdate']
+        if vres['userErrors']:
+            print(f"  warn   {p['handle']}: variant update -> {vres['userErrors']}")
+
+        if location_id and args.stock > 0 and vres['productVariants']:
+            inv_item = vres['productVariants'][0]['inventoryItem']['id']
+            serr = shop.call(MUT_STOCK, {"input": {
+                "name": "available", "reason": "restock", "ignoreCompareQuantity": True,
+                "quantities": [{"inventoryItemId": inv_item,
+                                "locationId": location_id, "quantity": args.stock}],
+            }})['inventorySetQuantities']['userErrors']
+            if serr:
+                print(f"  warn   {p['handle']}: stock -> {serr}")
 
         if pub_id:
             perr = shop.call(MUT_PUBLISH, {"id": prod['id'],

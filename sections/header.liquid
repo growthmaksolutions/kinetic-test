@@ -226,8 +226,12 @@
     display: inline-flex;
     align-items: center;
     flex-wrap: nowrap;
-    white-space: nowrap;
   }
+  /* nowrap belongs on the label only. white-space inherits, so setting it on
+     the list item pushed it into the mega panel and stopped the column
+     headings wrapping — "Parts & Accessories" then overran its neighbour. */
+  .km-header__menu-link > span { white-space: nowrap; }
+  .km-mega, .km-mega-mobile, .km-header__dropdown { white-space: normal; }
   .km-header__menu-link {
     display: block;
     padding: 12px 0;
@@ -328,9 +332,12 @@
     transform: rotate(180deg);
   }
   .km-mega__inner { padding: 36px 32px 28px; }
+  /* auto-fit, not a fixed count: the menu is merchant-editable, so the grid
+     has to hold 3 wide columns as readily as the 8 narrow brand columns it
+     was originally hard-coded for. */
   .km-mega__grid {
     display: grid;
-    grid-template-columns: repeat(8, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
     gap: 28px 24px;
   }
   .km-mega__col { min-width: 0; }

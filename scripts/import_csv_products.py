@@ -22,7 +22,8 @@ variants, images and every metafield.
   python3 scripts/import_csv_products.py --apply         # write
   python3 scripts/import_csv_products.py --apply --limit 5
 """
-import argparse, csv, html, json, os, re, ssl, time, urllib.error, urllib.request
+import argparse, csv, html, http.client, json, os, re, ssl, time
+import urllib.error, urllib.request
 from collections import OrderedDict
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -181,6 +182,14 @@ mutation ImportProduct($input: ProductSetInput!) {
 }
 """
 QUERY_SHOP = "query { shop { name myshopifyDomain currencyCode } }"
+QUERY_HANDLES = """
+query Handles($cursor: String) {
+  products(first: 250, after: $cursor) {
+    nodes { handle }
+    pageInfo { hasNextPage endCursor }
+  }
+}
+"""
 QUERY_PUBS = "query { publications(first: 20) { nodes { id name } } }"
 QUERY_LOC = "query { locations(first: 5) { nodes { id name isActive } } }"
 MUT_PUBLISH = """
@@ -210,10 +219,19 @@ class Shop:
                 with urllib.request.urlopen(req, timeout=90, context=self.ctx) as r:
                     payload = json.loads(r.read())
             except urllib.error.HTTPError as e:
-                if e.code in (429, 502, 503) and attempt < retries - 1:
+                if e.code in (429, 500, 502, 503, 504) and attempt < retries - 1:
                     time.sleep(2 * (attempt + 1))
                     continue
                 raise SystemExit(f"HTTP {e.code}: {e.read().decode(errors='replace')[:300]}")
+            except (urllib.error.URLError, ConnectionError, TimeoutError,
+                    http.client.HTTPException, OSError) as e:
+                # Shopify drops long-lived connections mid-import; a reset here
+                # is transient and the request is safe to repeat because
+                # productSet is keyed on handle.
+                if attempt < retries - 1:
+                    time.sleep(3 * (attempt + 1))
+                    continue
+                raise SystemExit(f"connection failed after {retries} attempts: {e!r}")
             errs = payload.get('errors')
             if errs:
                 if any('THROTTLED' in json.dumps(e) for e in errs) and attempt < retries - 1:
@@ -410,6 +428,10 @@ def main():
     ap.add_argument('--publish', action='store_true')
     ap.add_argument('--limit', type=int, default=0)
     ap.add_argument('--stock', type=int, default=25)
+    ap.add_argument('--skip-existing', action='store_true',
+                    help='skip handles already in the store. Use when resuming '
+                         'an interrupted run: productSet would otherwise re-send '
+                         'the image set for products that already have it.')
     ap.add_argument('--env', default=os.path.join(ROOT, '.env'))
     args = ap.parse_args()
 
@@ -442,10 +464,25 @@ def main():
             if (n.get('name') or '').lower() == 'online store':
                 pub_id = n['id']
 
-    ok = fail = 0
+    existing = set()
+    if args.skip_existing:
+        cursor = None
+        while True:
+            page = shop.call(QUERY_HANDLES, {"cursor": cursor})['products']
+            existing.update(n['handle'] for n in page['nodes'])
+            if not page['pageInfo']['hasNextPage']:
+                break
+            cursor = page['pageInfo']['endCursor']
+        already = sum(1 for h in groups if h in existing)
+        print(f"already in store: {already}/{len(groups)} — skipping those\n")
+
+    ok = fail = skipped = 0
     no_fit = no_spec = 0
     failures = []
     for i, (handle, rows) in enumerate(groups.items(), 1):
+        if handle in existing:
+            skipped += 1
+            continue
         inp, nspec, nfit = build_input(handle, rows, location_id, args.stock)
         if not nfit:
             no_fit += 1
@@ -473,7 +510,8 @@ def main():
         if i % 10 == 0 or i == len(groups):
             print(f"  [{i:3d}/{len(groups)}] ok={ok} fail={fail}   last={handle[:44]}")
 
-    print(f"\n{'imported' if args.apply else 'would import'}: {ok}   failed: {fail}")
+    print(f"\n{'imported' if args.apply else 'would import'}: {ok}   "
+          f"failed: {fail}   skipped (already present): {skipped}")
     print(f"products with no derived fitment_data: {no_fit}  (Gear/Parts have no model)")
     print(f"products with no derived spec_rows   : {no_spec}")
     if failures:

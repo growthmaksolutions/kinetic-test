@@ -134,8 +134,17 @@ def main():
                 self.send_response(404); self.end_headers(); return
             q = urllib.parse.parse_qs(parsed.query)
             if q.get('state', [''])[0] != state:
-                result['error'] = 'state mismatch — possible CSRF, aborting'
-            elif not verify_hmac(q, csec):
+                # A callback from an earlier attempt, still queued in the
+                # browser. Ignore it and keep waiting rather than aborting —
+                # `result` stays empty so the serve loop continues.
+                print("  (ignored a callback from a previous attempt)")
+                self.send_response(200)
+                self.send_header('Content-Type', 'text/html')
+                self.end_headers()
+                self.wfile.write(b"<h2>Stale callback ignored.</h2>"
+                                 b"<p>Open the newest URL from the terminal.</p>")
+                return
+            if not verify_hmac(q, csec):
                 result['error'] = 'HMAC verification failed — callback not from Shopify'
             elif not q.get('code'):
                 result['error'] = f"no code in callback: {parsed.query[:200]}"
@@ -161,7 +170,13 @@ def main():
     except Exception:
         pass
     print("waiting for the callback ... (Ctrl-C to abort)")
-    srv.handle_request()
+    # Serve until the callback actually lands. A single handle_request() would
+    # be consumed by the browser's favicon probe and exit empty-handed.
+    srv.timeout = 300
+    while not result:
+        srv.handle_request()
+        if not result:
+            print("  (ignored a non-callback request, still waiting)")
     srv.server_close()
 
     if 'error' in result:

@@ -11,7 +11,7 @@
             {%- if block.settings.image != blank -%}
               {{ block.settings.image | image_url: width: 120 | image_tag: width: 56, height: 56, loading: 'lazy' }}
             {%- else -%}
-              {%- render 'icon', icon: block.settings.icon | default: 'star' -%}
+              {%- render 'icon', icon: block.settings.icon, default: 'star' -%}
             {%- endif -%}
           </span>
           <h3>{{ block.settings.heading }}</h3>
@@ -83,3 +83,13 @@
   ]
 }
 {% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{%- render 'icon', icon: block.settings.icon | default: 'star' -%}"
+  to: "{%- render 'icon', icon: block.settings.icon, default: 'star' -%}"
+  position: 657..722
+{% endcomment %}

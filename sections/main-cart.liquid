@@ -92,7 +92,7 @@
           {%- for block in section.blocks -%}
             {%- if block.type == 'trust_badge' -%}
               <div class="km-cart__trust-item" {{ block.shopify_attributes }}>
-                <span class="km-cart__trust-icon">{%- render 'icon', icon: block.settings.icon | default: 'star' -%}</span>
+                <span class="km-cart__trust-icon">{%- render 'icon', icon: block.settings.icon, default: 'star' -%}</span>
                 <span>{{ block.settings.label }}</span>
               </div>
             {%- endif -%}
@@ -281,3 +281,13 @@
   ]
 }
 {% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{%- render 'icon', icon: block.settings.icon | default: 'star' -%}"
+  to: "{%- render 'icon', icon: block.settings.icon, default: 'star' -%}"
+  position: 4797..4862
+{% endcomment %}

@@ -336,7 +336,7 @@
                   {%- if block.settings.image != blank -%}
                     {{ block.settings.image | image_url: width: 80 | image_tag: width: 36, height: 36, loading: 'lazy' }}
                   {%- else -%}
-                    {%- render 'icon', icon: block.settings.icon | default: 'globe' -%}
+                    {%- render 'icon', icon: block.settings.icon, default: 'globe' -%}
                   {%- endif -%}
                 </span>
                 {{ block.settings.label }}
@@ -713,3 +713,13 @@
   ]
 }
 {% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{%- render 'icon', icon: block.settings.icon | default: 'globe' -%}"
+  to: "{%- render 'icon', icon: block.settings.icon, default: 'globe' -%}"
+  position: 17853..17919
+{% endcomment %}

@@ -50,7 +50,7 @@
           "type": "brand_menu",
           "settings": {
             "title": "Sportster",
-            "url": "/collections/sportster",
+            "url": "shopify://collections/harley-davidson-sportster-parts",
             "menu": "sportster"
           }
         },
@@ -58,7 +58,7 @@
           "type": "brand_menu",
           "settings": {
             "title": "Softail",
-            "url": "/collections/softail",
+            "url": "shopify://collections/harley-davidson-softail-parts",
             "menu": "softail"
           }
         },
@@ -66,7 +66,7 @@
           "type": "brand_menu",
           "settings": {
             "title": "Dyna",
-            "url": "/collections/dyna",
+            "url": "shopify://collections/harley-davidson-dyna-parts",
             "menu": "dyna"
           }
         },
@@ -74,7 +74,7 @@
           "type": "brand_menu",
           "settings": {
             "title": "Indian",
-            "url": "/collections/indian",
+            "url": "shopify://collections/indian-parts",
             "menu": "indian"
           }
         },
@@ -82,7 +82,7 @@
           "type": "brand_menu",
           "settings": {
             "title": "Honda",
-            "url": "/collections/honda",
+            "url": "shopify://collections/honda-cb-parts",
             "menu": "honda"
           }
         },
@@ -90,7 +90,7 @@
           "type": "brand_menu",
           "settings": {
             "title": "Triumph",
-            "url": "/collections/triumph",
+            "url": "shopify://collections/triumph-motorcycle-parts-accessories",
             "menu": "triumph"
           }
         },
@@ -98,7 +98,7 @@
           "type": "brand_menu",
           "settings": {
             "title": "Gear",
-            "url": "/collections/apparel",
+            "url": "shopify://collections/motorcycle-gear",
             "menu": "gear"
           }
         },
@@ -106,7 +106,7 @@
           "type": "brand_menu",
           "settings": {
             "title": "Parts",
-            "url": "/collections/exhausts",
+            "url": "shopify://collections/premium-motorcycle-parts",
             "menu": "parts"
           }
         }

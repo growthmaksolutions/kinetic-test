@@ -93,16 +93,18 @@
     {%- comment -%} BOTTOM STRIP (matches Webflow: payment + copyright + Terms & conditions) {%- endcomment -%}
     <div class="km-footer__bottom">
       <div class="km-footer__pay">
-        {%- for type in shop.enabled_payment_types -%}
+        {%- comment -%}
+          Icons come from the "Payment icons" setting so the strip is the same on
+          every store, whatever its payment providers. Blank falls back to the
+          methods actually enabled on the store.
+        {%- endcomment -%}
+        {%- assign pay_types = section.settings.payment_icons | remove: ' ' | split: ',' -%}
+        {%- if pay_types.size == 0 -%}
+          {%- assign pay_types = shop.enabled_payment_types -%}
+        {%- endif -%}
+        {%- for type in pay_types -%}
           {{ type | payment_type_svg_tag: class: 'km-footer__pay-icon' }}
         {%- endfor -%}
-        {%- if shop.enabled_payment_types.size == 0 -%}
-          {%- comment -%} Fallback if no payments enabled in dev {%- endcomment -%}
-          {{ 'visa' | payment_type_svg_tag: class: 'km-footer__pay-icon' }}
-          {{ 'master' | payment_type_svg_tag: class: 'km-footer__pay-icon' }}
-          {{ 'american_express' | payment_type_svg_tag: class: 'km-footer__pay-icon' }}
-          {{ 'paypal' | payment_type_svg_tag: class: 'km-footer__pay-icon' }}
-        {%- endif -%}
       </div>
 
       <p class="km-footer__copyright">© {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.</p>
@@ -206,7 +208,14 @@
     { "type": "image_picker", "id": "logo", "label": "Footer logo" },
     { "type": "text", "id": "tagline", "label": "Tagline", "default": "Performance parts for the ride of your life." },
     { "type": "header", "content": "Bottom Bar" },
-    { "type": "link_list", "id": "legal_menu", "label": "Legal Menu" }
+    { "type": "link_list", "id": "legal_menu", "label": "Legal Menu" },
+    {
+      "type": "text",
+      "id": "payment_icons",
+      "label": "Payment icons",
+      "default": "american_express, apple_pay, diners_club, discover, google_pay, jcb, master, paypal, visa",
+      "info": "Comma-separated payment types, shown in this order. Leave blank to show only the methods enabled on the store."
+    }
   ],
   "blocks": [
     {

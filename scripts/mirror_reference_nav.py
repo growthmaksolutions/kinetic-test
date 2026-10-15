@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-Mirror the reference store's header menu, and the collections it links to,
-onto the dev store, so the COLLECTIONS mega menu matches the reference.
+Mirror the reference store's header and footer menus, and the collections
+they link to, onto the dev store, so the COLLECTIONS mega menu and the footer
+columns match the reference.
 
 The reference store is only read. Writes go to the --to store, which must be
 a development store: the script refuses to write to production.
@@ -12,10 +13,13 @@ each copied rule is re-pointed at the target's own definition and fills itself
 with the target's matching products. Existing handles on the target are left
 alone, which makes re-runs safe.
 
-Menus copied: main-menu, plus the per-column menus the mega menu and footer
-brand blocks look up (sportster, softail, ...). Footer, company and support
-menus are not touched. The target's menus are snapshotted to backups/ before
-any write.
+Menus copied: main-menu, the per-column menus the mega menu looks up
+(sportster, softail, ...), and every menu a block in sections/footer-group.json
+renders (company, support and the brand row). Page links resolve to the
+target's page with the same handle, else the same page template, else the same
+title, so they land on the target's equivalent page rather than a copy. Menus
+whose content already matches are skipped. Before any write, the target's
+menus are snapshotted to a new timestamped file in backups/.
 
   python3 scripts/mirror_reference_nav.py                 # dry run
   python3 scripts/mirror_reference_nav.py --apply
@@ -37,7 +41,7 @@ Q_COLLECTION = '''query($h:String!){ collectionByHandle(handle:$h){
     references(first:50){ nodes{ ... on Collection{ handle } } } }
 } }'''
 Q_DEFS = '{ metafieldDefinitions(first:100, ownerType:PRODUCT){ nodes{ id namespace key } } }'
-Q_PAGES = '{ pages(first:250){ nodes{ id handle title } } blogs(first:50){ nodes{ id handle title } } }'
+Q_PAGES = '{ pages(first:250){ nodes{ id handle title templateSuffix } } blogs(first:50){ nodes{ id handle title } } }'
 Q_PUBS = '{ publications(first:20){ nodes{ id name } } }'
 Q_HANDLES = 'query($c:String){ collections(first:250, after:$c){ nodes{ id handle } pageInfo{ hasNextPage endCursor } } }'
 
@@ -93,9 +97,11 @@ def main():
 
     ref_menus = {m['handle']: m for m in must(src, Q_MENUS)['menus']['nodes']}
     main_menu = ref_menus['main-menu']
-    # The mega menu looks each column up as linklists[column.title | handleize].
+    # The mega menu looks each column up as linklists[column.title | handleize];
+    # the footer blocks name their menu in a setting.
     copy_menus = ['main-menu'] + [c['title'].strip().lower().replace(' ', '-')
                                   for top in main_menu['items'] for c in top['items'] or []]
+    copy_menus += footer_menus()
     copy_menus = [h for h in dict.fromkeys(copy_menus) if h in ref_menus]
 
     # Every collection a copied menu links to, plus any they list as children.
@@ -136,21 +142,56 @@ def main():
         }.items() if v not in (None, '')}
         print(f"  create {c['handle']:48s} {c['title']}  ({' & '.join(r['condition'] for r in rules)})")
 
-    pages = must(dst, Q_PAGES)
+    pages, ref_pages = must(dst, Q_PAGES), must(src, Q_PAGES)
 
     def resolve(kind, ref_handle, title):
-        pool = pages['pages' if kind == 'PAGE' else 'blogs']['nodes']
-        for p in pool:
-            if p['handle'] == ref_handle:
-                return p
-        for p in pool:
-            if p['title'].strip().lower() == title.strip().lower():
-                return p
-        raise SystemExit(f'target has no {kind.lower()} matching {ref_handle!r} / {title!r}')
+        key = 'pages' if kind == 'PAGE' else 'blogs'
+        pool = pages[key]['nodes']
+        ref = next((p for p in ref_pages[key]['nodes'] if p['handle'] == ref_handle), {})
+        tests = [lambda p: p['handle'] == ref_handle]
+        if ref.get('templateSuffix'):
+            tests.append(lambda p: p.get('templateSuffix') == ref['templateSuffix'])
+        tests.append(lambda p: p['title'].strip().lower() in
+                     {title.strip().lower(), ref.get('title', '').strip().lower()})
+        for test in tests:
+            hits = [p for p in pool if test(p)]
+            if len(hits) == 1:
+                return hits[0]
+        raise SystemExit(f'target has no single {kind.lower()} matching {ref_handle!r} / {title!r}')
+
+    def convert(items):
+        out = []
+        for i in items:
+            n = {'title': i['title'], 'type': i['type'], 'url': i['url']}
+            if i['type'] == 'COLLECTION':
+                n['resourceId'] = existing.get(handle_of(i['url']), '(to be created)')
+                n['url'] = f"/collections/{handle_of(i['url'])}"
+            elif i['type'] in ('PAGE', 'BLOG'):
+                p = resolve(i['type'], handle_of(i['url']), i['title'])
+                n['resourceId'] = p['id']
+                n['url'] = f"/{'pages' if i['type'] == 'PAGE' else 'blogs'}/{p['handle']}"
+            elif i['type'] not in ('COLLECTIONS', 'HTTP', 'SEARCH', 'CATALOG', 'FRONTPAGE'):
+                raise SystemExit(f"unsupported menu item type {i['type']} ({i['title']})")
+            if i.get('items'):
+                n['items'] = convert(i['items'])
+            out.append(n)
+        return out
+
+    def shape(items):
+        return [(i['title'], i['type'], i['url'].rstrip('/'), shape(i.get('items') or [])) for i in items]
+
+    current = {m['handle']: m for m in must(dst, Q_MENUS)['menus']['nodes']}
+    menu_plan = []
+    for h in copy_menus:
+        items = convert(ref_menus[h]['items'])
+        same = h in current and shape(current[h]['items']) == shape(items)
+        menu_plan.append((h, items, same))
+        print(f"  menu   {h:12s} {'unchanged' if same else 'update' if h in current else 'create'}")
+        if not same:
+            for it in _walk(items):
+                print(f"           {it['title']:28s} -> {it['url']}")
 
     if not args.apply:
-        for h in copy_menus:
-            print(f'  menu   {h}')
         print('\ndry run: nothing written')
         return
 
@@ -172,7 +213,8 @@ def main():
 
     # Collection metafields: the description and the child-collection list the
     # model template renders. Children are re-pointed at the target's own ids.
-    for h, c in wanted.items():
+    for c in to_create:
+        h = c['handle']
         mfs = []
         if c['description'] and c['description']['value']:
             mfs.append({'ownerId': existing[h], 'namespace': 'custom', 'key': 'category_description',
@@ -186,39 +228,36 @@ def main():
             record(action='metafieldsSet', handle=h, keys=[m['key'] for m in mfs])
 
     # ---- menus -------------------------------------------------------------
-    current = {m['handle']: m for m in must(dst, Q_MENUS)['menus']['nodes']}
-    stamp = datetime.date.today().isoformat()
+    changed = [h for h, _, same in menu_plan if not same]
+    if not changed:
+        return
+    stamp = datetime.datetime.now().strftime('%Y-%m-%dT%H%M%S')
     snap = os.path.join(ROOT, 'backups', f'dev-menus-before-mirror-{stamp}.json')
     json.dump(list(current.values()), open(snap, 'w'), indent=1)
     print(f'  snapshot of target menus: {os.path.relpath(snap, ROOT)}')
 
-    def convert(items):
-        out = []
-        for i in items:
-            n = {'title': i['title'], 'type': i['type'], 'url': i['url']}
-            if i['type'] == 'COLLECTION':
-                n['resourceId'] = existing[handle_of(i['url'])]
-                n['url'] = f"/collections/{handle_of(i['url'])}"
-            elif i['type'] in ('PAGE', 'BLOG'):
-                p = resolve(i['type'], handle_of(i['url']), i['title'])
-                n['resourceId'] = p['id']
-                n['url'] = f"/{'pages' if i['type'] == 'PAGE' else 'blogs'}/{p['handle']}"
-            elif i['type'] not in ('COLLECTIONS', 'HTTP', 'SEARCH', 'CATALOG', 'FRONTPAGE'):
-                raise SystemExit(f"unsupported menu item type {i['type']} ({i['title']})")
-            if i.get('items'):
-                n['items'] = convert(i['items'])
-            out.append(n)
-        return out
-
-    for h in copy_menus:
+    for h in changed:
         ref = ref_menus[h]
-        items = convert(ref['items'])
+        items = convert(ref['items'])  # again: collections created above now have ids
         if h in current:
             must(dst, M_MENU, {'id': current[h]['id'], 'title': ref['title'], 'handle': h, 'items': items})
         else:
             must(dst, M_MENU_NEW, {'title': ref['title'], 'handle': h, 'items': items})
         record(action='menuUpdate' if h in current else 'menuCreate', handle=h, snapshot=os.path.relpath(snap, ROOT))
         print(f'  menu {h} {"updated" if h in current else "created"}')
+
+
+def footer_menus():
+    """Menu handles named by the footer's blocks: the Company and Support
+    columns and the brand row."""
+    text = open(os.path.join(ROOT, 'sections', 'footer-group.json'), encoding='utf-8').read().strip()
+    if text.startswith('/*'):
+        text = text[text.index('*/') + 2:]
+    out = []
+    for section in json.loads(text)['sections'].values():
+        out += [b['settings']['menu'] for b in (section.get('blocks') or {}).values()
+                if b.get('settings', {}).get('menu')]
+    return out
 
 
 def _walk(items):

@@ -128,7 +128,7 @@
     border-radius: var(--km-radius-lg);
     overflow: hidden;
     background: transparent;
-    transition: transform var(--km-transition);
+    transition: transform var(--km-transition, .25s ease);
   }
   .km-blogs__card:hover { transform: translateY(-3px); }
 
@@ -156,8 +156,8 @@
     font-weight: 700;
     letter-spacing: .12em;
     text-transform: uppercase;
-    background: var(--km-surface);
-    color: var(--km-heading);
+    background: #fff;
+    color: #000;
     border-radius: var(--km-radius-pill);
     box-shadow: 0 2px 8px rgba(0,0,0,.1);
   }

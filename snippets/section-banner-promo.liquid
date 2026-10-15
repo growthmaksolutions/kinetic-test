@@ -43,42 +43,42 @@
 </section>
 
 <style>
-  .km-banner-promo { padding: 64px 0; background: var(--km-body-bg); }
+  .km-banner-promo { padding: 64px 0; background: var(--km-body-bg, #EDEDED); }
   .km-banner-promo__grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 24px; }
   .km-banner-promo__feature {
     position: relative; display: grid; grid-template-columns: 1fr 1fr;
-    border-radius: var(--km-radius-lg); overflow: hidden; color: var(--km-on-dark); text-decoration: none;
-    min-height: 380px; isolation: isolate; background: var(--km-surface-2); transition: transform .25s ease;
+    border-radius: 20px; overflow: hidden; color: #fff; text-decoration: none;
+    min-height: 380px; isolation: isolate; background: #111; transition: transform .25s ease;
   }
   .km-banner-promo__feature:hover { transform: translateY(-3px); }
   .km-banner-promo__feature-copy { padding: 44px 40px; display: flex; flex-direction: column; justify-content: center; gap: 14px; }
   .km-pill--sale {
     align-self: flex-start; display: inline-block; padding: 6px 14px; font-size: 11px;
     font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
-    background: var(--km-accent); color: var(--km-on-accent); border-radius: var(--km-radius-pill);
+    background: var(--km-accent, #FBB03D); color: #000; border-radius: 9999px;
   }
   .km-banner-promo__feature-heading {
     font-size: clamp(30px, 3.6vw, 44px); font-weight: 700; letter-spacing: -.02em;
-    line-height: 1.05; color: var(--km-on-dark); margin: 0;
+    line-height: 1.05; color: #fff; margin: 0;
   }
   .km-banner-promo__feature-cta {
     margin-top: 14px; display: inline-flex; align-items: center; gap: 8px; font-weight: 700;
-    font-size: 14px; letter-spacing: .06em; text-transform: uppercase; color: var(--km-accent);
+    font-size: 14px; letter-spacing: .06em; text-transform: uppercase; color: var(--km-accent, #FBB03D);
   }
   .km-banner-promo__feature-media { position: relative; overflow: hidden; }
   .km-banner-promo__feature-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .km-banner-promo__offers { display: flex; flex-direction: column; gap: 24px; }
   .km-banner-promo__offer {
     position: relative; display: grid; grid-template-columns: 1.1fr .9fr; gap: 12px;
-    border-radius: var(--km-radius-lg); overflow: hidden; text-decoration: none; color: var(--km-heading);
+    border-radius: 20px; overflow: hidden; text-decoration: none; color: #111;
     min-height: 170px; transition: transform .25s ease;
   }
   .km-banner-promo__offer:hover { transform: translateY(-2px); }
   .km-banner-promo__offer-copy { padding: 22px 22px 22px 26px; display: flex; flex-direction: column; justify-content: center; gap: 6px; }
-  .km-banner-promo__offer-tag { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--km-heading); opacity: .7; }
-  .km-banner-promo__offer-heading { font-size: 22px; font-weight: 700; letter-spacing: -.01em; line-height: 1.15; color: var(--km-heading); margin: 0; }
+  .km-banner-promo__offer-tag { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #000; opacity: .7; }
+  .km-banner-promo__offer-heading { font-size: 22px; font-weight: 700; letter-spacing: -.01em; line-height: 1.15; color: #000; margin: 0; }
   .km-banner-promo__offer-subtext { font-size: 13px; line-height: 1.5; color: rgba(0,0,0,.7); margin: 0; }
-  .km-banner-promo__offer-link { margin-top: 8px; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--km-heading); }
+  .km-banner-promo__offer-link { margin-top: 8px; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #000; }
   .km-banner-promo__offer-media { position: relative; overflow: hidden; }
   .km-banner-promo__offer-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   @media (max-width: 900px) {

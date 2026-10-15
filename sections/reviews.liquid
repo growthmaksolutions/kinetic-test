@@ -196,7 +196,7 @@
     width: 44px; height: 44px;
     border-radius: 50%;
     border: 1px solid var(--km-border);
-    background: var(--km-surface);
+    background: #fff;
     color: var(--km-heading);
     display: inline-flex;
     align-items: center;
@@ -206,9 +206,9 @@
     box-shadow: 0 2px 4px rgba(0,0,0,.04);
   }
   .km-reviews__arrow:first-child svg { transform: rotate(180deg); }
-  .km-reviews__arrow:hover { background: var(--km-primary); color: var(--km-primary-contrast); border-color: var(--km-border-strong); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,.12); }
+  .km-reviews__arrow:hover { background: #000; color: #fff; border-color: #000; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,.12); }
   .km-reviews__arrow:disabled { opacity: .35; cursor: not-allowed; }
-  .km-reviews__arrow:disabled:hover { background: var(--km-surface); color: var(--km-heading); border-color: var(--km-border); transform: none; box-shadow: 0 2px 4px rgba(0,0,0,.04); }
+  .km-reviews__arrow:disabled:hover { background: #fff; color: var(--km-heading); border-color: var(--km-border); transform: none; box-shadow: 0 2px 4px rgba(0,0,0,.04); }
 
   .km-reviews__grid {
     display: flex;
@@ -225,9 +225,9 @@
   .km-reviews__card {
     flex: 0 0 calc(50% - 16px);
     scroll-snap-align: start;
-    background: var(--km-surface);
+    background: #fff;
     padding: 32px;
-    border-radius: var(--km-radius-lg);
+    border-radius: 20px;
     border: 1px solid var(--km-border);
     display: flex;
     flex-direction: column;
@@ -240,10 +240,10 @@
   .km-reviews__stars {
     display: inline-flex;
     gap: 3px;
-    color: var(--km-accent);
+    color: var(--km-accent, #FBB03D);
   }
   .km-reviews__stars svg { width: 14px; height: 14px; }
-  .km-reviews__star--off { color: var(--km-border-strong); }
+  .km-reviews__star--off { color: #E5E7EB; }
 
   .km-reviews__quote {
     font-size: 15px;
@@ -260,7 +260,7 @@
   .km-reviews__meta {
     margin-top: auto;
     padding-top: 16px;
-    border-top: 1px solid var(--km-border);
+    border-top: 1px solid #F3F4F6;
   }
   .km-reviews__author {
     font-weight: 800;

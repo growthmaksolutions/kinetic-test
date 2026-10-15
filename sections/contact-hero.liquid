@@ -21,7 +21,7 @@
 
 <style>
   .km-contact-hero {
-    background: var(--km-body-bg);
+    background: var(--km-body-bg, #EDEDED);
     padding: 48px 0 32px;
   }
   .km-contact-hero__crumbs {
@@ -31,19 +31,19 @@
     font-size: 12px;
     font-weight: 600;
     letter-spacing: .04em;
-    color: var(--km-text);
+    color: var(--km-text, #4B5563);
     margin-bottom: 32px;
   }
   .km-contact-hero__crumbs a {
-    color: var(--km-text);
+    color: var(--km-text, #4B5563);
     text-decoration: none;
     transition: color .2s ease;
   }
   .km-contact-hero__crumbs a:hover {
-    color: var(--km-accent);
+    color: var(--km-accent, #FBB03D);
   }
   .km-contact-hero__crumb-current {
-    color: var(--km-heading);
+    color: #000;
     font-weight: 700;
   }
 
@@ -54,14 +54,14 @@
     font-size: clamp(36px, 5vw, 56px);
     font-weight: 700;
     letter-spacing: -.02em;
-    color: var(--km-heading);
+    color: #000;
     margin: 0 0 20px;
     line-height: 1.1;
   }
   .km-contact-hero__sub {
     font-size: 16px;
     line-height: 1.6;
-    color: var(--km-text);
+    color: var(--km-text, #4B5563);
     max-width: 780px;
   }
 </style>

@@ -24,10 +24,11 @@ menus are snapshotted to a new timestamped file in backups/.
   python3 scripts/mirror_reference_nav.py                 # dry run
   python3 scripts/mirror_reference_nav.py --apply
 """
-import argparse, datetime, json, os, sys
+import argparse, datetime, json, os, sys, urllib.parse
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from backup_live import Shop, load_env, ROOT
+from mirror_theme_images import files_by_name
 
 ITEM = 'id title type url resourceId'
 Q_MENUS = '{ menus(first:100){ nodes{ id handle title items{ %s items{ %s items{ %s } } } } } }' % (ITEM, ITEM, ITEM)
@@ -39,8 +40,21 @@ Q_COLLECTION = '''query($h:String!){ collectionByHandle(handle:$h){
   description: metafield(namespace:"custom", key:"category_description"){ value }
   children: metafield(namespace:"custom", key:"category_collections"){
     references(first:50){ nodes{ ... on Collection{ handle } } } }
+  before: metafield(namespace:"custom", key:"before_image"){ reference{ ... on MediaImage{ image{ url } } } }
 } }'''
 Q_DEFS = '{ metafieldDefinitions(first:100, ownerType:PRODUCT){ nodes{ id namespace key } } }'
+Q_COLL_DEFS = '{ metafieldDefinitions(first:100, ownerType:COLLECTION){ nodes{ name namespace key type{ name } } } }'
+Q_COLL_MF = '''query($id:ID!){ collection(id:$id){
+  category_description: metafield(namespace:"custom", key:"category_description"){ value }
+  category_collections: metafield(namespace:"custom", key:"category_collections"){ value }
+  before_image: metafield(namespace:"custom", key:"before_image"){ value } } }'''
+M_DEF = '''mutation($d:MetafieldDefinitionInput!){ metafieldDefinitionCreate(definition:$d){
+  createdDefinition{ id } userErrors{ field message } } }'''
+# Collection metafields the model template reads. before_image is bound as the
+# slider's AFTER picture in collection.model.json (the reference's naming).
+COLLECTION_MF = {'category_description': 'multi_line_text_field',
+                 'category_collections': 'list.collection_reference',
+                 'before_image': 'file_reference'}
 Q_PAGES = '{ pages(first:250){ nodes{ id handle title templateSuffix } } blogs(first:50){ nodes{ id handle title } } }'
 Q_PUBS = '{ publications(first:20){ nodes{ id name } } }'
 Q_HANDLES = 'query($c:String){ collections(first:250, after:$c){ nodes{ id handle } pageInfo{ hasNextPage endCursor } } }'
@@ -142,6 +156,43 @@ def main():
         }.items() if v not in (None, '')}
         print(f"  create {c['handle']:48s} {c['title']}  ({' & '.join(r['condition'] for r in rules)})")
 
+    # ---- collection metafields: definitions, then values that differ --------
+    ref_defs = [d for d in must(src, Q_COLL_DEFS)['metafieldDefinitions']['nodes']
+                if d['namespace'] == 'custom' and d['key'] in COLLECTION_MF]
+    have_defs = {(d['namespace'], d['key']) for d in must(dst, Q_COLL_DEFS)['metafieldDefinitions']['nodes']}
+    defs_to_create = [d for d in ref_defs if (d['namespace'], d['key']) not in have_defs]
+    for d in defs_to_create:
+        print(f"  define collection metafield custom.{d['key']} ({d['type']['name']})")
+
+    target_files = files_by_name(dst)
+
+    def metafield_changes():
+        out = []
+        for h, c in wanted.items():
+            want = {}
+            if c['description'] and c['description']['value']:
+                want['category_description'] = c['description']['value']
+            kids = [n['handle'] for n in ((c['children'] or {}).get('references') or {}).get('nodes', [])]
+            if kids:
+                want['category_collections'] = json.dumps([existing.get(k, f'(new) {k}') for k in kids])
+            url = ((((c['before'] or {}).get('reference') or {}).get('image')) or {}).get('url')
+            if url:
+                name = urllib.parse.unquote(url.split('?')[0].rsplit('/', 1)[-1])
+                if name not in target_files:
+                    raise SystemExit(f'{h}: target Files has no {name}; copy it first (mirror_theme_images.py)')
+                want['before_image'] = target_files[name]['id']
+            have = must(dst, Q_COLL_MF, {'id': existing[h]})['collection'] if h in existing else {}
+            for key, value in want.items():
+                cur = (have.get(key) or {}).get('value')
+                same = (json.loads(cur) == json.loads(value)) if cur and key == 'category_collections' else cur == value
+                if not same:
+                    out.append((h, key, value))
+        return out
+
+    mf_plan = metafield_changes()
+    for h, key, _ in mf_plan:
+        print(f'  metafield {h:40s} custom.{key}')
+
     pages, ref_pages = must(dst, Q_PAGES), must(src, Q_PAGES)
 
     def resolve(kind, ref_handle, title):
@@ -211,21 +262,24 @@ def main():
         record(action='collectionCreate', handle=made['handle'], id=made['id'], published='Online Store')
         print(f"  created {made['handle']}")
 
-    # Collection metafields: the description and the child-collection list the
-    # model template renders. Children are re-pointed at the target's own ids.
-    for c in to_create:
-        h = c['handle']
-        mfs = []
-        if c['description'] and c['description']['value']:
-            mfs.append({'ownerId': existing[h], 'namespace': 'custom', 'key': 'category_description',
-                        'type': 'multi_line_text_field', 'value': c['description']['value']})
-        kids = [n['handle'] for n in ((c['children'] or {}).get('references') or {}).get('nodes', [])]
-        if kids:
-            mfs.append({'ownerId': existing[h], 'namespace': 'custom', 'key': 'category_collections',
-                        'type': 'list.collection_reference', 'value': json.dumps([existing[k] for k in kids])})
-        if mfs:
-            must(dst, M_METAFIELDS, {'m': mfs})
-            record(action='metafieldsSet', handle=h, keys=[m['key'] for m in mfs])
+    # Definitions first: the theme binds custom.before_image as a dynamic source,
+    # which Shopify only accepts once a definition exists.
+    for d in defs_to_create:
+        must(dst, M_DEF, {'d': {'name': d['name'], 'namespace': d['namespace'], 'key': d['key'],
+                                'type': d['type']['name'], 'ownerType': 'COLLECTION'}})
+        record(action='metafieldDefinitionCreate', owner='COLLECTION', key=f"{d['namespace']}.{d['key']}")
+        print(f"  defined custom.{d['key']}")
+
+    # Recomputed now that new collections have ids; children and files are
+    # re-pointed at the target's own resources.
+    by_handle = {}
+    for h, key, value in metafield_changes():
+        by_handle.setdefault(h, []).append({'ownerId': existing[h], 'namespace': 'custom', 'key': key,
+                                            'type': COLLECTION_MF[key], 'value': value})
+    for h, mfs in by_handle.items():
+        must(dst, M_METAFIELDS, {'m': mfs})
+        record(action='metafieldsSet', handle=h, keys=[m['key'] for m in mfs])
+        print(f"  metafields {h}: {', '.join(m['key'] for m in mfs)}")
 
     # ---- menus -------------------------------------------------------------
     changed = [h for h, _, same in menu_plan if not same]

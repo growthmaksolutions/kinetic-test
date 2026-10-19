@@ -2,7 +2,7 @@
 # Secrets — never commit these. The Shopify Admin API token in .env grants
 # full read/write access to the store's products, orders and customers.
 # ---------------------------------------------------------------------------
-.env 
+.env    
 .env.*
 !.env.example
 *.pem
